@@ -28,10 +28,19 @@ public class JwtProvider {
 
     public String generateAccessToken(User user) {
         return Jwts.builder()
-               .claim("userId", user.getId())
-               .expiration(getExpireDate())
-               .signWith(key, SignatureAlgorithm.HS256)
-               .compact();
+                .claim("userId", user.getId())
+                .expiration(getExpireDate())
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateEmailValidToken(String email) {
+        Date expireDate = new Date(new Date().getTime() + (1000l * 60 * 5));
+        return Jwts.builder()
+                .claim("email", email)
+                .expiration(expireDate)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String removeBearer(String bearerToken) {
