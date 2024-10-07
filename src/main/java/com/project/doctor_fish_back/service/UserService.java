@@ -37,6 +37,8 @@ public class UserService {
     private RoleMapper roleMapper;
     @Autowired
     private UserRolesMapper userRolesMapper;
+    @Autowired
+    private EmailService emailService;
 
     public Boolean isDuplicateEmail(String email) {
         return Optional.ofNullable(userMapper.findByEmail(email)).isPresent();
@@ -67,6 +69,8 @@ public class UserService {
         } catch (Exception e) {
             throw new SignupException(e.getMessage());
         }
+
+        emailService.sendAuthMail(dto.getEmail());
 
         return true;
     }
@@ -108,4 +112,34 @@ public class UserService {
                 .roles(roles)
                 .build();
     }
+
+    @Transactional(rollbackFor = SignupException.class)
+    public Boolean insertAdminAndUserRoles(ReqSignupDto dto) throws SignupException {
+        User user = null;
+        try {
+            user = dto.toEntity(passwordEncoder);
+            userMapper.save(user);
+
+            Role role = roleMapper.findByName("ROLE_ADMIN");
+
+            if (role == null) {
+                role = Role.builder().name("ROLE_ADMIN").build();
+                roleMapper.save(role);
+            }
+
+            UserRoles userRoles = UserRoles.builder()
+                    .userId(user.getId())
+                    .roleId(role.getId())
+                    .build();
+
+            userRolesMapper.save(userRoles);
+
+            user.setUserRoles(Set.of(userRoles));
+        } catch (Exception e) {
+            throw new SignupException(e.getMessage());
+        }
+
+        return true;
+    }
+
 }

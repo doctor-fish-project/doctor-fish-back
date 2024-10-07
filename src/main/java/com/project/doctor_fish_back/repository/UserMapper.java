@@ -8,5 +8,5 @@ public interface UserMapper {
     User findById(Long id);
     User findByEmail(String email);
     int save(User user);
-
+    int modifyEmailValidByEmail(String email);
 }

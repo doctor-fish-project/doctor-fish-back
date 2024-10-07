@@ -30,11 +30,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
 
         http.exceptionHandling()
-                        .authenticationEntryPoint(authenticationHandler);
+                .authenticationEntryPoint(authenticationHandler);
 
         http.authorizeRequests()
                 .antMatchers(
-                        "/auth/**"
+                        "/auth/**",
+                        "/admin/**",
+                        "/doctor/**"
                 )
                 .permitAll()
                 .anyRequest()

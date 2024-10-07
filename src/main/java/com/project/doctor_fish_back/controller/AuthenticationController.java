@@ -29,10 +29,17 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(tokenService.isValidAccessToken(dto.getAccessToken()));
     }
 
-    // 회원가입
+    // 관리자 회원가입
+    @ValidAop
+    @PostMapping("/admin/signup")
+    public ResponseEntity<?> adminSignup(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
+        return ResponseEntity.ok().body(userService.insertAdminAndUserRoles(dto));
+    }
+
+    // 사용자 회원가입
     @ValidAop
     @PostMapping("/auth/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
+    public ResponseEntity<?> userSignup(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
         return ResponseEntity.ok().body(userService.insertUserAndUserRoles(dto));
     }
 
