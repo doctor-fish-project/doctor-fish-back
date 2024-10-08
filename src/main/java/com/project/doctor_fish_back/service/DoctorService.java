@@ -12,7 +12,11 @@ public class DoctorService {
     private DoctorMapper doctorMapper;
 
     public Boolean registerDoctor(ReqRegisterDoctorDto dto) {
-        doctorMapper.save(dto.toEntity());
+        try {
+            doctorMapper.save(dto.toEntity());
+        } catch (Exception e) {
+            throw new RuntimeException("실행 도중 오류가 발생했습니다.");
+        }
         return true;
     }
 }

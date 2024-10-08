@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.dto.response.reservation;
 
+import com.project.doctor_fish_back.entity.Doctor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,4 +15,6 @@ public class RespGetReservationDto {
     private int status;
     private LocalDateTime reservationDate;
     private LocalDateTime registerDate;
+
+    private Doctor doctor;
 }

@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.controller;
 
 import com.project.doctor_fish_back.exception.*;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,6 +38,16 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(AuthorityException.class)
     public ResponseEntity<?> authorityException(AuthorityException e) {
         return ResponseEntity.status(401).body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<?> notFoundException(NotFoundException e) {
+        return ResponseEntity.status(404).body(e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> runtimeException(RuntimeException e) {
+        return ResponseEntity.status(500).body(e.getMessage());
     }
 
 }

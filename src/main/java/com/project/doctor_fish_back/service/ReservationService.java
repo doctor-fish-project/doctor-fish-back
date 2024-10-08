@@ -74,6 +74,7 @@ public class ReservationService {
                 .status(reservation.getStatus())
                 .reservationDate(reservation.getReservationDate())
                 .registerDate(reservation.getReservationDate())
+                .doctor(reservation.getDoctor())
                 .build();
     }
 
@@ -97,6 +98,7 @@ public class ReservationService {
                 .status(reservation.getStatus())
                 .reservationDate(reservation.getReservationDate())
                 .registerDate(reservation.getReservationDate())
+                .doctor(reservation.getDoctor())
                 .build();
     }
 
