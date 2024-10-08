@@ -7,6 +7,7 @@ import com.project.doctor_fish_back.dto.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.entity.Role;
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.entity.UserRoles;
+import com.project.doctor_fish_back.exception.EmailValidException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
 import com.project.doctor_fish_back.repository.RoleMapper;
@@ -77,6 +78,11 @@ public class UserService {
 
     public RespSigninDto getGeneratedAccessToken(ReqSigninDto dto) throws SigninException {
         User user = checkUsernameAndPassword(dto.getEmail(), dto.getPassword());
+
+        if(user.getEmailValid() != 1) {
+            emailService.sendAuthMail(dto.getEmail());
+            throw new EmailValidException("이메일 인증 후 로그인 가능합니다.");
+        }
 
         return RespSigninDto.builder()
                 .expireDate(jwtProvider.getExpireDate().toLocaleString())

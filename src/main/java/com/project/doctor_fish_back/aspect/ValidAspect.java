@@ -35,7 +35,7 @@ public class ValidAspect {
         }
 
         switch (proceedingJoinPoint.getSignature().getName()) {
-            case "signup":
+            case "userSignup":
                 validSignupDto(args, bindingResult);
                 break;
         }

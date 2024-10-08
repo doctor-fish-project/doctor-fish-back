@@ -1,9 +1,6 @@
 package com.project.doctor_fish_back.controller;
 
-import com.project.doctor_fish_back.exception.AccessTokenValidException;
-import com.project.doctor_fish_back.exception.SigninException;
-import com.project.doctor_fish_back.exception.SignupException;
-import com.project.doctor_fish_back.exception.ValidException;
+import com.project.doctor_fish_back.exception.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,8 +25,13 @@ public class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(SigninException.class)
-    public ResponseEntity<?> signinException(SignupException e) {
+    public ResponseEntity<?> signinException(SigninException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(EmailValidException.class)
+    public ResponseEntity<?> emailValidException(EmailValidException e) {
+        return ResponseEntity.status(401).body(e.getMessage());
     }
 
 }
