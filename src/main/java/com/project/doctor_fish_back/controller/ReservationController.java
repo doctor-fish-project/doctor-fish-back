@@ -5,6 +5,7 @@ import com.project.doctor_fish_back.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,12 @@ public class ReservationController {
     @PostMapping("/reservation")
     public ResponseEntity<?> registerReservation(@RequestBody ReqRegisterReservationDto dto) {
         return ResponseEntity.ok().body(reservationService.registerReservation(dto));
+    }
+
+    // 예약 수락
+    @PutMapping("/reservation")
+    public ResponseEntity<?> acceptReservation() {
+        return ResponseEntity.ok().body(null);
     }
 
 }
