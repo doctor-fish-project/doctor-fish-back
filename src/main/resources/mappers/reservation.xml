@@ -6,6 +6,22 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.ReservationMapper">
 
+    <resultMap id="reservationResultMap" type="com.project.doctor_fish_back.entity.Reservation">
+        <id property="id" column="rt_id" />
+        <result property="userId" column="user_id" />
+        <result property="doctorId" column="doctor_id" />
+        <result property="status" column="status" />
+        <result property="reservationDate" column="reservation_date" />
+        <result property="registerDate" column="register_date" />
+        <association property="doctor" resultMap="doctorResultMap" />
+    </resultMap>
+
+    <resultMap id="doctorResultMap" type="com.project.doctor_fish_back.entity.Doctor">
+        <id property="id" column="dt_id" />
+        <result property="name" column="name" />
+        <result property="depart" column="depart" />
+    </resultMap>
+
     <insert id="register">
         insert into reservation_tb
         values(default, #{userId}, #{doctorId}, default, #{reservationDate}, now())
@@ -35,30 +51,38 @@
             id = #{id}
     </delete>
 
-    <select id="findById" resultType="com.project.doctor_fish_back.entity.Reservation">
+    <select id="findById" resultMap="reservationResultMap">
         select
-            id,
-            user_id as userId,
-            doctor_id as doctorId,
-            status,
-            reservation_date as reservationDate,
-            register_date as registerDate
+            rt.id as rt_id,
+            rt.user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dt.id as dt_id,
+            dt.name,
+            dt.depart
         from
-            reservation_tb
+            reservation_tb rt
+            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
         where
-            id = #{id}
+            rt.id = #{id}
     </select>
 
-    <select id="getAllToUser" resultType="com.project.doctor_fish_back.entity.Reservation">
+    <select id="getAllToUser" resultMap="reservationResultMap">
         select
-            id,
-            user_id as userId,
-            doctor_id as doctorId,
-            status,
-            reservation_date as reservationDate,
-            register_date as registerDate
+            rt.id as rt_id,
+            rt.user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dt.id as dt_id,
+            dt.name,
+            dt.depart
         from
-            reservation_tb
+            reservation_tb rt
+            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
         where
             user_id = #{userId}
     </select>
@@ -72,16 +96,20 @@
             user_id = #{userId}
     </select>
 
-    <select id="getAllToAdmin" resultType="com.project.doctor_fish_back.entity.Reservation">
+    <select id="getAllToAdmin" resultMap="reservationResultMap">
         select
-            id,
-            user_id as userId,
-            doctor_id as doctorId,
-            status,
-            reservation_date as reservationDate,
-            register_date as registerDate
+            rt.id as rt_id,
+            rt.user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dt.id as dt_id,
+            dt.name,
+            dt.depart
         from
-            reservation_tb
+            reservation_tb rt
+            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
     </select>
 
     <select id="getCountAllToAdmin" resultType="java.lang.Integer">

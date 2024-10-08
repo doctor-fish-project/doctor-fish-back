@@ -42,7 +42,11 @@ public class UserService {
     private EmailService emailService;
 
     public Boolean isDuplicateEmail(String email) {
-        return Optional.ofNullable(userMapper.findByEmail(email)).isPresent();
+        try {
+            return Optional.ofNullable(userMapper.findByEmail(email)).isPresent();
+        } catch (Exception e) {
+            throw new RuntimeException("실행 도중 오류가 발생했습니다.");
+        }
     }
 
     @Transactional(rollbackFor = SignupException.class)
