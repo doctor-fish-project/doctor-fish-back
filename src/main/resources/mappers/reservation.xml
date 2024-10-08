@@ -11,4 +11,84 @@
         values(default, #{userId}, #{doctorId}, default, #{reservationDate}, now())
     </insert>
 
+    <update id="acceptById">
+        update reservation_tb
+        set
+            status = 2
+        where
+            id = #{id}
+    </update>
+
+    <update id="cancelById">
+        update reservation_tb
+        set
+            status = 3
+        where
+            id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from
+            reservation_tb
+        where
+            id = #{id}
+    </delete>
+
+    <select id="findById" resultType="com.project.doctor_fish_back.entity.Reservation">
+        select
+            id,
+            user_id as userId,
+            doctor_id as doctorId,
+            status,
+            reservation_date as reservationDate,
+            register_date as registerDate
+        from
+            reservation_tb
+        where
+            id = #{id}
+    </select>
+
+    <select id="getAllToUser" resultType="com.project.doctor_fish_back.entity.Reservation">
+        select
+            id,
+            user_id as userId,
+            doctor_id as doctorId,
+            status,
+            reservation_date as reservationDate,
+            register_date as registerDate
+        from
+            reservation_tb
+        where
+            user_id = #{userId}
+    </select>
+
+    <select id="getCountAllToUser" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            user_id = #{userId}
+    </select>
+
+    <select id="getAllToAdmin" resultType="com.project.doctor_fish_back.entity.Reservation">
+        select
+            id,
+            user_id as userId,
+            doctor_id as doctorId,
+            status,
+            reservation_date as reservationDate,
+            register_date as registerDate
+        from
+            reservation_tb
+    </select>
+
+    <select id="getCountAllToAdmin" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            reservation_tb
+    </select>
+
 </mapper>

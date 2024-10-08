@@ -34,4 +34,9 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(401).body(e.getMessage());
     }
 
+    @ExceptionHandler(AuthorityException.class)
+    public ResponseEntity<?> authorityException(AuthorityException e) {
+        return ResponseEntity.status(401).body(e.getMessage());
+    }
+
 }
