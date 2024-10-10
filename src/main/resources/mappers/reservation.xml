@@ -69,6 +69,26 @@
             rt.id = #{id}
     </select>
 
+    <select id="getToUser" resultMap="reservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dt.id as dt_id,
+            dt.name,
+            dt.depart
+        from
+            reservation_tb rt
+            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+        where
+            user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
+        order by
+            rt.reservation_date desc
+    </select>
+
     <select id="getAllToUser" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
@@ -85,6 +105,17 @@
             left outer join doctor_tb dt on(rt.doctor_id = dt.id)
         where
             user_id = #{userId}
+        order by
+            rt.reservation_date desc
+    </select>
+
+    <select id="getCountToUser" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
     </select>
 
     <select id="getCountAllToUser" resultType="java.lang.Integer">
@@ -118,5 +149,6 @@
         from
             reservation_tb
     </select>
+
 
 </mapper>
