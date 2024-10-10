@@ -7,6 +7,7 @@ import com.project.doctor_fish_back.dto.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.entity.Role;
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.entity.UserRoles;
+import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.EmailValidException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
@@ -14,8 +15,11 @@ import com.project.doctor_fish_back.repository.RoleMapper;
 import com.project.doctor_fish_back.repository.UserMapper;
 import com.project.doctor_fish_back.repository.UserRolesMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
+import com.project.doctor_fish_back.security.principal.PrincipalUser;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -148,6 +152,24 @@ public class UserService {
         } catch (Exception e) {
             throw new SignupException(e.getMessage());
         }
+
+        return true;
+    }
+
+    public Boolean deleteUser(Long userId) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userMapper.findById(userId);
+
+        if(user == null) {
+            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        if(user.getId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        userMapper.deleteById(userId);
 
         return true;
     }
