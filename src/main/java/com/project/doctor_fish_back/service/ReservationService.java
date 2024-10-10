@@ -46,11 +46,23 @@ public class ReservationService {
         return true;
     }
 
+    public RespGetReservationListDto getReservationsToUser() {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Reservation> reservations = reservationMapper.getToUser(principalUser.getId());
+        int totalCount = reservationMapper.getCountAllToUser(principalUser.getId());
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservations)
+                .totalCount(totalCount)
+                .build();
+    }
+
     public RespGetReservationListDto getAllReservationsToUser() {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<Reservation> reservations = reservationMapper.getAllToUser(principalUser.getId());
-        int totalCount = reservationMapper.getCountAllToUser(principalUser.getId());
+        int totalCount = reservationMapper.getCountToUser(principalUser.getId());
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
