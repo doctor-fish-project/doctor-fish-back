@@ -9,4 +9,5 @@ public interface UserMapper {
     User findByEmail(String email);
     int save(User user);
     int modifyEmailValidByEmail(String email);
+    int deleteById(Long id);
 }

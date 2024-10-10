@@ -41,6 +41,14 @@
             email = #{email}
     </update>
 
+    <delete id="deleteById">
+        delete
+        from
+            user_tb
+        where
+            id = #{id}
+    </delete>
+
     <select id="findById" resultMap="userResultMap">
         select
             u.id as user_id,
