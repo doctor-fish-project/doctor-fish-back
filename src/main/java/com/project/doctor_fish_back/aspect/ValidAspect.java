@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.aspect;
 
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.exception.ValidException;
 import com.project.doctor_fish_back.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -38,6 +39,9 @@ public class ValidAspect {
             case "userSignup":
                 validSignupDto(args, bindingResult);
                 break;
+            case "modifyUserPassword":
+                validModifyUserPasswordDto(args, bindingResult);
+                break;
         }
 
         if(bindingResult.hasErrors()) {
@@ -59,6 +63,19 @@ public class ValidAspect {
 
                 if(userService.isDuplicateEmail(dto.getEmail())) {
                     FieldError fieldError = new FieldError("email", "email", "이미 존재하는 이메일입니다.");
+                    bindingResult.addError(fieldError);
+                }
+            }
+        }
+    }
+
+    private void validModifyUserPasswordDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+        for(Object arg : args) {
+            if(arg.getClass() == ReqModifyUserPasswordDto.class) {
+                ReqModifyUserPasswordDto dto = (ReqModifyUserPasswordDto) arg;
+
+                if(!dto.getPassword().equals(dto.getCheckPassword())) {
+                    FieldError fieldError = new FieldError("checkPassword", "checkPassword", "비밀번호가 일치하지 않습니다.");
                     bindingResult.addError(fieldError);
                 }
             }

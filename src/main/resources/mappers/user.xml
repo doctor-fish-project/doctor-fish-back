@@ -36,9 +36,35 @@
     <update id="modifyEmailValidByEmail">
         update user_tb
         set
-            email_valid = 1
+            email_valid = if(email_valid = 0, 1, 0)
         where
             email = #{email}
+    </update>
+
+    <update id="modify">
+        update user_tb
+        set
+            name = #{name},
+            phone_number = #{phoneNumber},
+            img = #{img}
+        where
+            id = #{id}
+    </update>
+
+    <update id="modifyEmail">
+        update user_tb
+        set
+            email = #{email}
+        where
+            id = #{id}
+    </update>
+
+    <update id="modifyPassword">
+        update user_tb
+        set
+            password = #{password}
+        where
+            id = #{id}
     </update>
 
     <delete id="deleteById">

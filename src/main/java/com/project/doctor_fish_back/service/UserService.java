@@ -2,6 +2,9 @@ package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.dto.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.entity.Role;
@@ -129,6 +132,66 @@ public class UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .roles(roles)
                 .build();
+    }
+
+    public Boolean modifyUser(Long userId, ReqModifyUserDto dto) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userMapper.findById(userId);
+
+        if(user == null) {
+            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        if(user.getId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        if(dto.getImg() == null || dto.getImg().equals("")) {
+            dto.setImg(defaultProfileImg);
+        }
+
+        userMapper.modify(dto.toEntity(userId));
+
+        return true;
+    }
+
+    public Boolean modifyUserEmail(Long userId, ReqModifyUserEmailDto dto) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userMapper.findById(userId);
+
+        if(user == null) {
+            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        if(user.getId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        userMapper.modifyEmail(dto.toEntity(userId));
+        userMapper.modifyEmailValidByEmail(dto.getEmail());
+        emailService.sendAuthMail(dto.getEmail());
+
+        return true;
+    }
+
+    public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userMapper.findById(userId);
+
+        if(user == null) {
+            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        if(user.getId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+
+        return true;
     }
 
     @Transactional(rollbackFor = SignupException.class)

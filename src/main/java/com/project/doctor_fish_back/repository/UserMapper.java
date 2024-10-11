@@ -10,4 +10,7 @@ public interface UserMapper {
     int save(User user);
     int modifyEmailValidByEmail(String email);
     int deleteById(Long id);
+    int modify(User user);
+    int modifyEmail(User user);
+    int modifyPassword(User user);
 }
