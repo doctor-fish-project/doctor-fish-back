@@ -44,23 +44,28 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservationService.getAllReservationsToUser());
     }
 
-
     // 사용자 예약 단건 조회
     @GetMapping("/reservation/user/{reservationId}")
     public ResponseEntity<?> getReservationToUser(@PathVariable Long reservationId) throws AuthorityException, NotFoundException {
         return ResponseEntity.ok().body(reservationService.getReservationToUser(reservationId));
     }
 
-    // 관리자 예약 전체 조회
-    @GetMapping("/reservation/list/admin")
-    public ResponseEntity<?> getAllReservationsToAdmin() {
-        return ResponseEntity.ok().body(reservationService.getAllReservationsToAdmin());
+    // 의사 예약 전체 조회
+    @GetMapping("/reservation/list/doctor/{doctorId}")
+    public ResponseEntity<?> getAllReservationsToDoctor(@PathVariable Long doctorId) {
+        return ResponseEntity.ok().body(reservationService.getAllReservationsToDoctor(doctorId));
     }
 
-    // 관리자 예약 단건 조회
-    @GetMapping("/reservation/admin/{reservationId}")
-    public ResponseEntity<?> getReservationToAdmin(@PathVariable Long reservationId) throws NotFoundException {
-        return ResponseEntity.ok().body(reservationService.getReservationToAdmin(reservationId));
+    // 의사, 원무과 예약 단건 조회
+    @GetMapping("/reservation/info/{reservationId}")
+    public ResponseEntity<?> getReservationToInfoAndDoctor(@PathVariable Long reservationId) throws NotFoundException {
+        return ResponseEntity.ok().body(reservationService.getReservationToInfoAndDoctor(reservationId));
+    }
+
+    // 원무과 예약 전체 조회
+    @GetMapping("/reservation/list/info")
+    public ResponseEntity<?> getAllReservationsToInfo() {
+        return ResponseEntity.ok().body(reservationService.getAllReservationsToInfo());
     }
 
     // 사용자 예약 삭제

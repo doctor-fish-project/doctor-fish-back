@@ -30,7 +30,7 @@
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into user_tb
-        values(default, #{email}, #{name}, #{password}, #{phoneNumber}, default)
+        values(default, #{email}, #{name}, #{password}, #{phoneNumber}, #{img}, default)
     </insert>
 
     <update id="modifyEmailValidByEmail">

@@ -11,4 +11,12 @@
         values(default, #{userId}, #{roleId})
     </insert>
 
+    <delete id="deleteByUserId">
+        delete
+        from
+            user_roles_tb
+        where
+            user_id = #{userId}
+    </delete>
+
 </mapper>
