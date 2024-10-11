@@ -50,4 +50,9 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(500).body(e.getMessage());
     }
 
+    @ExceptionHandler(ReviewLikeException.class)
+    public ResponseEntity<?> reviewLikeException(ReviewLikeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
 }
