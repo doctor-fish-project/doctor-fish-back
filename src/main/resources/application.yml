@@ -6,4 +6,7 @@ mybatis:
   mapper-locations:
     - /mappers/*.xml
 
-
+user:
+  profile:
+    img:
+      default:

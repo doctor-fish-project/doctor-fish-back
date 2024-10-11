@@ -13,6 +13,9 @@ public interface ReservationMapper {
     Reservation findById(Long id);
     int deleteById(Long id);
 
+    List<Reservation> getToUser(Long userId);
+    int getCountToUser(Long userId);
+
     List<Reservation> getAllToUser(Long userId);
     int getCountAllToUser(Long userId);
 
