@@ -3,6 +3,7 @@ package com.project.doctor_fish_back.controller;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.service.ReservationService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class ReservationController {
     // 예약하기
     @PostMapping("/reservation")
     public ResponseEntity<?> registerReservation(@RequestBody ReqRegisterReservationDto dto) {
+        System.out.println(dto);
         return ResponseEntity.ok().body(reservationService.registerReservation(dto));
     }
 

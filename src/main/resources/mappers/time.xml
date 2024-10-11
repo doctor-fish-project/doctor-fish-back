@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.TimeMapper">
+
+    <select id="getTimes" resultType="com.project.doctor_fish_back.entity.Time">
+        select
+            id,
+            time
+        from
+            time_tb
+    </select>
+    <select id="getReservedTimes" resultType="com.project.doctor_fish_back.entity.Time">
+        select
+            id,
+            time
+        from
+            time_tb
+        where
+            CAST(substr(time, 1, 2) AS UNSIGNED) in(select
+                                                        hour(reservation_date)
+                                                    from
+                                                        reservation_tb
+                                                    where
+                                                        doctor_id = #{doctorId}
+                                                        and status != 3
+                                                        and reservation_date like concat(#{reservationDate}, "%"))
+            or CAST(substr(time, 1, 2) AS UNSIGNED) between (select
+                                                                hour(leave_date)
+                                                            from
+                                                                leave_tb
+                                                            where
+                                                                doctor_id = #{doctorId}
+                                                                and status != 3
+                                                                and leave_date like concat(#{reservationDate}, "%"))
+                                                    and (select
+                                                            hour(end_date)
+                                                        from
+                                                            leave_tb
+                                                        where
+                                                            doctor_id = #{doctorId}
+                                                            and status != 3
+                                                            and leave_date like concat(#{reservationDate}, "%"));
+    </select>
+</mapper>
