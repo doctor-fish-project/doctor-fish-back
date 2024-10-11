@@ -21,12 +21,13 @@ public class ReqSignupDto {
     @NotBlank(message = "전화번호는 공백일 수 없습니다.")
     private String phoneNumber;
 
-    public User toEntity(BCryptPasswordEncoder passwordEncoder) {
+    public User toEntity(BCryptPasswordEncoder passwordEncoder, String defaultProfileImg) {
         return User.builder()
                 .email(email)
                 .name(name)
                 .password(passwordEncoder.encode(password))
                 .phoneNumber(phoneNumber)
+                .img(defaultProfileImg)
                 .build();
     }
 }

@@ -127,7 +127,7 @@
             user_id = #{userId}
     </select>
 
-    <select id="getAllToAdmin" resultMap="reservationResultMap">
+    <select id="getAllToInfo" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id,
@@ -141,13 +141,44 @@
         from
             reservation_tb rt
             left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+        order by
+            rt.reservation_date desc
     </select>
 
-    <select id="getCountAllToAdmin" resultType="java.lang.Integer">
+    <select id="getCountAllToInfo" resultType="java.lang.Integer">
         select
             count(*)
         from
             reservation_tb
+    </select>
+
+    <select id="getAllToDoctor" resultMap="reservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dt.id as dt_id,
+            dt.name,
+            dt.depart
+        from
+            reservation_tb rt
+            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+        where
+            doctor_id = #{doctorId}
+        order by
+            rt.reservation_date desc
+    </select>
+
+    <select id="getCountAllToDoctor" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            doctor_id = #{doctorId}
     </select>
 
 

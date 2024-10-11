@@ -20,6 +20,7 @@ public class User {
     @JsonIgnore
     private String password;
     private String phoneNumber;
+    private String img;
     private int emailValid;
     private Set<UserRoles> userRoles;
 
