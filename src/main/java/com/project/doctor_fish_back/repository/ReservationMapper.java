@@ -19,7 +19,10 @@ public interface ReservationMapper {
     List<Reservation> getAllToUser(Long userId);
     int getCountAllToUser(Long userId);
 
-    List<Reservation> getAllToAdmin();
-    int getCountAllToAdmin();
+    List<Reservation> getAllToDoctor(Long doctorId);
+    int getCountAllToDoctor(Long doctorId);
+
+    List<Reservation> getAllToInfo();
+    int getCountAllToInfo();
 
 }

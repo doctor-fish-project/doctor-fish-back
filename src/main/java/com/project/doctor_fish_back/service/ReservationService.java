@@ -90,9 +90,9 @@ public class ReservationService {
                 .build();
     }
 
-    public RespGetReservationListDto getAllReservationsToAdmin() {
-        List<Reservation> reservations = reservationMapper.getAllToAdmin();
-        int totalCount = reservationMapper.getCountAllToAdmin();
+    public RespGetReservationListDto getAllReservationsToDoctor(Long doctorId) {
+        List<Reservation> reservations = reservationMapper.getAllToDoctor(doctorId);
+        int totalCount = reservationMapper.getCountAllToDoctor(doctorId);
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
@@ -100,7 +100,17 @@ public class ReservationService {
                 .build();
     }
 
-    public RespGetReservationDto getReservationToAdmin(Long reservationId) throws NotFoundException {
+    public RespGetReservationListDto getAllReservationsToInfo() {
+        List<Reservation> reservations = reservationMapper.getAllToInfo();
+        int totalCount = reservationMapper.getCountAllToInfo();
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservations)
+                .totalCount(totalCount)
+                .build();
+    }
+
+    public RespGetReservationDto getReservationToInfoAndDoctor(Long reservationId) throws NotFoundException {
         Reservation reservation = findReservationById(reservationId);
 
         return RespGetReservationDto.builder()

@@ -4,6 +4,7 @@ import com.project.doctor_fish_back.aspect.annotation.ValidAop;
 import com.project.doctor_fish_back.dto.request.review.ReqModifyReviewDto;
 import com.project.doctor_fish_back.dto.request.review.ReqWriteReviewDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
+import com.project.doctor_fish_back.exception.ReviewLikeException;
 import com.project.doctor_fish_back.service.ReviewService;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,24 @@ public class ReviewController {
     @DeleteMapping("/review/{reviewId}")
     public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) throws NotFoundException, AuthorityException {
         return ResponseEntity.ok().body(reviewService.deleteReview(reviewId));
+    }
+
+    // 리뷰 좋아요
+    @PostMapping("/review/like/{reviewId}")
+    public ResponseEntity<?> like(@PathVariable Long reviewId) throws NotFoundException, ReviewLikeException {
+        return ResponseEntity.ok().body(reviewService.like(reviewId));
+    }
+
+    // 리뷰 좋아요 취소
+    @DeleteMapping("/review/like/{reviewLikeId}")
+    public ResponseEntity<?> dislike(@PathVariable Long reviewLikeId) throws NotFoundException, AuthorityException {
+        return ResponseEntity.ok().body(reviewService.dislike(reviewLikeId));
+    }
+
+    // 리뷰 좋아요 수 조회
+    @GetMapping("/review/like/{reviewId}")
+    public ResponseEntity<?> getLikeCount(@PathVariable Long reviewId) throws NotFoundException {
+        return ResponseEntity.ok().body(reviewService.getLikeCount(reviewId));
     }
 
 }

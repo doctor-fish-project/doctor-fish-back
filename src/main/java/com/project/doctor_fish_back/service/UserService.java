@@ -2,6 +2,9 @@ package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.dto.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.entity.Role;
@@ -18,6 +21,7 @@ import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +35,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
+    @Value("${user.profile.img.default}")
+    private String defaultProfileImg;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -57,7 +64,7 @@ public class UserService {
     public Boolean insertUserAndUserRoles(ReqSignupDto dto) throws SignupException {
         User user = null;
         try {
-            user = dto.toEntity(passwordEncoder);
+            user = dto.toEntity(passwordEncoder, defaultProfileImg);
             userMapper.save(user);
 
             Role role = roleMapper.findByName("ROLE_USER");
@@ -127,11 +134,71 @@ public class UserService {
                 .build();
     }
 
+    public Boolean modifyUser(Long userId, ReqModifyUserDto dto) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userMapper.findById(userId);
+
+        if(user == null) {
+            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        if(user.getId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        if(dto.getImg() == null || dto.getImg().equals("")) {
+            dto.setImg(defaultProfileImg);
+        }
+
+        userMapper.modify(dto.toEntity(userId));
+
+        return true;
+    }
+
+    public Boolean modifyUserEmail(Long userId, ReqModifyUserEmailDto dto) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userMapper.findById(userId);
+
+        if(user == null) {
+            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        if(user.getId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        userMapper.modifyEmail(dto.toEntity(userId));
+        userMapper.modifyEmailValidByEmail(dto.getEmail());
+        emailService.sendAuthMail(dto.getEmail());
+
+        return true;
+    }
+
+    public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userMapper.findById(userId);
+
+        if(user == null) {
+            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        if(user.getId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+
+        return true;
+    }
+
     @Transactional(rollbackFor = SignupException.class)
     public Boolean insertAdminAndUserRoles(ReqSignupDto dto) throws SignupException {
         User user = null;
         try {
-            user = dto.toEntity(passwordEncoder);
+            user = dto.toEntity(passwordEncoder, defaultProfileImg);
             userMapper.save(user);
 
             Role role = roleMapper.findByName("ROLE_ADMIN");
@@ -156,20 +223,26 @@ public class UserService {
         return true;
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public Boolean deleteUser(Long userId) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        User user = userMapper.findById(userId);
+            User user = userMapper.findById(userId);
 
-        if(user == null) {
-            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+            if(user == null) {
+                throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+            }
+
+            if(user.getId() != principalUser.getId()) {
+                throw new AuthorityException("권한이 없습니다.");
+            }
+
+            userMapper.deleteById(userId);
+            userRolesMapper.deleteByUserId(userId);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-
-        if(user.getId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
-        userMapper.deleteById(userId);
 
         return true;
     }
