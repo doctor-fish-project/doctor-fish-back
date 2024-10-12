@@ -10,11 +10,13 @@
         insert into doctor_tb
         values(default, #{name}, #{depart})
     </insert>
+
     <select id="getDoctors" resultType="com.project.doctor_fish_back.entity.Doctor">
         select
             id,
             name,
-            depart
+            depart,
+            img
         from
             doctor_tb
     </select>
