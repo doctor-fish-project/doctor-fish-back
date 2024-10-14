@@ -22,6 +22,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // 사용자 전체 조회
+    @GetMapping("/user/list")
+    public ResponseEntity<?> getUserList() {
+        return ResponseEntity.ok().body(userService.getUserList());
+    }
+
     // 사용자 내 정보 조회
     @GetMapping("/user/me")
     public ResponseEntity<?> getUserMe() {

@@ -30,7 +30,7 @@
             id = #{id}
     </select>
 
-    <select id="getLikeCountByReviewId" resultType="java.lang.Integer">
+    <select id="getLikeCountByReviewId" resultType="java.lang.Long">
         select
             count(*)
         from

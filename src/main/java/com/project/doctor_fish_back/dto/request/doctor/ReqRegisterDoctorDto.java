@@ -6,12 +6,18 @@ import lombok.Data;
 @Data
 public class ReqRegisterDoctorDto {
     private String name;
-    private String depart;
+    private String departName;
+    private String img;
+    private String comment;
+    private String record;
 
-    public Doctor toEntity() {
+    public Doctor toEntity(Long departId) {
         return Doctor.builder()
                 .name(name)
-                .depart(depart)
+                .departId(departId)
+                .img(img)
+                .comment(comment)
+                .record(record)
                 .build();
     }
 }

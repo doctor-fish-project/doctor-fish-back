@@ -9,7 +9,7 @@ import java.util.List;
 public interface CommentMapper {
     int save(Comment comment);
     List<Comment> findAllByReviewId(Long reviewId);
-    int getCommentCountByReviewId(Long reviewId);
+    Long getCommentCountByReviewId(Long reviewId);
     int modifyById(Comment comment);
     Comment findById(Long id);
     int deleteById(Long id);

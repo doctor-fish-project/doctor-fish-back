@@ -38,7 +38,7 @@ public class ReviewService {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<Review> reviews = reviewMapper.getReviewsToUser(principalUser.getId());
-        int reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
+        Long reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
 
         return RespGetReviewListDto.builder()
                 .reviews(reviews)
@@ -136,7 +136,7 @@ public class ReviewService {
         Long userId = principalUser.getId();
 
         ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
-        int likeCount = reviewLikeMapper.getLikeCountByReviewId(reviewId);
+        Long likeCount = reviewLikeMapper.getLikeCountByReviewId(reviewId);
 
         return RespReviewLikeInfoDto.builder()
                 .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())

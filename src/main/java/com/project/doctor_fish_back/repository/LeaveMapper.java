@@ -16,8 +16,8 @@ public interface LeaveMapper {
     int deleteById(Long id);
 
     List<Leave> getAllToDoctor(Long doctorId);
-    int getCountAllToDoctor(Long doctorId);
+    Long getCountAllToDoctor(Long doctorId);
 
     List<Leave> getAllToInfo();
-    int getCountAllToInfo();
+    Long getCountAllToInfo();
 }

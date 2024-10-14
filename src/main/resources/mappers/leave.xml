@@ -60,7 +60,7 @@
             doctor_id = #{doctorId}
     </select>
 
-    <select id="getCountAllToDoctor" resultType="java.lang.Integer">
+    <select id="getCountAllToDoctor" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -82,7 +82,7 @@
             leave_tb
     </select>
 
-    <select id="getCountAllToInfo" resultType="java.lang.Integer">
+    <select id="getCountAllToInfo" resultType="java.lang.Long">
         select
             count(*)
         from

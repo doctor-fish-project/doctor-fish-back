@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class RespGetReviewListDto {
     private List<Review> reviews;
-    private int reviewCount;
+    private Long reviewCount;
 }
