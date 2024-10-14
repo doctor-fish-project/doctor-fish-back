@@ -42,7 +42,7 @@
             review_id = #{reviewId}
     </select>
 
-    <select id="getCommentCountByReviewId" resultType="java.lang.Integer">
+    <select id="getCommentCountByReviewId" resultType="java.lang.Long">
         select
             count(*)
         from

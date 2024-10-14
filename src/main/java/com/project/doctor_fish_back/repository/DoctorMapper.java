@@ -8,6 +8,6 @@ import java.util.List;
 @Mapper
 public interface DoctorMapper {
     int save(Doctor doctor);
-
-    List<Doctor> getDoctors();
+    List<Doctor> getAll();
+    Long getCountAll();
 }

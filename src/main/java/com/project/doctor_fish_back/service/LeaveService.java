@@ -26,7 +26,7 @@ public class LeaveService {
 
     public RespGetLeaveListDto getAllLeavesToDoctor(Long doctorId) {
         List<Leave> leaves = leaveMapper.getAllToDoctor(doctorId);
-        int leaveCount = leaveMapper.getCountAllToDoctor(doctorId);
+        Long leaveCount = leaveMapper.getCountAllToDoctor(doctorId);
 
         return RespGetLeaveListDto.builder()
                 .leaves(leaves)
@@ -36,7 +36,7 @@ public class LeaveService {
 
     public RespGetLeaveListDto getAllLeavesToInfo() {
         List<Leave> leaves = leaveMapper.getAllToInfo();
-        int leaveCount = leaveMapper.getCountAllToInfo();
+        Long leaveCount = leaveMapper.getCountAllToInfo();
 
         return RespGetLeaveListDto.builder()
                 .leaves(leaves)

@@ -6,6 +6,7 @@ import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.dto.response.auth.RespSigninDto;
+import com.project.doctor_fish_back.dto.response.user.RespGetUserListDto;
 import com.project.doctor_fish_back.dto.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.entity.Role;
 import com.project.doctor_fish_back.entity.User;
@@ -29,6 +30,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -117,6 +119,16 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public RespGetUserListDto getUserList() {
+        List<User> users = userMapper.getAll();
+        Long userCount = userMapper.getCountAll();
+
+        return RespGetUserListDto.builder()
+                .users(users)
+                .userCount(userCount)
+                .build();
     }
 
     public RespUserInfoDto getUserInfo(Long id) {

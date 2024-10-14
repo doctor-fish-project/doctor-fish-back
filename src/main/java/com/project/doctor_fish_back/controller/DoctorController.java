@@ -18,10 +18,11 @@ public class DoctorController {
     // 의사 등록
     @PostMapping("/doctor/register")
     public ResponseEntity<?> register(@RequestBody ReqRegisterDoctorDto dto) {
-        return ResponseEntity.ok().body(doctorService.registerDoctor(dto));
+        return ResponseEntity.ok().body(doctorService.insertDoctorAndDepart(dto));
     }
 
-    @GetMapping("/doctors")
+    // 의사 전체 조회
+    @GetMapping("/doctor/list")
     public ResponseEntity<?> getDoctors() {
         return ResponseEntity.ok().body(doctorService.getDoctors());
     }

@@ -9,13 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Doctor {
+public class Depart {
     private Long id;
     private String name;
-    private Long departId;
-    private String img;
-    private String comment;
-    private String record;
-
-    private Depart depart;
 }

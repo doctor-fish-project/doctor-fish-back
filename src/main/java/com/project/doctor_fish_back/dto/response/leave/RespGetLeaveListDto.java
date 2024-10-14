@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class RespGetLeaveListDto {
     private List<Leave> leaves;
-    private int leaveCount;
+    private Long leaveCount;
 }

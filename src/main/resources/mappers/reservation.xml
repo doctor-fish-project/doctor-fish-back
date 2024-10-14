@@ -17,10 +17,18 @@
     </resultMap>
 
     <resultMap id="doctorResultMap" type="com.project.doctor_fish_back.entity.Doctor">
-        <id property="id" column="dt_id" />
-        <result property="name" column="name" />
-        <result property="depart" column="depart" />
+        <id property="id" column="dot_id" />
+        <result property="name" column="dot_name" />
+        <result property="departId" column="depart_id" />
         <result property="img" column="img" />
+        <result property="comment" column="comment" />
+        <result property="record" column="record" />
+        <association property="depart" resultMap="departResultMap"/>
+    </resultMap>
+
+    <resultMap id="departResultMap" type="com.project.doctor_fish_back.entity.Depart">
+        <id property="id" column="det_id" />
+        <result property="name" column="det_name" />
     </resultMap>
 
     <insert id="register">
@@ -60,13 +68,18 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
-            dt.id as dt_id,
-            dt.name,
-            dt.depart,
-            dt.img
+            dot.id as dot_id,
+            dot.name as dot_name,
+            dot.depart_id,
+            dot.img,
+            dot.comment,
+            dot.record,
+            det.id as det_id,
+            det.name as det_name
         from
             reservation_tb rt
-            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
         where
             rt.id = #{id}
     </select>
@@ -79,13 +92,18 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
-            dt.id as dt_id,
-            dt.name,
-            dt.depart,
-            dt.img
+            dot.id as dot_id,
+            dot.name as dot_name,
+            dot.depart_id,
+            dot.img,
+            dot.comment,
+            dot.record,
+            det.id as det_id,
+            det.name as det_name
         from
             reservation_tb rt
-            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
         where
             user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
         order by
@@ -100,20 +118,25 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
-            dt.id as dt_id,
-            dt.name,
-            dt.depart,
-            dt.img
+            dot.id as dot_id,
+            dot.name as dot_name,
+            dot.depart_id,
+            dot.img,
+            dot.comment,
+            dot.record,
+            det.id as det_id,
+            det.name as det_name
         from
             reservation_tb rt
-            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
         where
             user_id = #{userId}
         order by
             rt.reservation_date desc
     </select>
 
-    <select id="getCountToUser" resultType="java.lang.Integer">
+    <select id="getCountToUser" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -122,7 +145,7 @@
             user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
     </select>
 
-    <select id="getCountAllToUser" resultType="java.lang.Integer">
+    <select id="getCountAllToUser" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -139,18 +162,23 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
-            dt.id as dt_id,
-            dt.name,
-            dt.depart,
-            dt.img
+            dot.id as dot_id,
+            dot.name as dot_name,
+            dot.depart_id,
+            dot.img,
+            dot.comment,
+            dot.record,
+            det.id as det_id,
+            det.name as det_name
         from
             reservation_tb rt
-            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
         order by
             rt.reservation_date desc
     </select>
 
-    <select id="getCountAllToInfo" resultType="java.lang.Integer">
+    <select id="getCountAllToInfo" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -165,20 +193,25 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
-            dt.id as dt_id,
-            dt.name,
-            dt.depart,
-            dt.img
+            dot.id as dot_id,
+            dot.name as dot_name,
+            dot.depart_id,
+            dot.img,
+            dot.comment,
+            dot.record,
+            det.id as det_id,
+            det.name as det_name
         from
             reservation_tb rt
-            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
         where
             doctor_id = #{doctorId}
         order by
             rt.reservation_date desc
     </select>
 
-    <select id="getCountAllToDoctor" resultType="java.lang.Integer">
+    <select id="getCountAllToDoctor" resultType="java.lang.Long">
         select
             count(*)
         from

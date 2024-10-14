@@ -14,15 +14,15 @@ public interface ReservationMapper {
     int deleteById(Long id);
 
     List<Reservation> getToUser(Long userId);
-    int getCountToUser(Long userId);
+    Long getCountToUser(Long userId);
 
     List<Reservation> getAllToUser(Long userId);
-    int getCountAllToUser(Long userId);
+    Long getCountAllToUser(Long userId);
 
     List<Reservation> getAllToDoctor(Long doctorId);
-    int getCountAllToDoctor(Long doctorId);
+    Long getCountAllToDoctor(Long doctorId);
 
     List<Reservation> getAllToInfo();
-    int getCountAllToInfo();
+    Long getCountAllToInfo();
 
 }

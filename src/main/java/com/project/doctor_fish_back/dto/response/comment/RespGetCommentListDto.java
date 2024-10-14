@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class RespGetCommentListDto {
     private List<Comment> comments;
-    private int commentCount;
+    private Long commentCount;
 }

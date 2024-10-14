@@ -6,17 +6,44 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.DoctorMapper">
 
+    <resultMap id="doctorResultMap" type="com.project.doctor_fish_back.entity.Doctor">
+        <id property="id" column="dot_id" />
+        <result property="name" column="dot_name" />
+        <result property="departId" column="depart_id" />
+        <result property="img" column="img" />
+        <result property="comment" column="comment" />
+        <result property="record" column="record" />
+        <association property="depart" resultMap="departResultMap" />
+    </resultMap>
+
+    <resultMap id="departResultMap" type="com.project.doctor_fish_back.entity.Depart">
+        <id property="id" column="det_id" />
+        <result property="name" column="det_name" />
+    </resultMap>
+
     <insert id="save">
         insert into doctor_tb
-        values(default, #{name}, #{depart})
+        values(default, #{name}, #{departId}, #{img}, #{comment}, #{record})
     </insert>
 
-    <select id="getDoctors" resultType="com.project.doctor_fish_back.entity.Doctor">
+    <select id="getAll" resultMap="doctorResultMap">
         select
-            id,
-            name,
-            depart,
-            img
+            dot.id as dot_id,
+            dot.name as dot_name,
+            dot.depart_id,
+            dot.img,
+            dot.comment,
+            dot.record,
+            det.id as det_id,
+            det.name as det_name
+        from
+            doctor_tb dot
+            left outer join depart_tb det on(dot.depart_id = det.id)
+    </select>
+
+    <select id="getCountAll" resultType="java.lang.Long">
+        select
+            count(*)
         from
             doctor_tb
     </select>
