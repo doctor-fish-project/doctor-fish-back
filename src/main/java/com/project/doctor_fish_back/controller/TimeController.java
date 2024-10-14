@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 public class TimeController {
 
@@ -21,7 +20,5 @@ public class TimeController {
 
     @GetMapping("/times/reserved")
     public ResponseEntity<?> getReservedTimes(ReqReservedTimeDto dto) {
-        System.out.println("요청");
-        log.info("{}", dto.getReservationDate());
         return ResponseEntity.ok().body(timeService.getReservedTimeList(dto));    }
 }

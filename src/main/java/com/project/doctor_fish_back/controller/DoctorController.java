@@ -21,7 +21,7 @@ public class DoctorController {
         return ResponseEntity.ok().body(doctorService.registerDoctor(dto));
     }
 
-    @GetMapping("/doctors")
+    @GetMapping("/doctor/list")
     public ResponseEntity<?> getDoctors() {
         return ResponseEntity.ok().body(doctorService.getDoctors());
     }

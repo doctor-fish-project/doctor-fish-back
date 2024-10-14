@@ -15,7 +15,7 @@ public class ReqSignupDto {
     private String email;
     @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*?])[A-Za-z\\d~!@#$%^&*?]{8,16}$", message = "비밀번호는 8자이상 16자이하의 영대소문, 숫자, 특수문자(~!@#$%^&*?)를 포함하여합니다.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*?])[A-Za-z\\d~!@#$%^&*?]{8,16}$", message = "8자이상 16자이하의 영대소문, 숫자, 특수문자(~!@#$%^&*?)")
     private String password;
     private String checkPassword;
     @NotBlank(message = "전화번호는 공백일 수 없습니다.")
