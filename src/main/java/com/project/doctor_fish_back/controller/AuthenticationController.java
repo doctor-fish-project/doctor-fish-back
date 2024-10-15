@@ -4,8 +4,10 @@ import com.project.doctor_fish_back.aspect.annotation.ValidAop;
 import com.project.doctor_fish_back.dto.request.auth.ReqAccessDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
+import com.project.doctor_fish_back.service.DoctorService;
 import com.project.doctor_fish_back.service.TokenService;
 import com.project.doctor_fish_back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,13 @@ public class AuthenticationController {
     @PostMapping("/admin/signup")
     public ResponseEntity<?> adminSignup(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
         return ResponseEntity.ok().body(userService.insertAdminAndUserRoles(dto));
+    }
+
+    // 의사 회원가입
+    @ValidAop
+    @PostMapping("/doctor/signup")
+    public ResponseEntity<?> doctorSignup(@Valid @RequestBody ReqDoctorSignupDto dto, BindingResult bindingResult) throws SignupException {
+        return ResponseEntity.ok().body(userService.doctorSignup(dto));
     }
 
     // 사용자 회원가입

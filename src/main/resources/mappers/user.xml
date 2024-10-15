@@ -67,6 +67,14 @@
             id = #{id}
     </update>
 
+    <update id="modifyEmailValidById">
+        update user_tb
+        set
+            email_valid = if(email_valid = 0, 1, 0)
+        where
+            id = #{id}
+    </update>
+
     <delete id="deleteById">
         delete
         from
