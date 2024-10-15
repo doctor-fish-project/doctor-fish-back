@@ -8,7 +8,6 @@
 
     <select id="getCategory" resultType="com.project.doctor_fish_back.entity.Category">
         select
-            crt.id,
             ct.id,
             ct.name,
             ct.icon,
@@ -18,7 +17,8 @@
             join category_tb ct on(crt.category_id = ct.id)
             join role_tb rt on(crt.role_id = rt.id)
         where
-            rt.id = #{roleId};
+            rt.id = #{roleId}
 
     </select>
+
 </mapper>

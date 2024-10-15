@@ -28,6 +28,11 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewService.writeReview(dto));
     }
 
+    @GetMapping("/review")
+    public ResponseEntity<?> getReviewAll() {
+        return ResponseEntity.ok().body(reviewService.getReviewAll());
+    }
+
     // 사용자 내 리뷰 전체 조회
     @GetMapping("/review/me")
     public ResponseEntity<?> getReviewsToUser() {

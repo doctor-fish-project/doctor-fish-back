@@ -1,6 +1,9 @@
 package com.project.doctor_fish_back.controller;
 
-import com.project.doctor_fish_back.dto.request.doctor.ReqRegisterDoctorDto;
+import com.project.doctor_fish_back.aspect.annotation.ValidAop;
+import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorPasswordDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorUsernameDto;
 import com.project.doctor_fish_back.service.DoctorService;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
