@@ -8,17 +8,18 @@
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into role_tb
-        values(default, #{name})
+        values(default, #{name}, #{position})
     </insert>
 
-    <select id="findByName" resultType="com.project.doctor_fish_back.entity.Role">
+    <select id="findByPosition" resultType="com.project.doctor_fish_back.entity.Role">
         select
             id,
-            name
+            name,
+            position
         from
             role_tb
         where
-            name = #{name}
+            position = #{position}
     </select>
 
 </mapper>

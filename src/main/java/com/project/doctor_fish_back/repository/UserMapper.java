@@ -17,4 +17,5 @@ public interface UserMapper {
     int modifyPassword(User user);
     List<User> getAll();
     Long getCountAll();
+    int modifyEmailValidById(Long id);
 }
