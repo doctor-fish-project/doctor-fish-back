@@ -24,6 +24,7 @@ public class ReviewController {
     @ValidAop
     @PostMapping("/review")
     public ResponseEntity<?> writeReview(@Valid @RequestBody ReqWriteReviewDto dto, BindingResult bindingResult) {
+        System.out.println(dto);
         return ResponseEntity.ok().body(reviewService.writeReview(dto));
     }
 
