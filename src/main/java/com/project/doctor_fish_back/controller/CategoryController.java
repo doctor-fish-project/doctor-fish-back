@@ -1,20 +1,19 @@
 package com.project.doctor_fish_back.controller;
 
-import com.project.doctor_fish_back.service.DoctorService;
+import com.project.doctor_fish_back.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DoctorController {
+public class CategoryController {
 
     @Autowired
-    private DoctorService doctorService;
+    private CategoryService categoryService;
 
-    // 의사 전체 조회
-    @GetMapping("/doctor/list")
-    public ResponseEntity<?> getDoctors() {
-        return ResponseEntity.ok().body(doctorService.getDoctors());
+    @GetMapping("/category")
+    public ResponseEntity<?> getCategory() {
+        return ResponseEntity.ok().body(categoryService.getCategory());
     }
 }
