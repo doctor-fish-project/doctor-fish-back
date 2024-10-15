@@ -12,4 +12,5 @@ public interface DoctorMapper {
     Long getCountAll();
     int modify(Doctor doctor);
     Doctor findById(Long id);
+    int deleteById(Long id);
 }
