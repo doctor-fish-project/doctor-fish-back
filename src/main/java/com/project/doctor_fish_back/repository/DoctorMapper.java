@@ -10,4 +10,6 @@ public interface DoctorMapper {
     int save(Doctor doctor);
     List<Doctor> getAll();
     Long getCountAll();
+    int modify(Doctor doctor);
+    Doctor findById(Long id);
 }
