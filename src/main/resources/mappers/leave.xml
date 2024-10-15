@@ -47,15 +47,21 @@
 
     <select id="getAllToDoctor" resultType="com.project.doctor_fish_back.entity.Leave">
         select
-            id,
-            doctor_id as doctorId,
-            status,
-            leave_date as leaveDate,
-            end_date as endDate,
-            register_date as registerDate,
-            update_date as updateDate
+            lt.id,
+            lt.doctor_id as doctorId,
+            lt.status,
+            lt.leave_date as leaveDate,
+            lt.end_date as endDate,
+            lt.register_date as registerDate,
+            lt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            dpt.name as departName
         from
-            leave_tb
+            leave_tb lt
+            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
+            left outer join user_tb ut on(dt.user_id = ut.id)
+            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
         where
             doctor_id = #{doctorId}
     </select>
@@ -71,15 +77,21 @@
 
     <select id="getAllToInfo" resultType="com.project.doctor_fish_back.entity.Leave">
         select
-            id,
-            doctor_id as doctorId,
-            status,
-            leave_date as leaveDate,
-            end_date as endDate,
-            register_date as registerDate,
-            update_date as updateDate
+            lt.id,
+            lt.doctor_id as doctorId,
+            lt.status,
+            lt.leave_date as leaveDate,
+            lt.end_date as endDate,
+            lt.register_date as registerDate,
+            lt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            dpt.name as departName
         from
-            leave_tb
+            leave_tb lt
+            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
+            left outer join user_tb ut on(dt.user_id = ut.id)
+            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
     </select>
 
     <select id="getCountAllToInfo" resultType="java.lang.Long">
@@ -91,17 +103,23 @@
 
     <select id="findLeaveById" resultType="com.project.doctor_fish_back.entity.Leave">
         select
-            id,
-            doctor_id as doctorId,
-            status,
-            leave_date as leaveDate,
-            end_date as endDate,
-            register_date as registerDate,
-            update_date as updateDate
+            lt.id,
+            lt.doctor_id as doctorId,
+            lt.status,
+            lt.leave_date as leaveDate,
+            lt.end_date as endDate,
+            lt.register_date as registerDate,
+            lt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            dpt.name as departName
         from
-            leave_tb
+            leave_tb lt
+            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
+            left outer join user_tb ut on(dt.user_id = ut.id)
+            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
         where
-            id = #{id}
+            lt.id = #{id}
     </select>
 
 </mapper>

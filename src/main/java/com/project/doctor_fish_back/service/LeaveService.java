@@ -59,6 +59,9 @@ public class LeaveService {
                 .endDate(leave.getEndDate())
                 .registerDate(leave.getRegisterDate())
                 .updateDate(leave.getUpdateDate())
+                .userName(leave.getUserName())
+                .userImg(leave.getUserImg())
+                .departName(leave.getDepartName())
                 .build();
     }
 
