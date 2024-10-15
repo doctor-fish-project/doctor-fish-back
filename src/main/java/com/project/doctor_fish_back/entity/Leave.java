@@ -19,4 +19,8 @@ public class Leave {
     private LocalDateTime endDate;
     private LocalDateTime registerDate;
     private LocalDateTime updateDate;
+
+    private String userName;
+    private String userImg;
+    private String departName;
 }
