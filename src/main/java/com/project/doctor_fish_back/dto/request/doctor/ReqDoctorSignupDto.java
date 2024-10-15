@@ -10,6 +10,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class ReqDoctorSignupDto {
     @NotBlank(message = "아이디는 공백일 수 없습니다.")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "아이디는 영어여야합니다.")
     private String username;
     @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
