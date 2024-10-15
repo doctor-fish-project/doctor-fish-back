@@ -8,7 +8,7 @@
 
     <resultMap id="reservationResultMap" type="com.project.doctor_fish_back.entity.Reservation">
         <id property="id" column="rt_id" />
-        <result property="userId" column="user_id" />
+        <result property="userId" column="rt_user_id" />
         <result property="doctorId" column="doctor_id" />
         <result property="status" column="status" />
         <result property="reservationDate" column="reservation_date" />
@@ -18,10 +18,22 @@
 
     <resultMap id="doctorResultMap" type="com.project.doctor_fish_back.entity.Doctor">
         <id property="id" column="dot_id" />
+        <result property="userId" column="dot_user_id" />
         <result property="departId" column="depart_id" />
         <result property="comment" column="comment" />
         <result property="record" column="record" />
+        <association property="user" resultMap="userResultMap"/>
         <association property="depart" resultMap="departResultMap"/>
+    </resultMap>
+
+    <resultMap id="userResultMap" type="com.project.doctor_fish_back.entity.User">
+        <id property="id" column="ut_id" />
+        <result property="email" column="email" />
+        <result property="name" column="ut_name" />
+        <result property="password" column="password" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="img" column="ut_img" />
+        <result property="emailValid" column="email_valid" />
     </resultMap>
 
     <resultMap id="departResultMap" type="com.project.doctor_fish_back.entity.Depart">
@@ -61,20 +73,29 @@
     <select id="findById" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
-            rt.user_id,
+            rt.user_id as rt_user_id,
             rt.doctor_id,
             rt.status,
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
+            dot.user_id as dot_user_id,
             dot.depart_id,
             dot.comment,
             dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
             det.id as det_id,
             det.name as det_name
         from
             reservation_tb rt
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
             rt.id = #{id}
@@ -83,23 +104,32 @@
     <select id="getToUser" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
-            rt.user_id,
+            rt.user_id as rt_user_id,
             rt.doctor_id,
             rt.status,
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
+            dot.user_id as dot_user_id,
             dot.depart_id,
             dot.comment,
             dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
             det.id as det_id,
             det.name as det_name
         from
             reservation_tb rt
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
-            rt.user_id = #{userId} and DATE(rt.reservation_date) = DATE(NOW())
+            rt.user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
         order by
             rt.reservation_date desc
     </select>
@@ -107,20 +137,29 @@
     <select id="getAllToUser" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
-            rt.user_id,
+            rt.user_id as rt_user_id,
             rt.doctor_id,
             rt.status,
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
+            dot.user_id as dot_user_id,
             dot.depart_id,
             dot.comment,
             dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
             det.id as det_id,
             det.name as det_name
         from
             reservation_tb rt
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
             rt.user_id = #{userId}
@@ -149,20 +188,29 @@
     <select id="getAllToInfo" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
-            rt.user_id,
+            rt.user_id as rt_user_id,
             rt.doctor_id,
             rt.status,
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
+            dot.user_id as dot_user_id,
             dot.depart_id,
             dot.comment,
             dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
             det.id as det_id,
             det.name as det_name
         from
             reservation_tb rt
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         order by
             rt.reservation_date desc
@@ -178,23 +226,32 @@
     <select id="getAllToDoctor" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
-            rt.user_id,
+            rt.user_id as rt_user_id,
             rt.doctor_id,
             rt.status,
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
+            dot.user_id as dot_user_id,
             dot.depart_id,
             dot.comment,
             dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
             det.id as det_id,
             det.name as det_name
         from
             reservation_tb rt
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
-            rt.doctor_id = #{doctorId}
+            doctor_id = #{doctorId}
         order by
             rt.reservation_date desc
     </select>
