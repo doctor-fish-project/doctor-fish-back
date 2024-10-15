@@ -34,6 +34,16 @@ public class ReviewService {
         return true;
     }
 
+    public RespGetReviewListDto getReviewAll() {
+        List<Review> reviews = reviewMapper.getReviewAll();
+        Long reviewCount = reviewMapper.getReviewAllCount();
+
+        return RespGetReviewListDto.builder()
+                .reviews(reviews)
+                .reviewCount(reviewCount)
+                .build();
+    }
+
     public RespGetReviewListDto getReviewsToUser() {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

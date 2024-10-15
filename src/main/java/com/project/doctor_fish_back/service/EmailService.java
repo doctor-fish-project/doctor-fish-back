@@ -51,7 +51,7 @@ public class EmailService {
 
     public Boolean sendAuthMail(String toEmail) {
         StringBuilder htmlContent = new StringBuilder();
-        htmlContent.append("<div style='display:flex;justify-content:center;align-items:center;flex-direction:column;width:400px;'>");
+        htmlContent.append("<div style='display:flex;flex-direction:column;justify-content:center;align-items:center;flex-direction:column;width:100%;'>");
         htmlContent.append("<h2>회원가입을 완료하시려면 아래의 인증하기 버튼을 클릭하세요.</h2>");
         htmlContent.append("<a target='_blank' href='http://localhost:8080/auth/mail?token=");
         htmlContent.append(jwtProvider.generateEmailValidToken(toEmail));

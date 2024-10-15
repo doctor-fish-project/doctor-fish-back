@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.TableHeaderMapper">
+
+    <select id="getTableHeaders" resultType="com.project.doctor_fish_back.entity.TableHeader">
+        select
+            tht.id,
+            tht.name
+        from
+            table_header_tb tht
+            join category_table_headers_tb ctht on(ctht.table_header_id = tht.id)
+        where
+            ctht.category_id = #{categoryId}
+        order by
+            tht.id;
+    </select>
+
+
+</mapper>

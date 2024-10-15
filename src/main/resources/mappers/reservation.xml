@@ -131,7 +131,7 @@
         where
             rt.user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
         order by
-            rt.reservation_date desc
+            rt.reservation_date
     </select>
 
     <select id="getAllToUser" resultMap="reservationResultMap">

@@ -41,8 +41,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(
                             HttpMethod.POST,
-                        "/doctor/**",
-                        "/category"
+                        "/doctor/**"
+                )
+                .permitAll()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/category",
+                        "/tableheader",
+                        "/review"
                 )
                 .permitAll()
                 .anyRequest()
