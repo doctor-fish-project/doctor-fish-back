@@ -35,8 +35,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Value("${user.profile.img.default}")
-    private String defaultProfileImg;
+    @Value("${user.profile.user.img.default}")
+    private String userDefaultProfileImg;
+
+    @Value("${user.profile.doctor.img.default}")
+    private String doctorDefaultProfileImg;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -67,7 +70,7 @@ public class UserService {
     public Boolean insertUserAndUserRoles(ReqSignupDto dto) throws SignupException {
         User user = null;
         try {
-            user = dto.toEntity(passwordEncoder, defaultProfileImg);
+            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
             userMapper.save(user);
 
             Role role = roleMapper.findByPosition("ROLE_USER");
@@ -161,7 +164,7 @@ public class UserService {
         }
 
         if(dto.getImg() == null || dto.getImg().equals("")) {
-            dto.setImg(defaultProfileImg);
+            dto.setImg(userDefaultProfileImg);
         }
 
         userMapper.modify(dto.toEntity(userId));
@@ -211,7 +214,7 @@ public class UserService {
     public Boolean insertAdminAndUserRoles(ReqSignupDto dto) throws SignupException {
         User user = null;
         try {
-            user = dto.toEntity(passwordEncoder, defaultProfileImg);
+            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
             userMapper.save(user);
 
             Role role = roleMapper.findByPosition("ROLE_ADMIN");
@@ -241,7 +244,7 @@ public class UserService {
         User user = null;
         try {
             if(dto.getImg() == null || dto.getImg().equals("")) {
-                dto.setImg(defaultProfileImg);
+                dto.setImg(doctorDefaultProfileImg);
             }
 
             user = dto.toEntity(passwordEncoder);
