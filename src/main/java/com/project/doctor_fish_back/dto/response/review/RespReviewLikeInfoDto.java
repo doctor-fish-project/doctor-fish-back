@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class RespReviewLikeInfoDto {
     private Long reviewLikeId;
-    private int likeCount;
+    private Long likeCount;
 }

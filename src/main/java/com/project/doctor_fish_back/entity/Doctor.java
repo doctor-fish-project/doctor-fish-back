@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class Doctor {
     private Long id;
-    private String name;
-    private String depart;
+    private Long userId;
+    private Long departId;
+    private String comment;
+    private String record;
+
+    private User user;
+    private Depart depart;
 }

@@ -51,7 +51,7 @@ public class CommentService {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<Comment> comments = commentMapper.findAllByReviewId(reviewId);
-        int commentCount = commentMapper.getCommentCountByReviewId(reviewId);
+        Long commentCount = commentMapper.getCommentCountByReviewId(reviewId);
 
         return RespGetCommentListDto.builder()
                 .comments(comments)

@@ -1,6 +1,10 @@
 package com.project.doctor_fish_back.aspect;
 
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorPasswordDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorUsernameDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.exception.ValidException;
 import com.project.doctor_fish_back.service.UserService;
@@ -36,11 +40,23 @@ public class ValidAspect {
         }
 
         switch (proceedingJoinPoint.getSignature().getName()) {
+            case "doctorSignup":
+                validDoctorSignupDto(args, bindingResult);
+                break;
             case "userSignup":
-                validSignupDto(args, bindingResult);
+                validUserSignupDto(args, bindingResult);
                 break;
             case "modifyUserPassword":
                 validModifyUserPasswordDto(args, bindingResult);
+                break;
+            case "modifyUserEmail":
+                validModifyUserEmailDto(args, bindingResult);
+                break;
+            case "modifyDoctorUsername":
+                validModifyDoctorUsernameDto(args, bindingResult);
+                break;
+            case "modifyDoctorPassword":
+                validModifyDoctorPasswordDto(args, bindingResult);
                 break;
         }
 
@@ -51,7 +67,7 @@ public class ValidAspect {
         return proceedingJoinPoint.proceed();
     }
 
-    private void validSignupDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+    private void validUserSignupDto(Object[] args, BeanPropertyBindingResult bindingResult) {
         for(Object arg : args) {
             if(arg.getClass() == ReqSignupDto.class) {
                 ReqSignupDto dto = (ReqSignupDto) arg;
@@ -69,10 +85,67 @@ public class ValidAspect {
         }
     }
 
+    private void validDoctorSignupDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+        for(Object arg : args) {
+            if(arg.getClass() == ReqDoctorSignupDto.class) {
+                ReqDoctorSignupDto dto = (ReqDoctorSignupDto) arg;
+
+                if(!dto.getPassword().equals(dto.getCheckPassword())) {
+                    FieldError fieldError = new FieldError("checkPassword", "checkPassword", "비밀번호가 일치하지 않습니다.");
+                    bindingResult.addError(fieldError);
+                }
+
+                if(userService.isDuplicateEmail(dto.getUsername())) {
+                    FieldError fieldError = new FieldError("username", "username", "이미 존재하는 아이디입니다.");
+                    bindingResult.addError(fieldError);
+                }
+            }
+        }
+    }
+
+    private void validModifyUserEmailDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+        for(Object arg : args) {
+            if(arg.getClass() == ReqModifyUserEmailDto.class) {
+                ReqModifyUserEmailDto dto = (ReqModifyUserEmailDto) arg;
+
+                if(userService.isDuplicateEmail(dto.getEmail())) {
+                    FieldError fieldError = new FieldError("email", "email", "이미 존재하는 이메일입니다.");
+                    bindingResult.addError(fieldError);
+                }
+            }
+        }
+    }
+
     private void validModifyUserPasswordDto(Object[] args, BeanPropertyBindingResult bindingResult) {
         for(Object arg : args) {
             if(arg.getClass() == ReqModifyUserPasswordDto.class) {
                 ReqModifyUserPasswordDto dto = (ReqModifyUserPasswordDto) arg;
+
+                if(!dto.getPassword().equals(dto.getCheckPassword())) {
+                    FieldError fieldError = new FieldError("checkPassword", "checkPassword", "비밀번호가 일치하지 않습니다.");
+                    bindingResult.addError(fieldError);
+                }
+            }
+        }
+    }
+
+    private void validModifyDoctorUsernameDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+        for(Object arg : args) {
+            if(arg.getClass() == ReqModifyDoctorUsernameDto.class) {
+                ReqModifyDoctorUsernameDto dto = (ReqModifyDoctorUsernameDto) arg;
+
+                if(userService.isDuplicateEmail(dto.getUsername())) {
+                    FieldError fieldError = new FieldError("username", "username", "이미 존재하는 아이디입니다.");
+                    bindingResult.addError(fieldError);
+                }
+            }
+        }
+    }
+
+    private void validModifyDoctorPasswordDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+        for(Object arg : args) {
+            if(arg.getClass() == ReqModifyDoctorPasswordDto.class) {
+                ReqModifyDoctorPasswordDto dto = (ReqModifyDoctorPasswordDto) arg;
 
                 if(!dto.getPassword().equals(dto.getCheckPassword())) {
                     FieldError fieldError = new FieldError("checkPassword", "checkPassword", "비밀번호가 일치하지 않습니다.");

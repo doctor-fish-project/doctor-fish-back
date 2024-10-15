@@ -8,5 +8,9 @@ mybatis:
 
 user:
   profile:
-    img:
-      default: https://firebasestorage.googleapis.com/v0/b/userprofile-47d10.appspot.com/o/user%2Fdefault.png?alt=media&token=37dc1ece-c3dc-4da3-897e-0fbce05249ed
+    user:
+      img:
+        default: https://firebasestorage.googleapis.com/v0/b/userprofile-47d10.appspot.com/o/user%2Fdefault.png?alt=media&token=37dc1ece-c3dc-4da3-897e-0fbce05249ed
+    doctor:
+      img:
+        default: https://firebasestorage.googleapis.com/v0/b/userprofile-9dd9e.appspot.com/o/doctor%2FKakaoTalk_20241014_094635615.png?alt=media&token=84b66c11-215c-4a29-ba4b-fce031917ab5

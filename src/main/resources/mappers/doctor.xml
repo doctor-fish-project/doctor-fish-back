@@ -6,17 +6,103 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.DoctorMapper">
 
+    <resultMap id="doctorResultMap" type="com.project.doctor_fish_back.entity.Doctor">
+        <id property="id" column="dot_id" />
+        <result property="userId" column="user_id" />
+        <result property="departId" column="depart_id" />
+        <result property="comment" column="comment" />
+        <result property="record" column="record" />
+        <association property="user" resultMap="userResultMap" />
+        <association property="depart" resultMap="departResultMap" />
+    </resultMap>
+
+    <resultMap id="userResultMap" type="com.project.doctor_fish_back.entity.User">
+        <id property="id" column="ut_id" />
+        <result property="email" column="email" />
+        <result property="name" column="ut_name" />
+        <result property="password" column="password" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="img" column="img" />
+        <result property="emailValid" column="email_valid" />
+    </resultMap>
+
+    <resultMap id="departResultMap" type="com.project.doctor_fish_back.entity.Depart">
+        <id property="id" column="det_id" />
+        <result property="name" column="det_name" />
+    </resultMap>
+
     <insert id="save">
         insert into doctor_tb
-        values(default, #{name}, #{depart})
+        values(default, #{userId}, #{departId}, #{comment}, #{record})
     </insert>
-    <select id="getDoctors" resultType="com.project.doctor_fish_back.entity.Doctor">
-        select
-            id,
-            name,
-            depart
+
+    <update id="modify">
+        update doctor_tb
+        set
+            comment = #{comment},
+            record = #{record}
+        where
+            id = #{id}
+    </update>
+    <delete id="deleteById">
+        delete
         from
             doctor_tb
+        where
+            id = #{id}
+    </delete>
+
+    <select id="getAll" resultMap="doctorResultMap">
+        select
+            dot.id as dot_id,
+            dot.user_id,
+            dot.depart_id,
+            dot.comment,
+            dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img,
+            ut.email_valid,
+            det.id as det_id,
+            det.name as det_name
+        from
+            doctor_tb dot
+            left outer join user_tb ut on(dot.user_id = ut.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
+    </select>
+
+    <select id="getCountAll" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            doctor_tb
+    </select>
+
+    <select id="findById" resultMap="doctorResultMap">
+        select
+            dot.id as dot_id,
+            dot.user_id,
+            dot.depart_id,
+            dot.comment,
+            dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img,
+            ut.email_valid,
+            det.id as det_id,
+            det.name as det_name
+        from
+            doctor_tb dot
+            left outer join user_tb ut on(dot.user_id = ut.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
+        where
+            dot.id = #{id}
     </select>
 
 </mapper>

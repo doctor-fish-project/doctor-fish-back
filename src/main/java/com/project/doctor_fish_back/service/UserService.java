@@ -2,21 +2,19 @@ package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.dto.response.auth.RespSigninDto;
+import com.project.doctor_fish_back.dto.response.user.RespGetUserListDto;
 import com.project.doctor_fish_back.dto.response.user.RespUserInfoDto;
-import com.project.doctor_fish_back.entity.Role;
-import com.project.doctor_fish_back.entity.User;
-import com.project.doctor_fish_back.entity.UserRoles;
+import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.EmailValidException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
-import com.project.doctor_fish_back.repository.RoleMapper;
-import com.project.doctor_fish_back.repository.UserMapper;
-import com.project.doctor_fish_back.repository.UserRolesMapper;
+import com.project.doctor_fish_back.repository.*;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -29,6 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,8 +35,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Value("${user.profile.img.default}")
-    private String defaultProfileImg;
+    @Value("${user.profile.user.img.default}")
+    private String userDefaultProfileImg;
+
+    @Value("${user.profile.doctor.img.default}")
+    private String doctorDefaultProfileImg;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -51,6 +53,10 @@ public class UserService {
     private UserRolesMapper userRolesMapper;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private DepartMapper departMapper;
+    @Autowired
+    private DoctorMapper doctorMapper;
 
     public Boolean isDuplicateEmail(String email) {
         try {
@@ -64,13 +70,13 @@ public class UserService {
     public Boolean insertUserAndUserRoles(ReqSignupDto dto) throws SignupException {
         User user = null;
         try {
-            user = dto.toEntity(passwordEncoder, defaultProfileImg);
+            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
             userMapper.save(user);
 
-            Role role = roleMapper.findByName("ROLE_USER");
+            Role role = roleMapper.findByPosition("ROLE_USER");
 
             if (role == null) {
-                role = Role.builder().name("ROLE_USER").build();
+                role = Role.builder().name("회원").position("ROLE_USER").build();
                 roleMapper.save(role);
             }
 
@@ -119,6 +125,16 @@ public class UserService {
         return user;
     }
 
+    public RespGetUserListDto getUserList() {
+        List<User> users = userMapper.getAll();
+        Long userCount = userMapper.getCountAll();
+
+        return RespGetUserListDto.builder()
+                .users(users)
+                .userCount(userCount)
+                .build();
+    }
+
     public RespUserInfoDto getUserInfo(Long id) {
         User user = userMapper.findById(id);
         Set<String> roles = user.getUserRoles().stream().map(
@@ -148,7 +164,7 @@ public class UserService {
         }
 
         if(dto.getImg() == null || dto.getImg().equals("")) {
-            dto.setImg(defaultProfileImg);
+            dto.setImg(userDefaultProfileImg);
         }
 
         userMapper.modify(dto.toEntity(userId));
@@ -198,13 +214,13 @@ public class UserService {
     public Boolean insertAdminAndUserRoles(ReqSignupDto dto) throws SignupException {
         User user = null;
         try {
-            user = dto.toEntity(passwordEncoder, defaultProfileImg);
+            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
             userMapper.save(user);
 
-            Role role = roleMapper.findByName("ROLE_ADMIN");
+            Role role = roleMapper.findByPosition("ROLE_ADMIN");
 
             if (role == null) {
-                role = Role.builder().name("ROLE_ADMIN").build();
+                role = Role.builder().name("관리자").position("ROLE_ADMIN").build();
                 roleMapper.save(role);
             }
 
@@ -216,6 +232,55 @@ public class UserService {
             userRolesMapper.save(userRoles);
 
             user.setUserRoles(Set.of(userRoles));
+        } catch (Exception e) {
+            throw new SignupException(e.getMessage());
+        }
+
+        return true;
+    }
+
+    @Transactional(rollbackFor = SignupException.class)
+    public Boolean doctorSignup(ReqDoctorSignupDto dto) throws SignupException {
+        User user = null;
+        try {
+            if(dto.getImg() == null || dto.getImg().equals("")) {
+                dto.setImg(doctorDefaultProfileImg);
+            }
+
+            user = dto.toEntity(passwordEncoder);
+            userMapper.save(user);
+
+            userMapper.modifyEmailValidById(user.getId());
+
+            Role role = roleMapper.findByPosition("ROLE_DOCTOR");
+
+            if (role == null) {
+                role = Role.builder().name("의사").position("ROLE_DOCTOR").build();
+                roleMapper.save(role);
+            }
+
+            UserRoles userRoles = UserRoles.builder()
+                    .userId(user.getId())
+                    .roleId(role.getId())
+                    .build();
+
+            userRolesMapper.save(userRoles);
+
+            user.setUserRoles(Set.of(userRoles));
+
+            Depart depart = departMapper.findByName(dto.getDepartName());
+
+            if(depart == null) {
+                departMapper.save(Depart.builder().name(dto.getDepartName()).build());
+                depart = departMapper.findByName(dto.getDepartName());
+            }
+
+            Doctor doctor = Doctor.builder()
+                    .userId(user.getId())
+                    .departId(depart.getId())
+                    .build();
+
+            doctorMapper.save(doctor);
         } catch (Exception e) {
             throw new SignupException(e.getMessage());
         }

@@ -4,6 +4,7 @@ import com.project.doctor_fish_back.security.filter.JwtAccessTokenFilter;
 import com.project.doctor_fish_back.security.handler.AuthenticationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -35,8 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(
                         "/auth/**",
-                        "/admin/**",
-                        "/doctor/**"
+                        "/admin/**"
+                )
+                .permitAll()
+                .antMatchers(
+                            HttpMethod.POST,
+                        "/doctor/**",
+                        "/category"
                 )
                 .permitAll()
                 .anyRequest()

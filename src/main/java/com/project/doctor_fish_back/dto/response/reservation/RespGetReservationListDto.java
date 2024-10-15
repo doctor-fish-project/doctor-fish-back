@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class RespGetReservationListDto {
     private List<Reservation> reservations;
-    private Integer totalCount;
+    private Long totalCount;
 }

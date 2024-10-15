@@ -9,7 +9,7 @@ public interface ReviewLikeMapper {
     int save(ReviewLike reviewLike);
     int deleteById(Long id);
     ReviewLike findById(Long id);
-    int getLikeCountByReviewId(Long reviewId);
+    Long getLikeCountByReviewId(Long reviewId);
     ReviewLike findByReviewIdAndUserId(
             @Param("reviewId") Long reviewId,
             @Param("userId")  Long userId);

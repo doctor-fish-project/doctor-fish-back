@@ -9,7 +9,7 @@ import java.util.List;
 public interface ReviewMapper {
     int save(Review review);
     List<Review> getReviewsToUser(Long userId);
-    int getReviewCountByUserId(Long userId);
+    Long getReviewCountByUserId(Long userId);
     Review findById(Long id);
     int modify(Review review);
     int deleteById(Long id);

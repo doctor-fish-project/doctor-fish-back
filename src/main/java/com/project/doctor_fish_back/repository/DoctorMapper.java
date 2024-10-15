@@ -8,6 +8,9 @@ import java.util.List;
 @Mapper
 public interface DoctorMapper {
     int save(Doctor doctor);
-
-    List<Doctor> getDoctors();
+    List<Doctor> getAll();
+    Long getCountAll();
+    int modify(Doctor doctor);
+    Doctor findById(Long id);
+    int deleteById(Long id);
 }

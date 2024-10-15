@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.CategoryMapper">
+
+    <select id="getCategory" resultType="com.project.doctor_fish_back.entity.Category">
+        select
+            crt.id,
+            ct.id,
+            ct.name,
+            ct.icon,
+            ct.link
+        from
+            category_roles_tb crt
+            join category_tb ct on(crt.category_id = ct.id)
+            join role_tb rt on(crt.role_id = rt.id)
+        where
+            rt.id = #{roleId};
+
+    </select>
+</mapper>

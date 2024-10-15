@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.service;
 
+import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationListDto;
@@ -50,7 +51,7 @@ public class ReservationService {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<Reservation> reservations = reservationMapper.getToUser(principalUser.getId());
-        int totalCount = reservationMapper.getCountAllToUser(principalUser.getId());
+        Long totalCount = reservationMapper.getCountToUser(principalUser.getId());
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
@@ -62,7 +63,7 @@ public class ReservationService {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         List<Reservation> reservations = reservationMapper.getAllToUser(principalUser.getId());
-        int totalCount = reservationMapper.getCountToUser(principalUser.getId());
+        Long totalCount = reservationMapper.getCountAllToUser(principalUser.getId());
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
@@ -92,7 +93,7 @@ public class ReservationService {
 
     public RespGetReservationListDto getAllReservationsToDoctor(Long doctorId) {
         List<Reservation> reservations = reservationMapper.getAllToDoctor(doctorId);
-        int totalCount = reservationMapper.getCountAllToDoctor(doctorId);
+        Long totalCount = reservationMapper.getCountAllToDoctor(doctorId);
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
@@ -102,7 +103,7 @@ public class ReservationService {
 
     public RespGetReservationListDto getAllReservationsToInfo() {
         List<Reservation> reservations = reservationMapper.getAllToInfo();
-        int totalCount = reservationMapper.getCountAllToInfo();
+        Long totalCount = reservationMapper.getCountAllToInfo();
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
