@@ -45,6 +45,13 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(userService.doctorSignup(dto));
     }
 
+    // 관리자 로그인
+    @ValidAop
+    @PostMapping("/admin/signin")
+    public ResponseEntity<?> adminSignin(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
+        return ResponseEntity.ok().body(userService.insertAdminAndUserRoles(dto));
+    }
+
     // 사용자 회원가입
     @ValidAop
     @PostMapping("/auth/signup")

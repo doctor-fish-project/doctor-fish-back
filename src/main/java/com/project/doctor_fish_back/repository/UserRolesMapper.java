@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserRolesMapper {
     int save(UserRoles userRoles);
     int deleteByUserId(Long userId);
+    int findRoleIdByUserId(Long userId);
 }

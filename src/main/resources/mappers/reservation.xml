@@ -18,9 +18,7 @@
 
     <resultMap id="doctorResultMap" type="com.project.doctor_fish_back.entity.Doctor">
         <id property="id" column="dot_id" />
-        <result property="name" column="dot_name" />
         <result property="departId" column="depart_id" />
-        <result property="img" column="img" />
         <result property="comment" column="comment" />
         <result property="record" column="record" />
         <association property="depart" resultMap="departResultMap"/>
@@ -69,9 +67,7 @@
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
-            dot.name as dot_name,
             dot.depart_id,
-            dot.img,
             dot.comment,
             dot.record,
             det.id as det_id,
@@ -93,9 +89,7 @@
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
-            dot.name as dot_name,
             dot.depart_id,
-            dot.img,
             dot.comment,
             dot.record,
             det.id as det_id,
@@ -105,7 +99,7 @@
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
-            user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
+            rt.user_id = #{userId} and DATE(rt.reservation_date) = DATE(NOW())
         order by
             rt.reservation_date desc
     </select>
@@ -119,9 +113,7 @@
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
-            dot.name as dot_name,
             dot.depart_id,
-            dot.img,
             dot.comment,
             dot.record,
             det.id as det_id,
@@ -131,7 +123,7 @@
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
-            user_id = #{userId}
+            rt.user_id = #{userId}
         order by
             rt.reservation_date desc
     </select>
@@ -163,9 +155,7 @@
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
-            dot.name as dot_name,
             dot.depart_id,
-            dot.img,
             dot.comment,
             dot.record,
             det.id as det_id,
@@ -194,9 +184,7 @@
             rt.reservation_date,
             rt.register_date,
             dot.id as dot_id,
-            dot.name as dot_name,
             dot.depart_id,
-            dot.img,
             dot.comment,
             dot.record,
             det.id as det_id,
@@ -206,7 +194,7 @@
             left outer join doctor_tb dot on(rt.doctor_id = dot.id)
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
-            doctor_id = #{doctorId}
+            rt.doctor_id = #{doctorId}
         order by
             rt.reservation_date desc
     </select>
