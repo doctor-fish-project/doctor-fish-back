@@ -8,11 +8,13 @@ import com.project.doctor_fish_back.entity.Doctor;
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.repository.DoctorMapper;
 import com.project.doctor_fish_back.repository.UserMapper;
+import com.project.doctor_fish_back.repository.UserRolesMapper;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +30,8 @@ public class DoctorService {
     private DoctorMapper doctorMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserRolesMapper userRolesMapper;
 
     public RespGetDoctorListDto getDoctors() {
         List<Doctor> doctors = doctorMapper.getAll();
@@ -95,5 +99,25 @@ public class DoctorService {
 
         return true;
     }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Boolean deleteDoctor(Long doctorId) throws NotFoundException {
+        try {
+            Doctor doctor = doctorMapper.findById(doctorId);
+
+            if(doctor == null) {
+                throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
+            }
+
+            doctorMapper.deleteById(doctorId);
+            userMapper.deleteById(doctor.getUserId());
+            userRolesMapper.deleteByUserId(doctor.getUserId());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return true;
+    }
+
 
 }

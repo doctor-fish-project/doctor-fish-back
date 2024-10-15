@@ -48,4 +48,10 @@ public class DoctorController {
         return ResponseEntity.ok().body(doctorService.modifyDoctorPassword(doctorId, dto));
     }
 
+    // 의사 삭제
+    @DeleteMapping("/doctor/{doctorId}")
+    public ResponseEntity<?> deleteDoctor(@PathVariable Long doctorId) throws NotFoundException {
+        return ResponseEntity.ok().body(doctorService.deleteDoctor(doctorId));
+    }
+
 }
