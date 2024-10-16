@@ -14,7 +14,12 @@ public interface ReservationMapper {
     Reservation findById(Long id);
     int deleteById(Long id);
 
+
+    List<Reservation> getAll();
+    Long getCountAll();
+
     List<GetReservationMonth> getCountAndDoctorNameMonth(String year);
+
 
     List<Reservation> getToUser(Long userId);
     Long getCountToUser(Long userId);

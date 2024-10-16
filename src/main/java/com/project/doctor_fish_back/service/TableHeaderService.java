@@ -13,7 +13,7 @@ public class TableHeaderService {
     @Autowired
     private TableHeaderMapper tableHeaderMapper;
 
-    public List<TableHeader> getTableHeaders(Long categoryId) {
-        return tableHeaderMapper.getTableHeaders(categoryId);
+    public List<TableHeader> getTableHeaders(String pathName) {
+        return tableHeaderMapper.getTableHeaders(pathName);
     }
 }

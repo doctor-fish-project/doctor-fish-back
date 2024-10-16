@@ -34,6 +34,13 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservationService.cancelReservation(reservationId));
     }
 
+    // 전체 예약 조회
+    @GetMapping("/reservation/all")
+    public ResponseEntity<?> getReservationAll() {
+        System.out.println("요청");
+        return ResponseEntity.ok().body(reservationService.getReservations());
+    }
+
     // 사용자 오늘 예약 조회
     @GetMapping("/reservation/user")
     public ResponseEntity<?> getReservationToUser() {

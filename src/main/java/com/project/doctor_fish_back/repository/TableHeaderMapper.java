@@ -8,5 +8,5 @@ import java.util.List;
 @Mapper
 public interface TableHeaderMapper {
 
-    List<TableHeader> getTableHeaders(Long categoryId);
+    List<TableHeader> getTableHeaders(String pathName);
 }

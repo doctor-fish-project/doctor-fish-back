@@ -13,11 +13,11 @@
         from
             table_header_tb tht
             join category_table_headers_tb ctht on(ctht.table_header_id = tht.id)
+            join category_tb ct on(ct.id = ctht.category_id)
         where
-            ctht.category_id = #{categoryId}
+            ct.link = #{pathName}
         order by
             tht.id;
     </select>
-
 
 </mapper>
