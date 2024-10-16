@@ -70,6 +70,12 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservationService.getAllReservationsToInfo());
     }
 
+    // 월 별 예약 전체 조회
+    @GetMapping("/reservation/list/month/{year}")
+    public ResponseEntity<?> getAllReservationsMonth(@PathVariable String year) {
+        return ResponseEntity.ok().body(reservationService.getAllReservationsMonth(year));
+    }
+
     // 사용자 예약 삭제
     @DeleteMapping("/reservation/user/{reservationId}")
     public ResponseEntity<?> deleteReservationFromUser(@PathVariable Long reservationId) throws NotFoundException, AuthorityException {
