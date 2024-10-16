@@ -2,10 +2,14 @@ package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
+import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationCountMonth;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationListDto;
+import com.project.doctor_fish_back.entity.GetReservationMonth;
+import com.project.doctor_fish_back.entity.Month;
 import com.project.doctor_fish_back.entity.Reservation;
 import com.project.doctor_fish_back.exception.AuthorityException;
+import com.project.doctor_fish_back.repository.MonthMapper;
 import com.project.doctor_fish_back.repository.ReservationMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -13,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,6 +26,9 @@ public class ReservationService {
 
     @Autowired
     private ReservationMapper reservationMapper;
+
+    @Autowired
+    private MonthMapper monthMapper;
 
     public Boolean registerReservation(ReqRegisterReservationDto dto) {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -108,6 +116,27 @@ public class ReservationService {
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
                 .totalCount(totalCount)
+                .build();
+    }
+
+    public RespGetReservationCountMonth getAllReservationsMonth(String year) {
+        List<Month> months = monthMapper.getAll();
+        List<GetReservationMonth> getReservationMonths = reservationMapper.getCountAndDoctorNameMonth(year);
+
+        for(GetReservationMonth rm : getReservationMonths) {
+            String date = rm.getReservationDate();
+            String month = date.substring(date.length() - 2, date.length());
+
+            for(Month m : months) {
+                if(Integer.parseInt(month) == m.getId()) {
+                    rm.setMonthId(m.getId());
+                }
+            }
+        }
+
+        return RespGetReservationCountMonth.builder()
+                .months(months)
+                .getReservationMonths(getReservationMonths)
                 .build();
     }
 

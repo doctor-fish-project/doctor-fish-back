@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.repository;
 
+import com.project.doctor_fish_back.entity.GetReservationMonth;
 import com.project.doctor_fish_back.entity.Reservation;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,6 +13,8 @@ public interface ReservationMapper {
     int cancelById(Long id);
     Reservation findById(Long id);
     int deleteById(Long id);
+
+    List<GetReservationMonth> getCountAndDoctorNameMonth(String year);
 
     List<Reservation> getToUser(Long userId);
     Long getCountToUser(Long userId);
