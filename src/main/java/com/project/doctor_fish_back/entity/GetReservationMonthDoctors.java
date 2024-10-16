@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
-public class GetReservationMonth {
-    private String label;
-    private List<Integer> data;
+public class GetReservationMonthDoctors {
+    private Long id;
+    private String name;
 }

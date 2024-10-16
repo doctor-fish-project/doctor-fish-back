@@ -1,6 +1,6 @@
 package com.project.doctor_fish_back.repository;
 
-import com.project.doctor_fish_back.entity.GetReservationMonth;
+import com.project.doctor_fish_back.entity.GetReservationMonthDoctors;
 import com.project.doctor_fish_back.entity.Reservation;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,8 +18,8 @@ public interface ReservationMapper {
     List<Reservation> getAll();
     Long getCountAll();
 
-    List<GetReservationMonth> getCountAndDoctorNameMonth(String year);
-
+    List<GetReservationMonthDoctors> getDoctors(String year);
+    List<Integer> getCounts(Long doctorId);
 
     List<Reservation> getToUser(Long userId);
     Long getCountToUser(Long userId);

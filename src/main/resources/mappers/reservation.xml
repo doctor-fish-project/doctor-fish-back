@@ -50,10 +50,9 @@
         <result property="name" column="det_name" />
     </resultMap>
 
-    <resultMap id="getReservationMonthResultMap" type="com.project.doctor_fish_back.entity.GetReservationMonth">
-        <result property="reservationDate" column="reservation_date" />
-        <result property="count" column="count" />
-        <result property="doctorName" column="ut_name" />
+    <resultMap id="getReservationMonthResultMap" type="com.project.doctor_fish_back.entity.GetReservationMonthDoctors">
+        <result property="id" column="id" />
+        <result property="name" column="name" />
     </resultMap>
 
     <insert id="register">
@@ -308,20 +307,37 @@
             doctor_id = #{doctorId}
     </select>
 
-    <select id="getCountAndDoctorNameMonth" resultMap="getReservationMonthResultMap">
-        SELECT
-            DATE_FORMAT(`reservation_date`, '%Y-%m') as `reservation_date`,
-            ut.name as ut_name,
-            COUNT(*) as `count`
-        FROM
+    <select id="getDoctors" resultMap="getReservationMonthResultMap">
+        select
+            rt.doctor_id as id,
+            ut.name as name
+        from
             reservation_tb rt
-            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
-            left outer join user_tb ut on(dt.user_id = ut.id)
+            left join doctor_tb dt on(rt.doctor_id = dt.id)
+            left join user_tb ut on(dt.user_id = ut.id)
         where
-            `reservation_date` like concat(#{year}, "%")
-        GROUP BY MONTH(`reservation_date`), YEAR(`reservation_date`), ut.name
-        ORDER BY `reservation_date`
+            rt.reservation_date like concat(#{year}, "%")
+        group by
+            rt.doctor_id;
     </select>
 
+    <select id="getCounts" resultType="java.lang.Integer">
+        select
+            ifnull(temp_tb.count, 0)
+        from
+            month_tb mt
+            left outer join
+                (select
+                    substr(reservation_date, 6, 2) as id,
+                    count(*) as count
+                from
+                    reservation_tb
+                where
+                    doctor_id = #{doctorId}
+                group by
+                    substr(reservation_date, 6, 2)) as temp_tb on(mt.id = temp_tb.id)
+        order by
+            mt.id;
+    </select>
 
 </mapper>

@@ -5,9 +5,7 @@ import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservati
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationCountMonth;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationListDto;
-import com.project.doctor_fish_back.entity.GetReservationMonth;
-import com.project.doctor_fish_back.entity.Month;
-import com.project.doctor_fish_back.entity.Reservation;
+import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.repository.MonthMapper;
 import com.project.doctor_fish_back.repository.ReservationMapper;
@@ -131,24 +129,26 @@ public class ReservationService {
 
     public RespGetReservationCountMonth getAllReservationsMonth(String year) {
         List<Month> months = monthMapper.getAll();
-        List<GetReservationMonth> getReservationMonths = reservationMapper.getCountAndDoctorNameMonth(year);
+        List<GetReservationMonthDoctors> doctors = reservationMapper.getDoctors(year);
+        List<GetReservationMonth> reserveList = new ArrayList<>();
 
-        for(GetReservationMonth rm : getReservationMonths) {
-            String date = rm.getReservationDate();
-            String month = date.substring(date.length() - 2, date.length());
+        for(GetReservationMonthDoctors doctor : doctors) {
+            List<Integer> data = reservationMapper.getCounts(doctor.getId());
 
-            for(Month m : months) {
-                if(Integer.parseInt(month) == m.getId()) {
-                    rm.setMonthId(m.getId());
-                }
-            }
+            GetReservationMonth reserve = GetReservationMonth.builder()
+                    .label(doctor.getName())
+                    .data(data)
+                    .build();
+            reserveList.add(reserve);
+
         }
-
         return RespGetReservationCountMonth.builder()
                 .months(months)
-                .getReservationMonths(getReservationMonths)
+                .getReservationMonths(reserveList)
                 .build();
     }
+
+
 
     public RespGetReservationDto getReservationToInfoAndDoctor(Long reservationId) throws NotFoundException {
         Reservation reservation = findReservationById(reservationId);
