@@ -50,6 +50,12 @@
         <result property="name" column="det_name" />
     </resultMap>
 
+    <resultMap id="getReservationMonthResultMap" type="com.project.doctor_fish_back.entity.GetReservationMonth">
+        <result property="reservationDate" column="reservation_date" />
+        <result property="count" column="count" />
+        <result property="doctorName" column="ut_name" />
+    </resultMap>
+
     <insert id="register">
         insert into reservation_tb
         values(default, #{userId}, #{doctorId}, default, #{reservationDate}, now())
@@ -302,6 +308,20 @@
             doctor_id = #{doctorId}
     </select>
 
+    <select id="getCountAndDoctorNameMonth" resultMap="getReservationMonthResultMap">
+        SELECT
+            DATE_FORMAT(`reservation_date`, '%Y-%m') as `reservation_date`,
+            ut.name as ut_name,
+            COUNT(*) as `count`
+        FROM
+            reservation_tb rt
+            left outer join doctor_tb dt on(rt.doctor_id = dt.id)
+            left outer join user_tb ut on(dt.user_id = ut.id)
+        where
+            `reservation_date` like concat(#{year}, "%")
+        GROUP BY MONTH(`reservation_date`), YEAR(`reservation_date`), ut.name
+        ORDER BY `reservation_date`
+    </select>
 
 
 </mapper>
