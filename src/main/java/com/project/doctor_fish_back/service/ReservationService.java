@@ -47,6 +47,16 @@ public class ReservationService {
         return true;
     }
 
+    public RespGetReservationListDto getReservations() {
+        List<Reservation> reservations = reservationMapper.getAll();
+        Long totalCount = reservationMapper.getCountAll();
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservations)
+                .totalCount(totalCount)
+                .build();
+    }
+
     public RespGetReservationListDto getReservationsToUser() {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

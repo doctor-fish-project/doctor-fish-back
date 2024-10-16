@@ -6,6 +6,15 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.ReservationMapper">
 
+    <resultMap id="adminReservationResultMap" type="com.project.doctor_fish_back.entity.Reservation">
+        <id property="id" column="rt_id" />
+        <result property="userId" column="rt_user_id" />
+        <result property="status" column="status" />
+        <result property="reservationDate" column="reservation_date" />
+        <result property="registerDate" column="register_date" />
+        <association property="user" resultMap="userResultMap" />
+    </resultMap>
+
     <resultMap id="reservationResultMap" type="com.project.doctor_fish_back.entity.Reservation">
         <id property="id" column="rt_id" />
         <result property="userId" column="rt_user_id" />
@@ -101,6 +110,27 @@
             rt.id = #{id}
     </select>
 
+    <select id="getAll" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        order by
+            rt.reservation_date desc
+    </select>
+
     <select id="getToUser" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
@@ -165,6 +195,13 @@
             rt.user_id = #{userId}
         order by
             rt.reservation_date desc
+    </select>
+
+    <select id="getCountAll" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
     </select>
 
     <select id="getCountToUser" resultType="java.lang.Long">
@@ -264,6 +301,7 @@
         where
             doctor_id = #{doctorId}
     </select>
+
 
 
 </mapper>

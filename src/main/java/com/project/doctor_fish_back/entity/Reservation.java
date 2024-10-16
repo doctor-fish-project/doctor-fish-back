@@ -20,4 +20,5 @@ public class Reservation {
     private LocalDateTime registerDate;
 
     private Doctor doctor;
+    private User user;
 }
