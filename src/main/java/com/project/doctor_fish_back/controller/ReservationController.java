@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.controller;
 
+import com.project.doctor_fish_back.dto.request.reservation.ReqModifyReservationDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.service.ReservationService;
@@ -81,6 +82,12 @@ public class ReservationController {
     @GetMapping("/reservation/list/month/{year}")
     public ResponseEntity<?> getAllReservationsMonth(@PathVariable String year) {
         return ResponseEntity.ok().body(reservationService.getAllReservationsMonth(year));
+    }
+
+    // 예약 정보 수정
+    @PutMapping("/reservation/{reservationId}")
+    public ResponseEntity<?> modifyReservation(@PathVariable Long reservationId, @RequestBody ReqModifyReservationDto dto) throws NotFoundException, AuthorityException {
+        return ResponseEntity.ok().body(reservationService.modifyReservation(reservationId, dto));
     }
 
     // 사용자 예약 삭제
