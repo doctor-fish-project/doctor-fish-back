@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.service;
 
+import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorPasswordDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorUsernameDto;
@@ -43,12 +44,9 @@ public class DoctorService {
                 .build();
     }
 
-    public Boolean modifyDoctor(Long doctorId, ReqModifyDoctorDto dto) throws NotFoundException {
+    @NotFoundAop
+    public Boolean modifyDoctor(Long doctorId, ReqModifyDoctorDto dto) {
         Doctor doctor = doctorMapper.findById(doctorId);
-
-        if(doctor == null) {
-            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
 
         if(dto.getImg() == null || dto.getImg().equals("")) {
             dto.setImg(doctorDefaultProfileImg);
@@ -66,12 +64,9 @@ public class DoctorService {
         return true;
     }
 
-    public Boolean modifyDoctorUsername(Long doctorId, ReqModifyDoctorUsernameDto dto) throws NotFoundException {
+    @NotFoundAop
+    public Boolean modifyDoctorUsername(Long doctorId, ReqModifyDoctorUsernameDto dto) {
         Doctor doctor = doctorMapper.findById(doctorId);
-
-        if(doctor == null) {
-            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
 
         User user = User.builder()
                 .id(doctor.getUserId())
@@ -83,12 +78,9 @@ public class DoctorService {
         return true;
     }
 
-    public Boolean modifyDoctorPassword(Long doctorId, ReqModifyDoctorPasswordDto dto) throws NotFoundException {
+    @NotFoundAop
+    public Boolean modifyDoctorPassword(Long doctorId, ReqModifyDoctorPasswordDto dto) {
         Doctor doctor = doctorMapper.findById(doctorId);
-
-        if(doctor == null) {
-            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
 
         User user = User.builder()
                 .id(doctor.getUserId())
@@ -100,14 +92,11 @@ public class DoctorService {
         return true;
     }
 
+    @NotFoundAop
     @Transactional(rollbackFor = RuntimeException.class)
-    public Boolean deleteDoctor(Long doctorId) throws NotFoundException {
+    public Boolean deleteDoctor(Long doctorId) {
         try {
             Doctor doctor = doctorMapper.findById(doctorId);
-
-            if(doctor == null) {
-                throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-            }
 
             doctorMapper.deleteById(doctorId);
             userMapper.deleteById(doctor.getUserId());

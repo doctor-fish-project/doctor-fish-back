@@ -1,5 +1,7 @@
 package com.project.doctor_fish_back.service;
 
+import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
+import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqModifyReservationDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
@@ -41,19 +43,15 @@ public class ReservationService {
         return true;
     }
 
-    public Boolean acceptReservation(Long reservationId) throws NotFoundException {
-        findReservationById(reservationId);
-
+    @NotFoundAop
+    public Boolean acceptReservation(Long reservationId) {
         reservationMapper.acceptById(reservationId);
-
         return true;
     }
 
-    public Boolean cancelReservation(Long reservationId) throws NotFoundException {
-        findReservationById(reservationId);
-
+    @NotFoundAop
+    public Boolean cancelReservation(Long reservationId) {
         reservationMapper.cancelById(reservationId);
-
         return true;
     }
 
@@ -91,14 +89,10 @@ public class ReservationService {
                 .build();
     }
 
-    public RespGetReservationDto getReservationToUser(Long reservationId) throws AuthorityException, NotFoundException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Reservation reservation = findReservationById(reservationId);
-
-        if(reservation.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
+    @NotFoundAop
+    @AuthorityAop
+    public RespGetReservationDto getReservationToUser(Long reservationId) {
+        Reservation reservation = reservationMapper.findById(reservationId);
 
         return RespGetReservationDto.builder()
                 .id(reservation.getId())
@@ -152,8 +146,9 @@ public class ReservationService {
                 .build();
     }
 
-    public RespGetReservationDto getReservationToInfoAndDoctor(Long reservationId) throws NotFoundException {
-        Reservation reservation = findReservationById(reservationId);
+    @NotFoundAop
+    public RespGetReservationDto getReservationToInfoAndDoctor(Long reservationId) {
+        Reservation reservation = reservationMapper.findById(reservationId);
 
         return RespGetReservationDto.builder()
                 .id(reservation.getId())
@@ -165,6 +160,7 @@ public class ReservationService {
                 .doctor(reservation.getDoctor())
                 .build();
     }
+
 
     public Boolean modifyReservation(Long reservationId, ReqModifyReservationDto dto) throws NotFoundException, AuthorityException {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -194,16 +190,11 @@ public class ReservationService {
             throw new AuthorityException("권한이 없습니다.");
         }
 
-        if(reservation.getStatus() != 3) {
-            throw new AuthorityException("취소된 예약만 삭제할 수 있습니다.");
-        }
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean deleteReservationFromUser(Long reservationId) throws AuthorityException {
+        Reservation reservation = reservationMapper.findById(reservationId);
 
-        reservationMapper.deleteById(reservationId);
-        return true;
-    }
-
-    public Boolean deleteReservationFromAdmin(Long reservationId) throws NotFoundException, AuthorityException {
-        Reservation reservation = findReservationById(reservationId);
 
         if(reservation.getStatus() != 3) {
             throw new AuthorityException("취소된 예약만 삭제할 수 있습니다.");
@@ -212,6 +203,19 @@ public class ReservationService {
         reservationMapper.deleteById(reservationId);
         return true;
     }
+
+    @NotFoundAop
+    public Boolean deleteReservationFromAdmin(Long reservationId) throws AuthorityException {
+        Reservation reservation = reservationMapper.findById(reservationId);
+
+        if(reservation.getStatus() != 3) {
+            throw new AuthorityException("취소된 예약만 삭제할 수 있습니다.");
+        }
+
+        reservationMapper.deleteById(reservationId);
+        return true;
+    }
+
 
     private Reservation findReservationById(Long reservationId) throws NotFoundException {
         Reservation reservation = reservationMapper.findById(reservationId);
@@ -222,6 +226,7 @@ public class ReservationService {
 
         return reservation;
     }
+
 
 
 

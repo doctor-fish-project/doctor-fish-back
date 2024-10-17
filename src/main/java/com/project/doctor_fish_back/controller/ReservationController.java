@@ -25,13 +25,13 @@ public class ReservationController {
 
     // 예약 수락
     @PutMapping("/reservation/accept/{reservationId}")
-    public ResponseEntity<?> acceptReservation(@PathVariable Long reservationId) throws NotFoundException {
+    public ResponseEntity<?> acceptReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok().body(reservationService.acceptReservation(reservationId));
     }
 
     // 예약 취소
     @PutMapping("/reservation/cancel/{reservationId}")
-    public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) throws NotFoundException {
+    public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok().body(reservationService.cancelReservation(reservationId));
     }
 
@@ -56,7 +56,7 @@ public class ReservationController {
 
     // 사용자 예약 단건 조회
     @GetMapping("/reservation/user/{reservationId}")
-    public ResponseEntity<?> getReservationToUser(@PathVariable Long reservationId) throws AuthorityException, NotFoundException {
+    public ResponseEntity<?> getReservationToUser(@PathVariable Long reservationId) {
         return ResponseEntity.ok().body(reservationService.getReservationToUser(reservationId));
     }
 
@@ -68,7 +68,7 @@ public class ReservationController {
 
     // 의사, 원무과 예약 단건 조회
     @GetMapping("/reservation/info/{reservationId}")
-    public ResponseEntity<?> getReservationToInfoAndDoctor(@PathVariable Long reservationId) throws NotFoundException {
+    public ResponseEntity<?> getReservationToInfoAndDoctor(@PathVariable Long reservationId) {
         return ResponseEntity.ok().body(reservationService.getReservationToInfoAndDoctor(reservationId));
     }
 
@@ -92,13 +92,13 @@ public class ReservationController {
 
     // 사용자 예약 삭제
     @DeleteMapping("/reservation/user/{reservationId}")
-    public ResponseEntity<?> deleteReservationFromUser(@PathVariable Long reservationId) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> deleteReservationFromUser(@PathVariable Long reservationId) throws AuthorityException {
         return ResponseEntity.ok().body(reservationService.deleteReservationFromUser(reservationId));
     }
 
     // 관리자 예약 삭제
     @DeleteMapping("/reservation/admin/{reservationId}")
-    public ResponseEntity<?> deleteReservationFromAdmin(@PathVariable Long reservationId) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> deleteReservationFromAdmin(@PathVariable Long reservationId) throws AuthorityException {
         return ResponseEntity.ok().body(reservationService.deleteReservationFromAdmin(reservationId));
     }
 
