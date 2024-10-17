@@ -22,26 +22,26 @@ public class CommentController {
     // 댓글 작성
     @ValidAop
     @PostMapping("/review/comment")
-    public ResponseEntity<?> writeComment(@Valid @RequestBody ReqRegisterCommentDto dto, BindingResult bindingResult) throws NotFoundException {
+    public ResponseEntity<?> writeComment(@Valid @RequestBody ReqRegisterCommentDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(commentService.writeComment(dto));
     }
 
     // 댓글 조회
     @GetMapping("/review/{reviewId}/comments")
-    public ResponseEntity<?> getComments(@PathVariable Long reviewId) throws NotFoundException {
+    public ResponseEntity<?> getComments(@PathVariable Long reviewId) {
         return ResponseEntity.ok().body(commentService.getComments(reviewId));
     }
 
     // 댓글 수정
     @ValidAop
     @PutMapping("/review/comment")
-    public ResponseEntity<?> modifyComment(@Valid @RequestBody ReqModifyCommentDto dto, BindingResult bindingResult) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> modifyComment(@Valid @RequestBody ReqModifyCommentDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(commentService.modifyComment(dto));
     }
 
     // 댓글 삭제
     @DeleteMapping("/review/comment/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
         return ResponseEntity.ok().body(commentService.deleteComment(commentId));
     }
 

@@ -42,31 +42,31 @@ public class ReviewController {
     // 리뷰 수정
     @ValidAop
     @PutMapping("/review/{reviewId}")
-    public ResponseEntity<?> modifyReview(@PathVariable Long reviewId, @Valid @RequestBody ReqModifyReviewDto dto, BindingResult bindingResult) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> modifyReview(@PathVariable Long reviewId, @Valid @RequestBody ReqModifyReviewDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(reviewService.modifyReview(reviewId, dto));
     }
 
     // 리뷰 삭제
     @DeleteMapping("/review/{reviewId}")
-    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
         return ResponseEntity.ok().body(reviewService.deleteReview(reviewId));
     }
 
     // 리뷰 좋아요
     @PostMapping("/review/like/{reviewId}")
-    public ResponseEntity<?> like(@PathVariable Long reviewId) throws NotFoundException, ReviewLikeException {
+    public ResponseEntity<?> like(@PathVariable Long reviewId) throws ReviewLikeException {
         return ResponseEntity.ok().body(reviewService.like(reviewId));
     }
 
     // 리뷰 좋아요 취소
     @DeleteMapping("/review/like/{reviewLikeId}")
-    public ResponseEntity<?> dislike(@PathVariable Long reviewLikeId) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> dislike(@PathVariable Long reviewLikeId) {
         return ResponseEntity.ok().body(reviewService.dislike(reviewLikeId));
     }
 
     // 리뷰 좋아요 수 조회
     @GetMapping("/review/like/{reviewId}")
-    public ResponseEntity<?> getLikeCount(@PathVariable Long reviewId) throws NotFoundException {
+    public ResponseEntity<?> getLikeCount(@PathVariable Long reviewId) {
         return ResponseEntity.ok().body(reviewService.getLikeCount(reviewId));
     }
 

@@ -68,7 +68,7 @@
             comment_tb ct
             left outer join user_tb ut on(ct.user_id = ut.id)
         where
-            id = #{id}
+            ct.id = #{id}
     </select>
 
 </mapper>
