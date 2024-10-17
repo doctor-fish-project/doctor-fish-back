@@ -1,11 +1,13 @@
 package com.project.doctor_fish_back.service;
 
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.review.ReqModifyReviewDto;
 import com.project.doctor_fish_back.dto.request.review.ReqWriteReviewDto;
 import com.project.doctor_fish_back.dto.response.review.RespGetReviewListDto;
 import com.project.doctor_fish_back.dto.response.review.RespReviewLikeInfoDto;
+import com.project.doctor_fish_back.entity.Reservation;
 import com.project.doctor_fish_back.entity.Review;
 import com.project.doctor_fish_back.entity.ReviewLike;
 import com.project.doctor_fish_back.exception.AuthorityException;
@@ -38,6 +40,17 @@ public class ReviewService {
 
     public RespGetReviewListDto getReviewAll() {
         List<Review> reviews = reviewMapper.getReviewAll();
+        Long reviewCount = reviewMapper.getReviewAllCount();
+
+        return RespGetReviewListDto.builder()
+                .reviews(reviews)
+                .reviewCount(reviewCount)
+                .build();
+    }
+
+    public RespGetReviewListDto getReviewAllByLimit(ReqPageAndLimitDto dto) {
+        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+        List<Review> reviews = reviewMapper.getReviewAllByLimit(startIndex, dto.getLimit());
         Long reviewCount = reviewMapper.getReviewAllCount();
 
         return RespGetReviewListDto.builder()

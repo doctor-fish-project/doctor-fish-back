@@ -3,14 +3,13 @@ package com.project.doctor_fish_back.service;
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqModifyReservationDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationCountMonth;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationListDto;
-import com.project.doctor_fish_back.entity.GetReservationMonth;
-import com.project.doctor_fish_back.entity.Month;
-import com.project.doctor_fish_back.entity.Reservation;
+import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.repository.MonthMapper;
 import com.project.doctor_fish_back.repository.ReservationMapper;
@@ -55,13 +54,41 @@ public class ReservationService {
         return true;
     }
 
-    public RespGetReservationListDto getReservations() {
-        List<Reservation> reservations = reservationMapper.getAll();
+    public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
+        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+        List<Reservation> reservations = reservationMapper.getAll(startIndex, dto.getLimit());
         Long totalCount = reservationMapper.getCountAll();
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
                 .totalCount(totalCount)
+                .build();
+    }
+
+    public RespGetReservationListDto getReservationsToday(ReqPageAndLimitDto dto) {
+        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+        List<Reservation> reservations = reservationMapper.getToday(startIndex, dto.getLimit());
+        Long totalCount = reservationMapper.getCountToday();
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservations)
+                .totalCount(totalCount)
+                .build();
+    }
+
+    public RespGetReservationListDto getDashBoardReservations() {
+        Long limit = 6L;
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservationMapper.getAllByLimit(limit))
+                .build();
+    }
+
+    public RespGetReservationListDto getDashBoardReservationsToday() {
+        Long limit = 6L;
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservationMapper.getTodayByLimit(limit))
                 .build();
     }
 
@@ -127,22 +154,22 @@ public class ReservationService {
 
     public RespGetReservationCountMonth getAllReservationsMonth(String year) {
         List<Month> months = monthMapper.getAll();
-        List<GetReservationMonth> getReservationMonths = reservationMapper.getCountAndDoctorNameMonth(year);
+        List<GetReservationMonthDoctors> doctors = reservationMapper.getDoctors(year);
+        List<GetReservationMonth> reserveList = new ArrayList<>();
 
-        for(GetReservationMonth rm : getReservationMonths) {
-            String date = rm.getReservationDate();
-            String month = date.substring(date.length() - 2, date.length());
+        for(GetReservationMonthDoctors doctor : doctors) {
+            List<Integer> data = reservationMapper.getCounts(doctor.getId());
 
-            for(Month m : months) {
-                if(Integer.parseInt(month) == m.getId()) {
-                    rm.setMonthId(m.getId());
-                }
-            }
+            GetReservationMonth reserve = GetReservationMonth.builder()
+                    .label(doctor.getName())
+                    .data(data)
+                    .build();
+            reserveList.add(reserve);
+
         }
-
         return RespGetReservationCountMonth.builder()
                 .months(months)
-                .getReservationMonths(getReservationMonths)
+                .getReservationMonths(reserveList)
                 .build();
     }
 
