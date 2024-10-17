@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
+import com.project.doctor_fish_back.dto.request.reservation.ReqModifyReservationDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationCountMonth;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationDto;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,6 +166,25 @@ public class ReservationService {
                 .build();
     }
 
+    public Boolean modifyReservation(Long reservationId, ReqModifyReservationDto dto) throws NotFoundException, AuthorityException {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Reservation reservation = findReservationById(reservationId);
+
+        if(reservation == null) {
+            throw new NotFoundException("해당 예약을 찾을 수 없습니다.");
+        }
+
+        if(reservation.getUserId() != principalUser.getId()) {
+            throw new AuthorityException("권한이 없습니다.");
+        }
+
+        reservationMapper.modify(dto.toEntity(reservationId));
+
+        return true;
+
+    }
+
     public Boolean deleteReservationFromUser(Long reservationId) throws NotFoundException, AuthorityException {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -201,5 +222,7 @@ public class ReservationService {
 
         return reservation;
     }
+
+
 
 }

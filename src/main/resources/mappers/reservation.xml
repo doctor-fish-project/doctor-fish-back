@@ -77,6 +77,14 @@
             id = #{id}
     </update>
 
+    <update id="modify">
+       update reservation_tb
+        set
+            reservation_date = #{reservationDate}
+        where
+            id = #{id}
+    </update>
+
     <delete id="deleteById">
         delete
         from
