@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationCountMonth;
 import com.project.doctor_fish_back.dto.response.reservation.RespGetReservationDto;
@@ -53,8 +54,10 @@ public class ReservationService {
         return true;
     }
 
-    public RespGetReservationListDto getReservations() {
-        List<Reservation> reservations = reservationMapper.getAll();
+    public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
+        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+        List<Reservation> reservations = reservationMapper.getAll(startIndex, dto.getLimit());
+
         Long totalCount = reservationMapper.getCountAll();
 
         return RespGetReservationListDto.builder()

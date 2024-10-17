@@ -15,7 +15,7 @@ public interface ReservationMapper {
     int deleteById(Long id);
 
 
-    List<Reservation> getAll();
+    List<Reservation> getAll(Long startIndex, Long limit);
     Long getCountAll();
 
     List<GetReservationMonthDoctors> getDoctors(String year);

@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.controller;
 
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.service.ReservationService;
@@ -36,9 +37,9 @@ public class ReservationController {
 
     // 전체 예약 조회
     @GetMapping("/reservation/all")
-    public ResponseEntity<?> getReservationAll() {
+    public ResponseEntity<?> getReservationAll(ReqPageAndLimitDto dto) {
         System.out.println("요청");
-        return ResponseEntity.ok().body(reservationService.getReservations());
+        return ResponseEntity.ok().body(reservationService.getReservations(dto));
     }
 
     // 사용자 오늘 예약 조회

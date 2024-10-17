@@ -134,6 +134,7 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         order by
             rt.reservation_date desc
+        limit #{startIndex}, #{limit}
     </select>
 
     <select id="getToUser" resultMap="reservationResultMap">
