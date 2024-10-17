@@ -214,11 +214,7 @@ public class UserService {
     public Boolean doctorSignup(ReqDoctorSignupDto dto) throws SignupException {
         User user = null;
         try {
-            if(dto.getImg() == null || dto.getImg().equals("")) {
-                dto.setImg(doctorDefaultProfileImg);
-            }
-
-            user = dto.toEntity(passwordEncoder);
+            user = dto.toEntity(passwordEncoder, doctorDefaultProfileImg);
             userMapper.save(user);
 
             userMapper.modifyEmailValidById(user.getId());
