@@ -75,6 +75,7 @@ public class NotFoundAspect {
             case "cancelReservation":
             case "getReservationToUser":
             case "getReservationToInfoAndDoctor":
+            case "modifyReservation":
             case "deleteReservationFromUser":
             case "deleteReservationFromAdmin":
                 reservation(args);

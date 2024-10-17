@@ -161,54 +161,25 @@ public class ReservationService {
                 .build();
     }
 
-
-    public Boolean modifyReservation(Long reservationId, ReqModifyReservationDto dto) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Reservation reservation = findReservationById(reservationId);
-
-        if(reservation == null) {
-            throw new NotFoundException("해당 예약을 찾을 수 없습니다.");
-        }
-
-        if(reservation.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean modifyReservation(Long reservationId, ReqModifyReservationDto dto) {
         reservationMapper.modify(dto.toEntity(reservationId));
-
         return true;
-
     }
-
-    public Boolean deleteReservationFromUser(Long reservationId) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Reservation reservation = findReservationById(reservationId);
-
-        if(reservation.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean deleteReservationFromUser(Long reservationId) throws AuthorityException {
-        Reservation reservation = reservationMapper.findById(reservationId);
-
-
-        if(reservation.getStatus() != 3) {
-            throw new AuthorityException("취소된 예약만 삭제할 수 있습니다.");
-        }
-
+    public Boolean deleteReservationFromUser(Long reservationId) {
         reservationMapper.deleteById(reservationId);
         return true;
     }
 
     @NotFoundAop
-    public Boolean deleteReservationFromAdmin(Long reservationId) throws AuthorityException {
+    public Boolean deleteReservationFromAdmin (Long reservationId) throws AuthorityException {
         Reservation reservation = reservationMapper.findById(reservationId);
 
-        if(reservation.getStatus() != 3) {
+        if (reservation.getStatus() != 3) {
             throw new AuthorityException("취소된 예약만 삭제할 수 있습니다.");
         }
 
@@ -216,18 +187,5 @@ public class ReservationService {
         return true;
     }
 
-
-    private Reservation findReservationById(Long reservationId) throws NotFoundException {
-        Reservation reservation = reservationMapper.findById(reservationId);
-
-        if(reservation == null) {
-            throw new NotFoundException("해당 예약을 찾을 수 없습니다.");
-        }
-
-        return reservation;
-    }
-
-
-
-
 }
+
