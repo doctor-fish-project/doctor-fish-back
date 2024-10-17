@@ -49,7 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/category",
                         "/tableheader",
                         "/review",
+<<<<<<< HEAD
                         "reservation/all"
+=======
+                        "/test"
+>>>>>>> main
                 )
                 .permitAll()
                 .anyRequest()

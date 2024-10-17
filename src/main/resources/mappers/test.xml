@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.TestMapper">
+
+    <resultMap id="testResultMap" type="java.util.HashMap">
+        <id property="doctorId" column="doctor_id" />
+        <result property="name" column="name" />
+        <collection property="counts" javaType="java.util.ArrayList" ofType="java.util.HashMap">
+            <id property="month" column="month" />
+            <result property="count" column="count" />
+        </collection>
+    </resultMap>
+
+    <select id="test" resultMap="testResultMap">
+        select
+            dt.id as doctor_id,
+            ut.name,
+            mt.id as month,
+            ifnull(count, 0) as count
+        from
+            doctor_tb dt
+            join month_tb mt
+            left outer join (select
+                                substr(reservation_date, 6, 2) as id,
+                                doctor_id,
+                                count(*) as count
+                            from
+                                reservation_tb
+                            group by
+                                doctor_id,
+                                substr(reservation_date, 6, 2)
+                            order by doctor_id) rt on(rt.id = mt.id and dt.id = rt.doctor_id)
+            left outer join user_tb ut on(ut.id = dt.user_id)
+        order by
+            doctor_id,
+            month;
+    </select>
+
+</mapper>
