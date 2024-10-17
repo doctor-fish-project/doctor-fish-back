@@ -35,17 +35,34 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservationService.cancelReservation(reservationId));
     }
 
-    // 전체 예약 조회
+    // 관리자 페이지 전체 예약 조회
     @GetMapping("/reservation/all")
     public ResponseEntity<?> getReservationAll(ReqPageAndLimitDto dto) {
-        System.out.println("요청");
         return ResponseEntity.ok().body(reservationService.getReservations(dto));
+    }
+
+    // 관리자 페이지 오늘 예약 조회
+    @GetMapping("/reservation/today")
+    public ResponseEntity<?> getReservationToday(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reservationService.getReservationsToday(dto));
+    }
+
+    // 대쉬보드 전체 예약 조회
+    @GetMapping("/reservation/dashboard/all")
+    public ResponseEntity<?> getDashBoardReservationAll() {
+        return ResponseEntity.ok().body(reservationService.getDashBoardReservations());
     }
 
     // 사용자 오늘 예약 조회
     @GetMapping("/reservation/user")
     public ResponseEntity<?> getReservationToUser() {
         return ResponseEntity.ok().body(reservationService.getReservationsToUser());
+    }
+
+    // 대쉬보드 오늘 예약 조회
+    @GetMapping("/reservation/dashboard/today")
+    public ResponseEntity<?> getDashBoardReservationToday() {
+        return ResponseEntity.ok().body(reservationService.getDashBoardReservationsToday());
     }
 
     // 사용자 예약 전체 조회

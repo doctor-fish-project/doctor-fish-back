@@ -16,7 +16,7 @@ public interface ReviewMapper {
 
     List<Review> getReviewsToUser(Long userId);
     List<Review> getReviewAll();
-
+    List<Review> getReviewAllByLimit(Long startIndex, Long limit);
 
     Review findById(Long id);
 

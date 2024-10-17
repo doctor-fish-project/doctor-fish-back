@@ -9,8 +9,12 @@ import java.util.List;
 public interface AnnouncementMapper {
     int save(Announcement announcement);
     int modify(Announcement announcement);
-    Announcement findById(Long id);
     int deleteById(Long id);
-    List<Announcement> getAll();
+
     Long getCountAll();
+
+    Announcement findById(Long id);
+
+    List<Announcement> getAll();
+    List<Announcement> getAllByLimit(Long limit);
 }

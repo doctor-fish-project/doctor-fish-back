@@ -98,6 +98,15 @@ public class AnnouncementService {
                 .build();
     }
 
+    public RespGetAnnounceListDto getDashBoardAnnouncements() {
+        Long limit = 6L;
+        List<Announcement> announcements = announcementMapper.getAllByLimit(limit);
+
+        return RespGetAnnounceListDto.builder()
+                .announcements(announcements)
+                .build();
+    }
+
     public RespGetAnnounceDto getAnnouncement(Long announceId) throws NotFoundException {
         Announcement announcement = announcementMapper.findById(announceId);
 

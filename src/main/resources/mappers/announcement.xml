@@ -53,6 +53,23 @@
             update_date as updateDate
         from
             announcement_tb
+        order by
+            registerDate
+    </select>
+
+    <select id="getAllByLimit" resultType="com.project.doctor_fish_back.entity.Announcement">
+        select
+            id,
+            user_id as userId,
+            title,
+            content,
+            register_date as registerDate,
+            update_date as updateDate
+        from
+            announcement_tb
+        order by
+            registerDate
+        limit 0, #{limit}
     </select>
 
     <select id="getCountAll" resultType="java.lang.Long">

@@ -18,6 +18,12 @@ public interface ReservationMapper {
     List<Reservation> getAll(Long startIndex, Long limit);
     Long getCountAll();
 
+    List<Reservation> getToday(Long startIndex, Long limit);
+    Long getCountToday();
+
+    List<Reservation> getAllByLimit(Long limit);
+    List<Reservation> getTodayByLimit(Long limit);
+
     List<GetReservationMonthDoctors> getDoctors(String year);
     List<Integer> getCounts(Long doctorId);
 

@@ -48,8 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         HttpMethod.GET,
                         "/category",
                         "/tableheader",
-                        "/review",
-                        "reservation/all"
+                        "/review/**",
+                        "/reservation/**"
+
                 )
                 .permitAll()
                 .anyRequest()

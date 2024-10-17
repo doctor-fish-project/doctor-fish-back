@@ -57,12 +57,38 @@ public class ReservationService {
     public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
         Long startIndex = (dto.getPage() - 1) * dto.getLimit();
         List<Reservation> reservations = reservationMapper.getAll(startIndex, dto.getLimit());
-
         Long totalCount = reservationMapper.getCountAll();
 
         return RespGetReservationListDto.builder()
                 .reservations(reservations)
                 .totalCount(totalCount)
+                .build();
+    }
+
+    public RespGetReservationListDto getReservationsToday(ReqPageAndLimitDto dto) {
+        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+        List<Reservation> reservations = reservationMapper.getToday(startIndex, dto.getLimit());
+        Long totalCount = reservationMapper.getCountToday();
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservations)
+                .totalCount(totalCount)
+                .build();
+    }
+
+    public RespGetReservationListDto getDashBoardReservations() {
+        Long limit = 6L;
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservationMapper.getAllByLimit(limit))
+                .build();
+    }
+
+    public RespGetReservationListDto getDashBoardReservationsToday() {
+        Long limit = 6L;
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservationMapper.getTodayByLimit(limit))
                 .build();
     }
 
