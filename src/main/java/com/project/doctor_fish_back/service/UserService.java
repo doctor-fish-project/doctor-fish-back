@@ -223,16 +223,9 @@ public class UserService {
 
             userMapper.modifyEmailValidById(user.getId());
 
-            Role role = roleMapper.findByPosition("ROLE_DOCTOR");
-
-            if (role == null) {
-                role = Role.builder().name("의사").position("ROLE_DOCTOR").build();
-                roleMapper.save(role);
-            }
-
             UserRoles userRoles = UserRoles.builder()
                     .userId(user.getId())
-                    .roleId(role.getId())
+                    .roleId(dto.getRoleId())
                     .build();
 
             userRolesMapper.save(userRoles);
@@ -249,6 +242,8 @@ public class UserService {
             Doctor doctor = Doctor.builder()
                     .userId(user.getId())
                     .departId(depart.getId())
+                    .comment(dto.getComment())
+                    .record(dto.getRecord())
                     .build();
 
             doctorMapper.save(doctor);
