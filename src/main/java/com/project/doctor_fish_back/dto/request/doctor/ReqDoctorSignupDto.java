@@ -20,19 +20,18 @@ public class ReqDoctorSignupDto {
     private String checkPassword;
     @NotBlank(message = "전화번호는 공백일 수 없습니다.")
     private String phoneNumber;
-    private String img;
     @NotBlank(message = "부서이름은 공백일 수 없습니다.")
     private String departName;
     private String comment;
     private String record;
 
-    public User toEntity(BCryptPasswordEncoder passwordEncoder) {
+    public User toEntity(BCryptPasswordEncoder passwordEncoder, String doctorDefaultProfileImg) {
         return User.builder()
                 .email(username)
                 .name(name)
                 .password(passwordEncoder.encode(password))
                 .phoneNumber(phoneNumber)
-                .img(img)
+                .img(doctorDefaultProfileImg)
                 .build();
     }
 }
