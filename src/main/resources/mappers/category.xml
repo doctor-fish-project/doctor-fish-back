@@ -18,6 +18,8 @@
             join role_tb rt on(crt.role_id = rt.id)
         where
             rt.id = #{roleId}
+        order by
+            crt.category_id
 
     </select>
 
