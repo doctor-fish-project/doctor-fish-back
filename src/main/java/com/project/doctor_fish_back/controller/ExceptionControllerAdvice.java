@@ -45,10 +45,10 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(404).body(e.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtimeException(RuntimeException e) {
-        return ResponseEntity.status(500).body(e.getMessage());
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<?> runtimeException(RuntimeException e) {
+//        return ResponseEntity.status(500).body(e.getMessage());
+//    }
 
     @ExceptionHandler(ReviewLikeException.class)
     public ResponseEntity<?> reviewLikeException(ReviewLikeException e) {

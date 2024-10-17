@@ -35,31 +35,31 @@ public class LeaveController {
 
     // 의사, 원무과 연차 단건 조회
     @GetMapping("/leave/{leaveId}")
-    public ResponseEntity<?> getLeaveToDoctorAndInfo(@PathVariable Long leaveId) throws NotFoundException {
+    public ResponseEntity<?> getLeaveToDoctorAndInfo(@PathVariable Long leaveId) {
         return ResponseEntity.ok().body(leaveService.getLeaveToDoctorAndInfo(leaveId));
     }
 
     // 연차 수정
     @PutMapping("/leave/{leaveId}")
-    public ResponseEntity<?> modifyLeave(@PathVariable Long leaveId, @RequestBody ReqModifyLeaveDto dto) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> modifyLeave(@PathVariable Long leaveId, @RequestBody ReqModifyLeaveDto dto) {
         return ResponseEntity.ok().body(leaveService.modifyLeave(leaveId, dto));
     }
 
     // 연차 수락
     @PutMapping("/leave/accept/{leaveId}")
-    public ResponseEntity<?> acceptLeave(@PathVariable Long leaveId) throws NotFoundException {
+    public ResponseEntity<?> acceptLeave(@PathVariable Long leaveId) {
         return ResponseEntity.ok().body(leaveService.acceptLeave(leaveId));
     }
 
     // 연차 취소
     @PutMapping("/leave/cancel/{leaveId}")
-    public ResponseEntity<?> cancelLeave(@PathVariable Long leaveId) throws NotFoundException {
+    public ResponseEntity<?> cancelLeave(@PathVariable Long leaveId) {
         return ResponseEntity.ok().body(leaveService.cancelLeave(leaveId));
     }
 
     // 연차 삭제
     @DeleteMapping("/leave/{leaveId}")
-    public ResponseEntity<?> deleteLeave(@PathVariable Long leaveId) throws NotFoundException {
+    public ResponseEntity<?> deleteLeave(@PathVariable Long leaveId) {
         return ResponseEntity.ok().body(leaveService.deleteLeave(leaveId));
     }
 

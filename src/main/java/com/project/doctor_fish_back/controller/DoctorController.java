@@ -30,27 +30,27 @@ public class DoctorController {
     // 의사 정보 수정(이름, 사진, 소개글, 이력)
     @ValidAop
     @PutMapping("/doctor/{doctorId}")
-    public ResponseEntity<?> modifyDoctor(@PathVariable Long doctorId, @Valid @RequestBody ReqModifyDoctorDto dto, BindingResult bindingResult) throws NotFoundException {
+    public ResponseEntity<?> modifyDoctor(@PathVariable Long doctorId, @Valid @RequestBody ReqModifyDoctorDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(doctorService.modifyDoctor(doctorId, dto));
     }
 
     // 의사 아이디 변경
     @ValidAop
     @PutMapping("/doctor/{doctorId}/username")
-    public ResponseEntity<?> modifyDoctorUsername(@PathVariable Long doctorId, @Valid @RequestBody ReqModifyDoctorUsernameDto dto, BindingResult bindingResult) throws NotFoundException {
+    public ResponseEntity<?> modifyDoctorUsername(@PathVariable Long doctorId, @Valid @RequestBody ReqModifyDoctorUsernameDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(doctorService.modifyDoctorUsername(doctorId, dto));
     }
 
     // 의사 비밀번호 변경
     @ValidAop
     @PutMapping("/doctor/{doctorId}/password")
-    public ResponseEntity<?> modifyDoctorPassword(@PathVariable Long doctorId, @Valid @RequestBody ReqModifyDoctorPasswordDto dto, BindingResult bindingResult) throws NotFoundException {
+    public ResponseEntity<?> modifyDoctorPassword(@PathVariable Long doctorId, @Valid @RequestBody ReqModifyDoctorPasswordDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(doctorService.modifyDoctorPassword(doctorId, dto));
     }
 
     // 의사 삭제
     @DeleteMapping("/doctor/{doctorId}")
-    public ResponseEntity<?> deleteDoctor(@PathVariable Long doctorId) throws NotFoundException {
+    public ResponseEntity<?> deleteDoctor(@PathVariable Long doctorId) {
         return ResponseEntity.ok().body(doctorService.deleteDoctor(doctorId));
     }
 
