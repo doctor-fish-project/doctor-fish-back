@@ -55,6 +55,7 @@ public class AuthorityAspect {
                 modifyLeave(args);
                 break;
             case "getReservationToUser":
+            case "modifyReservation":
             case "deleteReservationFromUser":
                 reservation(args);
                 break;

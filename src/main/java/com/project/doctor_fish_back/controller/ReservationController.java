@@ -86,13 +86,13 @@ public class ReservationController {
 
     // 예약 정보 수정
     @PutMapping("/reservation/{reservationId}")
-    public ResponseEntity<?> modifyReservation(@PathVariable Long reservationId, @RequestBody ReqModifyReservationDto dto) throws NotFoundException, AuthorityException {
+    public ResponseEntity<?> modifyReservation(@PathVariable Long reservationId, @RequestBody ReqModifyReservationDto dto) {
         return ResponseEntity.ok().body(reservationService.modifyReservation(reservationId, dto));
     }
 
     // 사용자 예약 삭제
     @DeleteMapping("/reservation/user/{reservationId}")
-    public ResponseEntity<?> deleteReservationFromUser(@PathVariable Long reservationId) throws AuthorityException {
+    public ResponseEntity<?> deleteReservationFromUser(@PathVariable Long reservationId) {
         return ResponseEntity.ok().body(reservationService.deleteReservationFromUser(reservationId));
     }
 
