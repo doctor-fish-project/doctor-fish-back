@@ -4,6 +4,8 @@ import com.project.doctor_fish_back.entity.GetReservationMonthDoctors;
 import com.project.doctor_fish_back.entity.Reservation;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -38,5 +40,7 @@ public interface ReservationMapper {
 
     List<Reservation> getAllToInfo();
     Long getCountAllToInfo();
+
+    int modify(Reservation reservation);
 
 }

@@ -1,5 +1,7 @@
 package com.project.doctor_fish_back.service;
 
+import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
+import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.dto.request.leave.ReqRegisterLeaveDto;
 import com.project.doctor_fish_back.dto.response.leave.RespGetLeaveDto;
@@ -44,12 +46,9 @@ public class LeaveService {
                 .build();
     }
 
-    public RespGetLeaveDto getLeaveToDoctorAndInfo(Long leaveId) throws NotFoundException {
+    @NotFoundAop
+    public RespGetLeaveDto getLeaveToDoctorAndInfo(Long leaveId) {
         Leave leave = leaveMapper.findLeaveById(leaveId);
-
-        if(leave == null) {
-            throw new NotFoundException("해당 연차를 찾을 수 없습니다.");
-        }
 
         return RespGetLeaveDto.builder()
                 .id(leave.getId())
@@ -65,55 +64,28 @@ public class LeaveService {
                 .build();
     }
 
-    public Boolean modifyLeave(Long leaveId, ReqModifyLeaveDto dto) throws NotFoundException, AuthorityException {
-        Leave leave = leaveMapper.findLeaveById(leaveId);
-
-        if(leave == null) {
-            throw new NotFoundException("해당 연차를 찾을 수 없습니다.");
-        }
-
-        if(leave.getDoctorId() != dto.getDoctorId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean modifyLeave(Long leaveId, ReqModifyLeaveDto dto) {
         leaveMapper.modify(dto.toEntity(leaveId));
-
         return true;
     }
 
-    public Boolean acceptLeave(Long leaveId) throws NotFoundException {
-        Leave leave = leaveMapper.findLeaveById(leaveId);
-
-        if(leave == null) {
-            throw new NotFoundException("해당 연차를 찾을 수 없습니다.");
-        }
-
+    @NotFoundAop
+    public Boolean acceptLeave(Long leaveId) {
         leaveMapper.acceptById(leaveId);
-
         return true;
     }
 
-    public Boolean cancelLeave(Long leaveId) throws NotFoundException {
-        Leave leave = leaveMapper.findLeaveById(leaveId);
-
-        if(leave == null) {
-            throw new NotFoundException("해당 연차를 찾을 수 없습니다.");
-        }
-
+    @NotFoundAop
+    public Boolean cancelLeave(Long leaveId) {
         leaveMapper.cancelById(leaveId);
-
         return true;
     }
 
-    public Boolean deleteLeave(Long leaveId) throws NotFoundException {
-        Leave leave = leaveMapper.findLeaveById(leaveId);
-
-        if(leave == null) {
-            throw new NotFoundException("해당 연차를 찾을 수 없습니다.");
-        }
-
+    @NotFoundAop
+    public Boolean deleteLeave(Long leaveId) {
         leaveMapper.deleteById(leaveId);
-
         return true;
     }
 

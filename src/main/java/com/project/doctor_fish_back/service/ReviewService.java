@@ -1,6 +1,8 @@
 package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
+import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
+import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.review.ReqModifyReviewDto;
 import com.project.doctor_fish_back.dto.request.review.ReqWriteReviewDto;
 import com.project.doctor_fish_back.dto.response.review.RespGetReviewListDto;
@@ -69,52 +71,26 @@ public class ReviewService {
                 .build();
     }
 
-    public Boolean modifyReview(Long reviewId, ReqModifyReviewDto dto) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Review review = reviewMapper.findById(reviewId);
-
-        if(review == null) {
-            throw new NotFoundException("해당 리뷰를 찾을 수 없습니다.");
-        }
-
-        if(review.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean modifyReview(Long reviewId, ReqModifyReviewDto dto) {
         reviewMapper.modify(dto.toEntity(reviewId));
-
         return true;
     }
 
-    public Boolean deleteReview(Long reviewId) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Review review = reviewMapper.findById(reviewId);
-
-        if(review == null) {
-            throw new NotFoundException("해당 리뷰를 찾을 수 없습니다.");
-        }
-
-        if(review.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean deleteReview(Long reviewId) {
         reviewMapper.deleteById(reviewId);
-
         return true;
     }
 
-    public Boolean like(Long reviewId) throws NotFoundException, ReviewLikeException {
+    @NotFoundAop
+    public Boolean like(Long reviewId) throws ReviewLikeException {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = principalUser.getId();
 
-        Review review = reviewMapper.findById(reviewId);
         ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
-
-        if(review == null) {
-            throw new NotFoundException("해당 리뷰를 찾을 수 없습니다.");
-        }
 
         if(reviewLike != null) {
             throw new ReviewLikeException("이미 좋아요한 리뷰입니다.");
@@ -130,31 +106,15 @@ public class ReviewService {
         return true;
     }
 
-    public Boolean dislike(Long reviewLikeId) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        ReviewLike reviewLike = reviewLikeMapper.findById(reviewLikeId);
-
-        if(reviewLike == null) {
-            throw new NotFoundException("좋아요를 취소할 수 없습니다.");
-        }
-
-        if(reviewLike.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean dislike(Long reviewLikeId) {
         reviewLikeMapper.deleteById(reviewLikeId);
-
         return true;
     }
 
-    public RespReviewLikeInfoDto getLikeCount(Long reviewId) throws NotFoundException {
-        Review review = reviewMapper.findById(reviewId);
-
-        if(review == null) {
-            throw new NotFoundException("해당 리뷰를 찾을 수 없습니다.");
-        }
-
+    @NotFoundAop
+    public RespReviewLikeInfoDto getLikeCount(Long reviewId) {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = principalUser.getId();
 

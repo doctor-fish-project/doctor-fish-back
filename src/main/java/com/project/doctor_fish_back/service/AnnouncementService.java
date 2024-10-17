@@ -1,5 +1,7 @@
 package com.project.doctor_fish_back.service;
 
+import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
+import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.announcement.ReqModifyAnnounce;
 import com.project.doctor_fish_back.dto.request.announcement.ReqWriteAnnounceDto;
 import com.project.doctor_fish_back.dto.response.announcement.RespGetAnnounceDto;
@@ -28,7 +30,7 @@ public class AnnouncementService {
     @Autowired
     private UserMapper userMapper;
 
-    public Boolean writeAnnounce(ReqWriteAnnounceDto dto) throws NotFoundException, AuthorityException {
+    public Boolean writeAnnounce(ReqWriteAnnounceDto dto) throws AuthorityException {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User user = userMapper.findById(principalUser.getId());
@@ -51,40 +53,18 @@ public class AnnouncementService {
         return true;
     }
 
-    public boolean modifyAnnounce(Long announceId, ReqModifyAnnounce dto) throws AuthorityException, NotFoundException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Announcement announcement = announcementMapper.findById(announceId);
-
-        if(announcement == null) {
-            throw new NotFoundException("해당 공지사항 찾을 수 없습니다.");
-        }
-
-        if(announcement.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public boolean modifyAnnounce(Long announceId, ReqModifyAnnounce dto) {
         announcementMapper.modify(dto.toEntity(announceId));
-
         return true;
 
     }
 
-    public Boolean deleteAnnounce(Long announceId) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Announcement announcement = announcementMapper.findById(announceId);
-
-        if(announcement == null) {
-            throw new NotFoundException("해당 공지사항 찾을 수 없습니다.");
-        }
-
-        if(announcement.getUserId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean deleteAnnounce(Long announceId) {
         announcementMapper.deleteById(announceId);
-
         return true;
     }
 
@@ -107,12 +87,10 @@ public class AnnouncementService {
                 .build();
     }
 
-    public RespGetAnnounceDto getAnnouncement(Long announceId) throws NotFoundException {
-        Announcement announcement = announcementMapper.findById(announceId);
+    @NotFoundAop
+    public RespGetAnnounceDto getAnnouncement(Long announceId) {
 
-        if(announcement == null) {
-            throw new NotFoundException("해당 공지사항 찾을 수 없습니다.");
-        }
+        Announcement announcement = announcementMapper.findById(announceId);
 
         return RespGetAnnounceDto.builder()
                 .id(announcement.getId())

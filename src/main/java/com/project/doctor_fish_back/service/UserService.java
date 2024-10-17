@@ -1,5 +1,7 @@
 package com.project.doctor_fish_back.service;
 
+import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
+import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
@@ -150,19 +152,9 @@ public class UserService {
                 .build();
     }
 
-    public Boolean modifyUser(Long userId, ReqModifyUserDto dto) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userMapper.findById(userId);
-
-        if(user == null) {
-            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
-
-        if(user.getId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean modifyUser(Long userId, ReqModifyUserDto dto) {
         if(dto.getImg() == null || dto.getImg().equals("")) {
             dto.setImg(userDefaultProfileImg);
         }
@@ -172,19 +164,9 @@ public class UserService {
         return true;
     }
 
-    public Boolean modifyUserEmail(Long userId, ReqModifyUserEmailDto dto) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userMapper.findById(userId);
-
-        if(user == null) {
-            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
-
-        if(user.getId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean modifyUserEmail(Long userId, ReqModifyUserEmailDto dto) {
         userMapper.modifyEmail(dto.toEntity(userId));
         userMapper.modifyEmailValidByEmail(dto.getEmail());
         emailService.sendAuthMail(dto.getEmail());
@@ -192,21 +174,10 @@ public class UserService {
         return true;
     }
 
-    public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) throws NotFoundException, AuthorityException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userMapper.findById(userId);
-
-        if(user == null) {
-            throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-        }
-
-        if(user.getId() != principalUser.getId()) {
-            throw new AuthorityException("권한이 없습니다.");
-        }
-
+    @NotFoundAop
+    @AuthorityAop
+    public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) {
         userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
-
         return true;
     }
 
@@ -243,25 +214,14 @@ public class UserService {
     public Boolean doctorSignup(ReqDoctorSignupDto dto) throws SignupException {
         User user = null;
         try {
-            if(dto.getImg() == null || dto.getImg().equals("")) {
-                dto.setImg(doctorDefaultProfileImg);
-            }
-
-            user = dto.toEntity(passwordEncoder);
+            user = dto.toEntity(passwordEncoder, doctorDefaultProfileImg);
             userMapper.save(user);
 
             userMapper.modifyEmailValidById(user.getId());
 
-            Role role = roleMapper.findByPosition("ROLE_DOCTOR");
-
-            if (role == null) {
-                role = Role.builder().name("의사").position("ROLE_DOCTOR").build();
-                roleMapper.save(role);
-            }
-
             UserRoles userRoles = UserRoles.builder()
                     .userId(user.getId())
-                    .roleId(role.getId())
+                    .roleId(dto.getRoleId())
                     .build();
 
             userRolesMapper.save(userRoles);
@@ -278,6 +238,8 @@ public class UserService {
             Doctor doctor = Doctor.builder()
                     .userId(user.getId())
                     .departId(depart.getId())
+                    .comment(dto.getComment())
+                    .record(dto.getRecord())
                     .build();
 
             doctorMapper.save(doctor);
@@ -288,21 +250,11 @@ public class UserService {
         return true;
     }
 
+    @NotFoundAop
+    @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
-    public Boolean deleteUser(Long userId) throws NotFoundException, AuthorityException {
+    public Boolean deleteUser(Long userId) {
         try {
-            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            User user = userMapper.findById(userId);
-
-            if(user == null) {
-                throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
-            }
-
-            if(user.getId() != principalUser.getId()) {
-                throw new AuthorityException("권한이 없습니다.");
-            }
-
             userMapper.deleteById(userId);
             userRolesMapper.deleteByUserId(userId);
         } catch (Exception e) {
