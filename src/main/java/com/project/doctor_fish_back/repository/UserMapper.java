@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.repository;
 
 import com.project.doctor_fish_back.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,7 +16,8 @@ public interface UserMapper {
     int modify(User user);
     int modifyEmail(User user);
     int modifyPassword(User user);
-    List<User> getAll();
+    List<User> getAll(@Param("startIndex") Long startIndex,
+                      @Param("limit") Long limit);
     Long getCountAll();
     int modifyEmailValidById(Long id);
 }

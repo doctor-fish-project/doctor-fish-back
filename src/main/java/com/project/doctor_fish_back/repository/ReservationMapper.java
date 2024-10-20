@@ -3,6 +3,7 @@ package com.project.doctor_fish_back.repository;
 import com.project.doctor_fish_back.entity.GetReservationMonthDoctors;
 import com.project.doctor_fish_back.entity.Reservation;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -17,10 +18,12 @@ public interface ReservationMapper {
     int deleteById(Long id);
 
 
-    List<Reservation> getAll(Long startIndex, Long limit);
+    List<Reservation> getAll(@Param("startIndex") Long startIndex,
+                             @Param("limit") Long limit);
     Long getCountAll();
 
-    List<Reservation> getToday(Long startIndex, Long limit);
+    List<Reservation> getToday(@Param("startIndex") Long startIndex,
+                               @Param("limit") Long limit);
     Long getCountToday();
 
     List<Reservation> getAllByLimit(Long limit);
