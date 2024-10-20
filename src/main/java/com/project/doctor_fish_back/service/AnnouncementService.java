@@ -4,9 +4,11 @@ import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.announcement.ReqModifyAnnounce;
 import com.project.doctor_fish_back.dto.request.announcement.ReqWriteAnnounceDto;
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.response.announcement.RespGetAnnounceDto;
 import com.project.doctor_fish_back.dto.response.announcement.RespGetAnnounceListDto;
 import com.project.doctor_fish_back.entity.Announcement;
+import com.project.doctor_fish_back.entity.Reservation;
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.repository.AnnouncementMapper;
@@ -68,13 +70,14 @@ public class AnnouncementService {
         return true;
     }
 
-    public RespGetAnnounceListDto getAllAnnouncements() {
-        List<Announcement> announcements = announcementMapper.getAll();
-        Long announceCount = announcementMapper.getCountAll();
+    public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto) {
+        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+        List<Announcement> announcements = announcementMapper.getAll(startIndex, dto.getLimit());
+        Long totalCount = announcementMapper.getCountAll();
 
         return RespGetAnnounceListDto.builder()
                 .announcements(announcements)
-                .announceCount(announceCount)
+                .announceCount(totalCount)
                 .build();
     }
 

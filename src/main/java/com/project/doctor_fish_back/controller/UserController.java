@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.controller;
 
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
@@ -24,8 +25,8 @@ public class UserController {
 
     // 사용자 전체 조회
     @GetMapping("/user/list")
-    public ResponseEntity<?> getUserList() {
-        return ResponseEntity.ok().body(userService.getUserList());
+    public ResponseEntity<?> getUserList(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(userService.getUserList(dto));
     }
 
     // 사용자 내 정보 조회

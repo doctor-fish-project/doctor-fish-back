@@ -5,6 +5,7 @@ import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
@@ -127,8 +128,9 @@ public class UserService {
         return user;
     }
 
-    public RespGetUserListDto getUserList() {
-        List<User> users = userMapper.getAll();
+    public RespGetUserListDto getUserList(ReqPageAndLimitDto dto) {
+        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+        List<User> users = userMapper.getAll(startIndex, dto.getLimit());
         Long userCount = userMapper.getCountAll();
 
         return RespGetUserListDto.builder()

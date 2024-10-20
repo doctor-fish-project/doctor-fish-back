@@ -49,7 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/category",
                         "/tableheader",
                         "/review/**",
-                        "/reservation/**"
+                        "/reservation/**",
+                        "/announce/**",
+                        "/user/**"
 
                 )
                 .permitAll()

@@ -55,6 +55,7 @@
             announcement_tb
         order by
             registerDate
+        limit #{startIndex}, #{limit}
     </select>
 
     <select id="getAllByLimit" resultType="com.project.doctor_fish_back.entity.Announcement">

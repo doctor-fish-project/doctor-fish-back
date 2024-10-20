@@ -3,6 +3,7 @@ package com.project.doctor_fish_back.controller;
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
 import com.project.doctor_fish_back.dto.request.announcement.ReqModifyAnnounce;
 import com.project.doctor_fish_back.dto.request.announcement.ReqWriteAnnounceDto;
+import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.service.AnnouncementService;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -41,8 +42,8 @@ public class AnnouncementController {
 
     // 공지사항 전체조회
     @GetMapping("/announce/list")
-    public ResponseEntity<?> getAllAnnouncements() {
-        return ResponseEntity.ok().body(announcementService.getAllAnnouncements());
+    public ResponseEntity<?> getAllAnnouncements(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(announcementService.getAllAnnouncements(dto));
     }
 
     // 대쉬보드 공지사항 조회
