@@ -1,7 +1,7 @@
 package com.project.doctor_fish_back.aspect;
 
+import com.project.doctor_fish_back.dto.request.auth.ReqAdminSignupDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
-import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorPasswordDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorUsernameDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
@@ -40,8 +40,8 @@ public class ValidAspect {
         }
 
         switch (proceedingJoinPoint.getSignature().getName()) {
-            case "doctorSignup":
-                validDoctorSignupDto(args, bindingResult);
+            case "adminSignup":
+                validAdminSignupDto(args, bindingResult);
                 break;
             case "userSignup":
                 validUserSignupDto(args, bindingResult);
@@ -81,14 +81,19 @@ public class ValidAspect {
                     FieldError fieldError = new FieldError("email", "email", "이미 존재하는 이메일입니다.");
                     bindingResult.addError(fieldError);
                 }
+
+                if(userService.isDuplicatePhoneNumber(dto.getPhoneNumber())) {
+                    FieldError fieldError = new FieldError("phoneNumber", "phoneNumber", "이미 존재하는 전화번호입니다.");
+                    bindingResult.addError(fieldError);
+                }
             }
         }
     }
 
-    private void validDoctorSignupDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+    private void validAdminSignupDto(Object[] args, BeanPropertyBindingResult bindingResult) {
         for(Object arg : args) {
-            if(arg.getClass() == ReqDoctorSignupDto.class) {
-                ReqDoctorSignupDto dto = (ReqDoctorSignupDto) arg;
+            if(arg.getClass() == ReqAdminSignupDto.class) {
+                ReqAdminSignupDto dto = (ReqAdminSignupDto) arg;
 
                 if(!dto.getPassword().equals(dto.getCheckPassword())) {
                     FieldError fieldError = new FieldError("checkPassword", "checkPassword", "비밀번호가 일치하지 않습니다.");
@@ -97,6 +102,11 @@ public class ValidAspect {
 
                 if(userService.isDuplicateEmail(dto.getUsername())) {
                     FieldError fieldError = new FieldError("username", "username", "이미 존재하는 아이디입니다.");
+                    bindingResult.addError(fieldError);
+                }
+
+                if(userService.isDuplicatePhoneNumber(dto.getPhoneNumber())) {
+                    FieldError fieldError = new FieldError("phoneNumber", "phoneNumber", "이미 존재하는 전화번호입니다.");
                     bindingResult.addError(fieldError);
                 }
             }

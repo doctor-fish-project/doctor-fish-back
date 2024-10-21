@@ -29,9 +29,10 @@ public class ReviewController {
         return ResponseEntity.ok().body(reviewService.writeReview(dto));
     }
 
-    @GetMapping("/review")
-    public ResponseEntity<?> getReviewAll() {
-        return ResponseEntity.ok().body(reviewService.getReviewAll());
+    // 리뷰 전체 조회
+    @GetMapping("/review/list")
+    public ResponseEntity<?> getReviews() {
+        return ResponseEntity.ok().body(reviewService.getReviews());
     }
 
     // 관리자 페이지 전체 리뷰 조회

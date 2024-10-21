@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Builder
@@ -22,6 +23,8 @@ public class User {
     private String phoneNumber;
     private String img;
     private int emailValid;
+    private LocalDateTime registerDate;
+    private LocalDateTime updateDate;
     private Set<UserRoles> userRoles;
 
     public PrincipalUser toPrincipal() {

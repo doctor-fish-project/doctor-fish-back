@@ -35,13 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers(
-                        "/auth/**",
-                        "/admin/**"
-                )
-                .permitAll()
-                .antMatchers(
-                            HttpMethod.POST,
-                        "/doctor/**"
+                        "/auth/**"
                 )
                 .permitAll()
                 .antMatchers(

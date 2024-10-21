@@ -38,7 +38,7 @@ public class ReviewService {
         return true;
     }
 
-    public RespGetReviewListDto getReviewAll() {
+    public RespGetReviewListDto getReviews() {
         List<Review> reviews = reviewMapper.getReviewAll();
         Long reviewCount = reviewMapper.getReviewAllCount();
 

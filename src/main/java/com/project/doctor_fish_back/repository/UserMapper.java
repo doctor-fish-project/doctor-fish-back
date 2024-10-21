@@ -10,6 +10,7 @@ import java.util.List;
 public interface UserMapper {
     User findById(Long id);
     User findByEmail(String email);
+    User findByPhoneNumber(String phoneNumber);
     int save(User user);
     int modifyEmailValidByEmail(String email);
     int deleteById(Long id);

@@ -1,13 +1,9 @@
 package com.project.doctor_fish_back.controller;
 
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
-import com.project.doctor_fish_back.dto.request.auth.ReqAccessDto;
-import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
-import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
-import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
+import com.project.doctor_fish_back.dto.request.auth.*;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
-import com.project.doctor_fish_back.service.DoctorService;
 import com.project.doctor_fish_back.service.TokenService;
 import com.project.doctor_fish_back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,25 +27,18 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(tokenService.isValidAccessToken(dto.getAccessToken()));
     }
 
-    // 관리자 회원가입
+    // 원무과, 의사, 관리자 회원가입
     @ValidAop
-    @PostMapping("/admin/signup")
-    public ResponseEntity<?> adminSignup(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
-        return ResponseEntity.ok().body(userService.insertAdminAndUserRoles(dto));
+    @PostMapping("/auth/signup/admin")
+    public ResponseEntity<?> adminSignup(@Valid @RequestBody ReqAdminSignupDto dto, BindingResult bindingResult) throws SignupException {
+        return ResponseEntity.ok().body(userService.adminSignup(dto));
     }
 
-    // 의사 회원가입
+    // 원무과, 의사, 관리자 로그인
     @ValidAop
-    @PostMapping("/doctor/signup")
-    public ResponseEntity<?> doctorSignup(@Valid @RequestBody ReqDoctorSignupDto dto, BindingResult bindingResult) throws SignupException {
-        return ResponseEntity.ok().body(userService.doctorSignup(dto));
-    }
-
-    // 관리자 로그인
-    @ValidAop
-    @PostMapping("/admin/signin")
-    public ResponseEntity<?> adminSignin(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
-        return ResponseEntity.ok().body(userService.insertAdminAndUserRoles(dto));
+    @PostMapping("/auth/signin/admin")
+    public ResponseEntity<?> adminSignin(@Valid @RequestBody ReqAdminSigninDto dto, BindingResult bindingResult) throws SigninException {
+        return ResponseEntity.ok().body(userService.getGeneratedAccessToken(dto));
     }
 
     // 사용자 회원가입
@@ -59,7 +48,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(userService.insertUserAndUserRoles(dto));
     }
 
-    // 로그인
+    // 사용자 로그인
     @ValidAop
     @PostMapping("/auth/signin")
     public ResponseEntity<?> signin(@Valid @RequestBody ReqSigninDto dto, BindingResult bindingResult) throws SigninException {

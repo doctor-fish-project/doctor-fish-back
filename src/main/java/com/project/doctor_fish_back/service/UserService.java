@@ -2,9 +2,10 @@ package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
+import com.project.doctor_fish_back.dto.request.auth.ReqAdminSigninDto;
+import com.project.doctor_fish_back.dto.request.auth.ReqAdminSignupDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
-import com.project.doctor_fish_back.dto.request.doctor.ReqDoctorSignupDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
@@ -13,22 +14,17 @@ import com.project.doctor_fish_back.dto.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.response.user.RespGetUserListDto;
 import com.project.doctor_fish_back.dto.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.entity.*;
-import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.EmailValidException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
 import com.project.doctor_fish_back.repository.*;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
-import com.project.doctor_fish_back.security.principal.PrincipalUser;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,10 +56,19 @@ public class UserService {
     private DepartMapper departMapper;
     @Autowired
     private DoctorMapper doctorMapper;
+    private ContentNegotiatingViewResolver viewResolver;
 
     public Boolean isDuplicateEmail(String email) {
         try {
             return Optional.ofNullable(userMapper.findByEmail(email)).isPresent();
+        } catch (Exception e) {
+            throw new RuntimeException("실행 도중 오류가 발생했습니다.");
+        }
+    }
+
+    public Boolean isDuplicatePhoneNumber(String phoneNumber) {
+        try {
+            return Optional.ofNullable(userMapper.findByPhoneNumber(phoneNumber)).isPresent();
         } catch (Exception e) {
             throw new RuntimeException("실행 도중 오류가 발생했습니다.");
         }
@@ -98,6 +103,15 @@ public class UserService {
         emailService.sendAuthMail(dto.getEmail());
 
         return true;
+    }
+
+    public RespSigninDto getGeneratedAccessToken(ReqAdminSigninDto dto) throws SigninException {
+        User user = checkUsernameAndPassword(dto.getUsername(), dto.getPassword());
+
+        return RespSigninDto.builder()
+                .expireDate(jwtProvider.getExpireDate().toLocaleString())
+                .accessToken(jwtProvider.generateAccessToken(user))
+                .build();
     }
 
     public RespSigninDto getGeneratedAccessToken(ReqSigninDto dto) throws SigninException {
@@ -150,6 +164,10 @@ public class UserService {
                 .email(user.getEmail())
                 .name(user.getName())
                 .phoneNumber(user.getPhoneNumber())
+                .img(user.getImg())
+                .emailValid(user.getEmailValid())
+                .registerDate(user.getRegisterDate())
+                .updateDate(user.getUpdateDate())
                 .roles(roles)
                 .build();
     }
@@ -184,67 +202,18 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = SignupException.class)
-    public Boolean insertAdminAndUserRoles(ReqSignupDto dto) throws SignupException {
+    public Boolean adminSignup(ReqAdminSignupDto dto) throws SignupException {
         User user = null;
         try {
-            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
-            userMapper.save(user);
-
-            Role role = roleMapper.findByPosition("ROLE_ADMIN");
-
-            if (role == null) {
-                role = Role.builder().name("관리자").position("ROLE_ADMIN").build();
-                roleMapper.save(role);
+            if (dto.getRoleId() == 2) { // 원무과
+                insertInfoOrAdminAndUserRoles(dto, user);
+            } else if (dto.getRoleId() == 3) { // 의사
+                doctorSignup(dto, user);
+            } else if (dto.getRoleId() == 4) { // 관리자
+                insertInfoOrAdminAndUserRoles(dto, user);
+            } else {
+                throw new SignupException("잘못된 요청입니다.");
             }
-
-            UserRoles userRoles = UserRoles.builder()
-                    .userId(user.getId())
-                    .roleId(role.getId())
-                    .build();
-
-            userRolesMapper.save(userRoles);
-
-            user.setUserRoles(Set.of(userRoles));
-        } catch (Exception e) {
-            throw new SignupException(e.getMessage());
-        }
-
-        return true;
-    }
-
-    @Transactional(rollbackFor = SignupException.class)
-    public Boolean doctorSignup(ReqDoctorSignupDto dto) throws SignupException {
-        User user = null;
-        try {
-            user = dto.toEntity(passwordEncoder, doctorDefaultProfileImg);
-            userMapper.save(user);
-
-            userMapper.modifyEmailValidById(user.getId());
-
-            UserRoles userRoles = UserRoles.builder()
-                    .userId(user.getId())
-                    .roleId(dto.getRoleId())
-                    .build();
-
-            userRolesMapper.save(userRoles);
-
-            user.setUserRoles(Set.of(userRoles));
-
-            Depart depart = departMapper.findByName(dto.getDepartName());
-
-            if(depart == null) {
-                departMapper.save(Depart.builder().name(dto.getDepartName()).build());
-                depart = departMapper.findByName(dto.getDepartName());
-            }
-
-            Doctor doctor = Doctor.builder()
-                    .userId(user.getId())
-                    .departId(depart.getId())
-                    .comment(dto.getComment())
-                    .record(dto.getRecord())
-                    .build();
-
-            doctorMapper.save(doctor);
         } catch (Exception e) {
             throw new SignupException(e.getMessage());
         }
@@ -264,6 +233,58 @@ public class UserService {
         }
 
         return true;
+    }
+
+    private void insertInfoOrAdminAndUserRoles(ReqAdminSignupDto dto, User user) {
+        user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
+        userMapper.save(user);
+
+        userMapper.modifyEmailValidById(user.getId());
+
+        UserRoles userRoles = UserRoles.builder()
+                .userId(user.getId())
+                .roleId(dto.getRoleId())
+                .build();
+
+        userRolesMapper.save(userRoles);
+
+        user.setUserRoles(Set.of(userRoles));
+    }
+
+    private void doctorSignup(ReqAdminSignupDto dto, User user) throws SignupException {
+        if(dto.getDepartName() == null || dto.getDepartName().equals("")) {
+            throw new SignupException("부서이름을 입력하세요.");
+        }
+
+        user = dto.toEntity(passwordEncoder, doctorDefaultProfileImg);
+        userMapper.save(user);
+
+        userMapper.modifyEmailValidById(user.getId());
+
+        UserRoles userRoles = UserRoles.builder()
+                .userId(user.getId())
+                .roleId(dto.getRoleId())
+                .build();
+
+        userRolesMapper.save(userRoles);
+
+        user.setUserRoles(Set.of(userRoles));
+
+        Depart depart = departMapper.findByName(dto.getDepartName());
+
+        if(depart == null) {
+            departMapper.save(Depart.builder().name(dto.getDepartName()).build());
+            depart = departMapper.findByName(dto.getDepartName());
+        }
+
+        Doctor doctor = Doctor.builder()
+                .userId(user.getId())
+                .departId(depart.getId())
+                .comment(dto.getComment())
+                .record(dto.getRecord())
+                .build();
+
+        doctorMapper.save(doctor);
     }
 
 }
