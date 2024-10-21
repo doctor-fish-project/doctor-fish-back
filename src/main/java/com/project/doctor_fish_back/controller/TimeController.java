@@ -1,8 +1,7 @@
 package com.project.doctor_fish_back.controller;
 
-import com.project.doctor_fish_back.dto.request.time.ReqReservedTimeDto;
+import com.project.doctor_fish_back.dto.time.ReqReservedTimeDto;
 import com.project.doctor_fish_back.service.TimeService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

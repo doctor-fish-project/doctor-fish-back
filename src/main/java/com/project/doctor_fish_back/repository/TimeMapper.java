@@ -1,6 +1,5 @@
 package com.project.doctor_fish_back.repository;
 
-import com.project.doctor_fish_back.dto.request.time.ReqReservedTimeDto;
 import com.project.doctor_fish_back.entity.Time;
 import org.apache.ibatis.annotations.Mapper;
 

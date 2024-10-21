@@ -1,0 +1,10 @@
+package com.project.doctor_fish_back.repository.admin;
+
+import com.project.doctor_fish_back.entity.Depart;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface AdminDepartMapper {
+    int save(Depart depart);
+    Depart findByName(String name);
+}

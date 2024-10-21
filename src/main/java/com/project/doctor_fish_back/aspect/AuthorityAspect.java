@@ -1,10 +1,10 @@
 package com.project.doctor_fish_back.aspect;
 
-import com.project.doctor_fish_back.dto.request.comment.ReqModifyCommentDto;
-import com.project.doctor_fish_back.dto.request.leave.ReqModifyLeaveDto;
+import com.project.doctor_fish_back.dto.admin.request.comment.ReqModifyCommentDto;
+import com.project.doctor_fish_back.dto.admin.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
-import com.project.doctor_fish_back.repository.*;
+import com.project.doctor_fish_back.repository.admin.*;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,19 +19,19 @@ import org.springframework.stereotype.Component;
 public class AuthorityAspect {
 
     @Autowired
-    private AnnouncementMapper announcementMapper;
+    private AdminAnnouncementMapper announcementMapper;
     @Autowired
-    private CommentMapper commentMapper;
+    private AdminCommentMapper commentMapper;
     @Autowired
-    private LeaveMapper leaveMapper;
+    private AdminLeaveMapper leaveMapper;
     @Autowired
-    private ReservationMapper reservationMapper;
+    private AdminReservationMapper reservationMapper;
     @Autowired
-    private ReviewMapper reviewMapper;
+    private AdminReviewMapper reviewMapper;
     @Autowired
-    private ReviewLikeMapper reviewLikeMapper;
+    private AdminReviewLikeMapper reviewLikeMapper;
     @Autowired
-    private UserMapper userMapper;
+    private AdminUserMapper userMapper;
 
     @Pointcut("@annotation(com.project.doctor_fish_back.aspect.annotation.AuthorityAop)")
     private void pointCut() {}

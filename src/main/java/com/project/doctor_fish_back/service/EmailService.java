@@ -1,7 +1,7 @@
 package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.entity.User;
-import com.project.doctor_fish_back.repository.UserMapper;
+import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class EmailService {
     @Autowired
     private JwtProvider jwtProvider;
     @Autowired
-    private UserMapper userMapper;
+    private AdminUserMapper userMapper;
 
     public Boolean send(String toEmail, String fromEmail, String subject, String content) {
         MimeMessage message = javaMailSender.createMimeMessage();
