@@ -3,6 +3,7 @@ package com.project.doctor_fish_back.dto.response.user;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Builder
@@ -12,5 +13,9 @@ public class RespUserInfoDto {
     private String email;
     private String name;
     private String phoneNumber;
+    private String img;
+    private int emailValid;
+    private LocalDateTime registerDate;
+    private LocalDateTime updateDate;
     private Set<String> roles;
 }

@@ -48,17 +48,17 @@
 
     <select id="getReviewAll" resultType="com.project.doctor_fish_back.entity.Review">
         select
-        rt.id,
-        rt.user_id as userId,
-        rt.img,
-        rt.content,
-        rt.register_date as registerDate,
-        rt.update_date as updateDate,
-        ut.name as userName,
-        ut.img as userImg
+            rt.id,
+            rt.user_id as userId,
+            rt.img,
+            rt.content,
+            rt.register_date as registerDate,
+            rt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg
         from
-        review_tb rt
-        left outer join user_tb ut on(rt.user_id = ut.id)
+            review_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
     </select>
 
     <select id="getReviewAllByLimit" resultType="com.project.doctor_fish_back.entity.Review">
@@ -88,9 +88,9 @@
 
     <select id="getReviewAllCount" resultType="java.lang.Long">
         select
-        count(*)
+            count(*)
         from
-        review_tb;
+            review_tb;
     </select>
 
     <select id="findById" resultType="com.project.doctor_fish_back.entity.Review">
