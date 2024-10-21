@@ -19,4 +19,7 @@ public class Announcement {
     private String content;
     private LocalDateTime registerDate;
     private LocalDateTime updateDate;
+
+    private String userName;
+    private String userImg;
 }
