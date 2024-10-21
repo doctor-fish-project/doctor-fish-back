@@ -31,28 +31,34 @@
 
     <select id="findById" resultType="com.project.doctor_fish_back.entity.Announcement">
         select
-            id,
-            user_id as userId,
-            title,
-            content,
-            register_date as registerDate,
-            update_date as updateDate
+            at.id,
+            at.user_id as userId,
+            at.title,
+            at.content,
+            at.register_date as registerDate,
+            at.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg
         from
-            announcement_tb
+            announcement_tb at
+            left outer join user_tb ut on(at.user_id = ut.id)
         where
             id = #{id}
     </select>
 
     <select id="getAll" resultType="com.project.doctor_fish_back.entity.Announcement">
         select
-            id,
-            user_id as userId,
-            title,
-            content,
-            register_date as registerDate,
-            update_date as updateDate
+            at.id,
+            at.user_id as userId,
+            at.title,
+            at.content,
+            at.register_date as registerDate,
+            at.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg
         from
-            announcement_tb
+            announcement_tb at
+            left outer join user_tb ut on(at.user_id = ut.id)
         order by
             registerDate
         limit #{startIndex}, #{limit}
@@ -60,14 +66,17 @@
 
     <select id="getAllByLimit" resultType="com.project.doctor_fish_back.entity.Announcement">
         select
-            id,
-            user_id as userId,
-            title,
-            content,
-            register_date as registerDate,
-            update_date as updateDate
+            at.id,
+            at.user_id as userId,
+            at.title,
+            at.content,
+            at.register_date as registerDate,
+            at.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg
         from
-            announcement_tb
+            announcement_tb at
+            left outer join user_tb ut on(at.user_id = ut.id)
         order by
             registerDate
         limit 0, #{limit}
