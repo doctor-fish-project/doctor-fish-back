@@ -1,14 +1,13 @@
 package com.project.doctor_fish_back.controller;
 
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyAdminUsernameDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
-import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.UserService;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,11 +35,18 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserInfo(principalUser.getId()));
     }
 
-    // 사용자 정보 수정(이름, 전화번호, 프로필사진)
+    // 사용자, 원무과, 관리자 정보 수정(이름, 전화번호, 프로필사진)
     @ValidAop
     @PutMapping("/user/{userId}")
     public ResponseEntity<?> modifyUser(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(userService.modifyUser(userId, dto));
+    }
+
+    // 원무과, 의사, 관리자 아이디 수정
+    @ValidAop
+    @PutMapping("/user/{userId}/username")
+    public ResponseEntity<?> modifyAdminUsername(@PathVariable Long userId, @Valid @RequestBody ReqModifyAdminUsernameDto dto, BindingResult bindingResult) {
+        return ResponseEntity.ok().body(userService.modifyAdminUsername(userId, dto));
     }
 
     // 사용자 이메일 변경
@@ -50,7 +56,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.modifyUserEmail(userId, dto));
     }
 
-    // 사용자 비밀번호 변경
+    // 사용자, 원무과, 의사, 관리자 비밀번호 변경
     @ValidAop
     @PutMapping("/user/{userId}/password")
     public ResponseEntity<?> modifyUserPassword(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserPasswordDto dto, BindingResult bindingResult) {

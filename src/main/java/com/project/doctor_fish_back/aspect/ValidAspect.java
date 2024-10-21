@@ -2,11 +2,15 @@ package com.project.doctor_fish_back.aspect;
 
 import com.project.doctor_fish_back.dto.request.auth.ReqAdminSignupDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
+import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorPasswordDto;
-import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorUsernameDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyAdminUsernameDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
+import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.exception.ValidException;
+import com.project.doctor_fish_back.repository.UserMapper;
 import com.project.doctor_fish_back.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -23,6 +27,8 @@ public class ValidAspect {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Pointcut("@annotation(com.project.doctor_fish_back.aspect.annotation.ValidAop)")
     private void pointCut() {}
@@ -46,17 +52,14 @@ public class ValidAspect {
             case "userSignup":
                 validUserSignupDto(args, bindingResult);
                 break;
-            case "modifyUserPassword":
-                validModifyUserPasswordDto(args, bindingResult);
+            case "modifyAdminUsername":
+                validModifyAdminUsername(args, bindingResult);
                 break;
             case "modifyUserEmail":
                 validModifyUserEmailDto(args, bindingResult);
                 break;
-            case "modifyDoctorUsername":
-                validModifyDoctorUsernameDto(args, bindingResult);
-                break;
-            case "modifyDoctorPassword":
-                validModifyDoctorPasswordDto(args, bindingResult);
+            case "modifyUserPassword":
+                validModifyUserPasswordDto(args, bindingResult);
                 break;
         }
 
@@ -84,6 +87,36 @@ public class ValidAspect {
 
                 if(userService.isDuplicatePhoneNumber(dto.getPhoneNumber())) {
                     FieldError fieldError = new FieldError("phoneNumber", "phoneNumber", "이미 존재하는 전화번호입니다.");
+                    bindingResult.addError(fieldError);
+                }
+            }
+        }
+    }
+
+    private void validModifyUser(Object[] args, BeanPropertyBindingResult bindingResult) {
+        for(Object arg : args) {
+            if(arg.getClass() == ReqModifyUserDto.class) {
+                ReqModifyUserDto dto = (ReqModifyUserDto) arg;
+
+                User user = userMapper.findByPhoneNumber(dto.getPhoneNumber());
+
+                if(!user.getPhoneNumber().equals(dto.getPhoneNumber())) {
+                    if(userService.isDuplicatePhoneNumber(dto.getPhoneNumber())) {
+                        FieldError fieldError = new FieldError("phoneNumber", "phoneNumber", "이미 존재하는 전화번호입니다.");
+                        bindingResult.addError(fieldError);
+                    }
+                }
+            }
+        }
+    }
+
+    private void validModifyAdminUsername(Object[] args, BeanPropertyBindingResult bindingResult) {
+        for(Object arg : args) {
+            if(arg.getClass() == ReqModifyAdminUsernameDto.class) {
+                ReqModifyAdminUsernameDto dto = (ReqModifyAdminUsernameDto) arg;
+
+                if(userService.isDuplicateEmail(dto.getUsername())) {
+                    FieldError fieldError = new FieldError("username", "username", "이미 존재하는 아이디입니다.");
                     bindingResult.addError(fieldError);
                 }
             }
@@ -139,27 +172,17 @@ public class ValidAspect {
         }
     }
 
-    private void validModifyDoctorUsernameDto(Object[] args, BeanPropertyBindingResult bindingResult) {
+    private void validModifyDoctor(Object[] args, BeanPropertyBindingResult bindingResult) {
         for(Object arg : args) {
-            if(arg.getClass() == ReqModifyDoctorUsernameDto.class) {
-                ReqModifyDoctorUsernameDto dto = (ReqModifyDoctorUsernameDto) arg;
+            if(arg.getClass() == ReqModifyDoctorDto.class) {
+                ReqModifyDoctorDto dto = (ReqModifyDoctorDto) arg;
 
-                if(userService.isDuplicateEmail(dto.getUsername())) {
-                    FieldError fieldError = new FieldError("username", "username", "이미 존재하는 아이디입니다.");
-                    bindingResult.addError(fieldError);
-                }
-            }
-        }
-    }
-
-    private void validModifyDoctorPasswordDto(Object[] args, BeanPropertyBindingResult bindingResult) {
-        for(Object arg : args) {
-            if(arg.getClass() == ReqModifyDoctorPasswordDto.class) {
-                ReqModifyDoctorPasswordDto dto = (ReqModifyDoctorPasswordDto) arg;
-
-                if(!dto.getPassword().equals(dto.getCheckPassword())) {
-                    FieldError fieldError = new FieldError("checkPassword", "checkPassword", "비밀번호가 일치하지 않습니다.");
-                    bindingResult.addError(fieldError);
+                User user = userMapper.findByPhoneNumber(dto.getPhoneNumber());
+                if(!user.getPhoneNumber().equals(dto.getPhoneNumber())) {
+                    if(userService.isDuplicatePhoneNumber(dto.getPhoneNumber())) {
+                        FieldError fieldError = new FieldError("phoneNumber", "phoneNumber", "이미 존재하는 전화번호입니다.");
+                        bindingResult.addError(fieldError);
+                    }
                 }
             }
         }

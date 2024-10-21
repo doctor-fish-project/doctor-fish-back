@@ -168,7 +168,7 @@
             user_tb
     </select>
 
-    <select id="findByPhoneNumber" resultType="com.project.doctor_fish_back.entity.User">
+    <select id="findByPhoneNumber" resultMap="userResultMap">
         select
             u.id as user_id,
             u.email,
