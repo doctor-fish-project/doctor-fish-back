@@ -2,7 +2,7 @@ package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.exception.AccessTokenValidException;
-import com.project.doctor_fish_back.repository.UserMapper;
+import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class TokenService {
 
     @Autowired
-    private UserMapper userMapper;
+    private AdminUserMapper userMapper;
 
     @Autowired
     private JwtProvider jwtProvider;

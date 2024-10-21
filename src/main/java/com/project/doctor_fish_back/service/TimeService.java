@@ -1,6 +1,6 @@
 package com.project.doctor_fish_back.service;
 
-import com.project.doctor_fish_back.dto.request.time.ReqReservedTimeDto;
+import com.project.doctor_fish_back.dto.time.ReqReservedTimeDto;
 import com.project.doctor_fish_back.entity.Time;
 import com.project.doctor_fish_back.repository.TimeMapper;
 import org.springframework.beans.factory.annotation.Autowired;

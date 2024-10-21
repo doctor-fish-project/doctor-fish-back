@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.admin.AdminLeaveMapper">
+
+    <insert id="save">
+        insert into leave_tb
+        values(default, #{doctorId}, default, #{leaveDate}, #{endDate}, now(), now())
+    </insert>
+
+    <update id="modify">
+        update leave_tb
+        set
+            leave_date = #{leaveDate},
+            end_date = #{endDate},
+            update_date = now()
+        where
+            id = #{id}
+    </update>
+
+    <update id="acceptById">
+        update leave_tb
+        set
+            status = 2
+        where
+            id = #{id}
+    </update>
+
+    <update id="cancelById">
+        update leave_tb
+        set
+            status = 3
+        where
+            id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from
+            leave_tb
+        where
+            id = #{id}
+    </delete>
+
+    <select id="getAllToDoctor" resultType="com.project.doctor_fish_back.entity.Leave">
+        select
+            lt.id,
+            lt.doctor_id as doctorId,
+            lt.status,
+            lt.leave_date as leaveDate,
+            lt.end_date as endDate,
+            lt.register_date as registerDate,
+            lt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            dpt.name as departName
+        from
+            leave_tb lt
+            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
+            left outer join user_tb ut on(dt.user_id = ut.id)
+            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
+        where
+            doctor_id = #{doctorId}
+    </select>
+
+    <select id="getCountAllToDoctor" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            leave_tb
+        where
+            doctor_id = #{doctorId}
+    </select>
+
+    <select id="getAllToInfo" resultType="com.project.doctor_fish_back.entity.Leave">
+        select
+            lt.id,
+            lt.doctor_id as doctorId,
+            lt.status,
+            lt.leave_date as leaveDate,
+            lt.end_date as endDate,
+            lt.register_date as registerDate,
+            lt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            dpt.name as departName
+        from
+            leave_tb lt
+            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
+            left outer join user_tb ut on(dt.user_id = ut.id)
+            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
+    </select>
+
+    <select id="getCountAllToInfo" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            leave_tb
+    </select>
+
+    <select id="findLeaveById" resultType="com.project.doctor_fish_back.entity.Leave">
+        select
+            lt.id,
+            lt.doctor_id as doctorId,
+            lt.status,
+            lt.leave_date as leaveDate,
+            lt.end_date as endDate,
+            lt.register_date as registerDate,
+            lt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            dpt.name as departName
+        from
+            leave_tb lt
+            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
+            left outer join user_tb ut on(dt.user_id = ut.id)
+            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
+        where
+            lt.id = #{id}
+    </select>
+
+</mapper>

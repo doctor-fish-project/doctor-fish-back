@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.user.UserReservationMapper">
+
+    <resultMap id="adminReservationResultMap" type="com.project.doctor_fish_back.entity.Reservation">
+        <id property="id" column="rt_id" />
+        <result property="userId" column="rt_user_id" />
+        <result property="status" column="status" />
+        <result property="reservationDate" column="reservation_date" />
+        <result property="registerDate" column="register_date" />
+        <association property="user" resultMap="userResultMap" />
+    </resultMap>
+
+    <resultMap id="reservationResultMap" type="com.project.doctor_fish_back.entity.Reservation">
+        <id property="id" column="rt_id" />
+        <result property="userId" column="rt_user_id" />
+        <result property="doctorId" column="doctor_id" />
+        <result property="status" column="status" />
+        <result property="reservationDate" column="reservation_date" />
+        <result property="registerDate" column="register_date" />
+        <association property="doctor" resultMap="doctorResultMap" />
+    </resultMap>
+
+    <resultMap id="doctorResultMap" type="com.project.doctor_fish_back.entity.Doctor">
+        <id property="id" column="dot_id" />
+        <result property="userId" column="dot_user_id" />
+        <result property="departId" column="depart_id" />
+        <result property="comment" column="comment" />
+        <result property="record" column="record" />
+        <association property="user" resultMap="userResultMap"/>
+        <association property="depart" resultMap="departResultMap"/>
+    </resultMap>
+
+    <resultMap id="userResultMap" type="com.project.doctor_fish_back.entity.User">
+        <id property="id" column="ut_id" />
+        <result property="email" column="email" />
+        <result property="name" column="ut_name" />
+        <result property="password" column="password" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="img" column="ut_img" />
+        <result property="emailValid" column="email_valid" />
+    </resultMap>
+
+    <resultMap id="departResultMap" type="com.project.doctor_fish_back.entity.Depart">
+        <id property="id" column="det_id" />
+        <result property="name" column="det_name" />
+    </resultMap>
+
+    <resultMap id="getReservationMonthResultMap" type="com.project.doctor_fish_back.entity.GetReservationMonthDoctors">
+        <result property="id" column="id" />
+        <result property="name" column="name" />
+    </resultMap>
+
+    <insert id="register">
+        insert into reservation_tb
+        values(default, #{userId}, #{doctorId}, default, #{reservationDate}, now())
+    </insert>
+
+    <update id="cancelById">
+        update reservation_tb
+        set
+            status = 3
+        where
+            id = #{id}
+    </update>
+
+    <update id="modify">
+       update reservation_tb
+        set
+            reservation_date = #{reservationDate}
+        where
+            id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from
+            reservation_tb
+        where
+            id = #{id}
+    </delete>
+
+    <select id="findById" resultMap="reservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dot.id as dot_id,
+            dot.user_id as dot_user_id,
+            dot.depart_id,
+            dot.comment,
+            dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            det.id as det_id,
+            det.name as det_name
+        from
+            reservation_tb rt
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
+        where
+            rt.id = #{id}
+    </select>
+
+    <select id="getAll" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        order by
+            rt.reservation_date desc
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="getToday" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            DATE(reservation_date) = DATE(NOW())
+        order by
+            rt.reservation_date desc
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="getToUser" resultMap="reservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dot.id as dot_id,
+            dot.user_id as dot_user_id,
+            dot.depart_id,
+            dot.comment,
+            dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            det.id as det_id,
+            det.name as det_name
+        from
+            reservation_tb rt
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
+        where
+            rt.user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
+        order by
+            rt.reservation_date
+    </select>
+
+    <select id="getAllToUser" resultMap="reservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            dot.id as dot_id,
+            dot.user_id as dot_user_id,
+            dot.depart_id,
+            dot.comment,
+            dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            det.id as det_id,
+            det.name as det_name
+        from
+            reservation_tb rt
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
+        where
+            rt.user_id = #{userId}
+        order by
+            rt.reservation_date desc
+    </select>
+
+    <select id="getCountAll" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+    </select>
+
+    <select id="getCountToday" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            DATE(reservation_date) = DATE(NOW())
+    </select>
+
+    <select id="getCountToUser" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            user_id = #{userId} and DATE(reservation_date) = DATE(NOW())
+    </select>
+
+    <select id="getCountAllToUser" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            user_id = #{userId}
+    </select>
+
+    <select id="getAllByLimit" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        order by
+            rt.reservation_date desc
+        limit 0, #{limit}
+    </select>
+
+    <select id="getTodayByLimit" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            DATE(reservation_date) = DATE(NOW())
+        order by
+            rt.reservation_date desc
+        limit 0, #{limit}
+    </select>
+
+</mapper>

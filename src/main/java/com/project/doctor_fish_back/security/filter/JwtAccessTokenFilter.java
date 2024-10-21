@@ -1,7 +1,7 @@
 package com.project.doctor_fish_back.security.filter;
 
 import com.project.doctor_fish_back.entity.User;
-import com.project.doctor_fish_back.repository.UserMapper;
+import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import io.jsonwebtoken.Claims;
@@ -23,7 +23,7 @@ public class JwtAccessTokenFilter extends GenericFilter {
     private JwtProvider jwtProvider;
 
     @Autowired
-    private UserMapper userMapper;
+    private AdminUserMapper userMapper;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

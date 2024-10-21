@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.user.UserReviewLikeMapper">
+
+    <insert id="save">
+        insert into review_like_tb
+        values(default, #{reviewId}, #{userId})
+    </insert>
+
+    <delete id="deleteById">
+        delete
+        from
+            review_like_tb
+        where
+            id = #{id}
+    </delete>
+
+    <select id="findById" resultType="com.project.doctor_fish_back.entity.ReviewLike">
+        select
+            id,
+            review_id as reviewId,
+            user_id as userId
+        from
+            review_like_tb
+        where
+            id = #{id}
+    </select>
+
+    <select id="getLikeCountByReviewId" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            review_like_tb
+        where
+            review_id = #{reviewId}
+    </select>
+
+    <select id="findByReviewIdAndUserId" resultType="com.project.doctor_fish_back.entity.ReviewLike">
+        select
+            id,
+            review_id,
+            user_id
+        from
+            review_like_tb
+        where
+            review_id = #{reviewId}
+            and user_id = #{userId}
+    </select>
+
+</mapper>

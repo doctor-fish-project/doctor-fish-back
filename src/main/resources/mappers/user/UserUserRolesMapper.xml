@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.user.UserUserRolesMapper">
+
+    <insert id="save">
+        insert into user_roles_tb
+        values(default, #{userId}, #{roleId})
+    </insert>
+
+    <delete id="deleteByUserId">
+        delete
+        from
+            user_roles_tb
+        where
+            user_id = #{userId}
+    </delete>
+    <select id="findRoleIdByUserId" resultType="java.lang.Integer">
+        select
+            role_id
+        from
+            user_roles_tb
+        where
+            user_id = #{userId}
+    </select>
+
+</mapper>

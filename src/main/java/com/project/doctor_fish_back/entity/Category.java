@@ -1,6 +1,6 @@
 package com.project.doctor_fish_back.entity;
 
-import com.project.doctor_fish_back.dto.response.category.RespCategoryDto;
+import com.project.doctor_fish_back.dto.category.RespCategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
