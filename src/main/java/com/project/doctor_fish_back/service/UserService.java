@@ -7,6 +7,7 @@ import com.project.doctor_fish_back.dto.request.auth.ReqAdminSignupDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.request.auth.ReqSignupDto;
 import com.project.doctor_fish_back.dto.request.reservation.ReqPageAndLimitDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyAdminUsernameDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.request.user.ReqModifyUserPasswordDto;
@@ -181,6 +182,12 @@ public class UserService {
 
         userMapper.modify(dto.toEntity(userId));
 
+        return true;
+    }
+
+    @NotFoundAop
+    public Boolean modifyAdminUsername(Long userId, ReqModifyAdminUsernameDto dto) {
+        userMapper.modifyEmail(dto.toEntity(userId));
         return true;
     }
 

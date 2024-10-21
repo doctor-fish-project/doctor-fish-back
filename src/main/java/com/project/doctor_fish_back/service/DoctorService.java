@@ -3,14 +3,13 @@ package com.project.doctor_fish_back.service;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorDto;
 import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorPasswordDto;
-import com.project.doctor_fish_back.dto.request.doctor.ReqModifyDoctorUsernameDto;
+import com.project.doctor_fish_back.dto.request.user.ReqModifyAdminUsernameDto;
 import com.project.doctor_fish_back.dto.response.doctor.RespGetDoctorListDto;
 import com.project.doctor_fish_back.entity.Doctor;
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.repository.DoctorMapper;
 import com.project.doctor_fish_back.repository.UserMapper;
 import com.project.doctor_fish_back.repository.UserRolesMapper;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -57,37 +56,10 @@ public class DoctorService {
         User user = User.builder()
                 .id(doctor.getUserId())
                 .name(dto.getName())
+                .phoneNumber(dto.getPhoneNumber())
                 .img(dto.getImg())
                 .build();
         userMapper.modify(user);
-
-        return true;
-    }
-
-    @NotFoundAop
-    public Boolean modifyDoctorUsername(Long doctorId, ReqModifyDoctorUsernameDto dto) {
-        Doctor doctor = doctorMapper.findById(doctorId);
-
-        User user = User.builder()
-                .id(doctor.getUserId())
-                .email(dto.getUsername())
-                .build();
-
-        userMapper.modifyEmail(user);
-
-        return true;
-    }
-
-    @NotFoundAop
-    public Boolean modifyDoctorPassword(Long doctorId, ReqModifyDoctorPasswordDto dto) {
-        Doctor doctor = doctorMapper.findById(doctorId);
-
-        User user = User.builder()
-                .id(doctor.getUserId())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .build();
-
-        userMapper.modifyPassword(user);
 
         return true;
     }
