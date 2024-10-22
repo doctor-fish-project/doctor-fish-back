@@ -20,5 +20,12 @@
         where
             name = #{name}
     </select>
+    <select id="getDeparts" resultType="com.project.doctor_fish_back.entity.Depart">
+        select
+            id,
+            name
+        from
+            depart_tb
+    </select>
 
 </mapper>

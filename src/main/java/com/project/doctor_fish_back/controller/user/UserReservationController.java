@@ -32,13 +32,13 @@ public class UserReservationController {
         return ResponseEntity.ok().body(reservationService.getReservationsToUser());
     }
 
-    // 사용자 예약 전체 조회
+    // 사용자 내 예약 전체 조회
     @GetMapping("/reservation/list")
     public ResponseEntity<?> getAllReservationsToUser() {
         return ResponseEntity.ok().body(reservationService.getAllReservationsToUser());
     }
 
-    // 사용자 예약 단건 조회
+    // 사용자 내 예약 단건 조회
     @GetMapping("/reservation/{reservationId}")
     public ResponseEntity<?> getReservationToUser(@PathVariable Long reservationId) {
         return ResponseEntity.ok().body(reservationService.getReservationToUser(reservationId));

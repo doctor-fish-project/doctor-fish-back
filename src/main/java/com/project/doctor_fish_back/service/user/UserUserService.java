@@ -13,7 +13,7 @@ import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.EmailValidException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
-import com.project.doctor_fish_back.repository.user.RoleMapper;
+import com.project.doctor_fish_back.repository.user.UserRoleMapper;
 import com.project.doctor_fish_back.repository.user.UserUserMapper;
 import com.project.doctor_fish_back.repository.user.UserUserRolesMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
@@ -41,7 +41,7 @@ public class UserUserService {
     @Autowired
     private UserUserMapper userMapper;
     @Autowired
-    private RoleMapper roleMapper;
+    private UserRoleMapper roleMapper;
     @Autowired
     private UserUserRolesMapper userRolesMapper;
     @Autowired
