@@ -20,10 +20,10 @@ public class AdminLeaveController {
         return ResponseEntity.ok().body(leaveService.registerLeave(dto));
     }
 
-    // 의사 연차 전체 조회
-    @GetMapping("/leave/list/doctor/{doctorId}")
-    public ResponseEntity<?> getAllLeavesToDoctor(@PathVariable Long doctorId) {
-        return ResponseEntity.ok().body(leaveService.getAllLeavesToDoctor(doctorId));
+    // 관리자 연차 전체 조회
+    @GetMapping("/leave/list/{userId}")
+    public ResponseEntity<?> getAllLeavesToDoctor(@PathVariable Long userId) {
+        return ResponseEntity.ok().body(leaveService.getAllLeavesToDoctor(userId));
     }
 
     // 연차 전체 조회

@@ -30,6 +30,7 @@ public interface UserReservationMapper {
     List<Reservation> getAllToUser(Long userId);
     Long getCountAllToUser(Long userId);
 
+
     int modify(Reservation reservation);
 
 }
