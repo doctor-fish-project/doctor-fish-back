@@ -137,7 +137,7 @@ public class AuthorityAspect {
             }
             Leave leave = leaveMapper.findLeaveById(leaveId);
 
-            if(leave.getDoctorId() != dto.getDoctorId()) {
+            if(leave.getUserId() != dto.getUserId()) {
                 throw new AuthorityException("권한이 없습니다.");
             }
         }

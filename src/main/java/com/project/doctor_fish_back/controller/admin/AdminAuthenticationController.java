@@ -27,7 +27,7 @@ public class AdminAuthenticationController {
     // 토큰 유효성 검사
     @GetMapping("/auth/access")
     public ResponseEntity<?> access(ReqAccessDto dto) {
-        return ResponseEntity.ok().body(tokenService.isValidAccessToken(dto.getAccessToken()));
+        return ResponseEntity.ok().body(tokenService.isValidAccessToken(dto.getAdminAccessToken()));
     }
 
     // 원무과, 의사, 관리자 회원가입

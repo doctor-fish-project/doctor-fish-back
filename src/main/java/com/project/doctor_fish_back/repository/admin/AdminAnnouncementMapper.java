@@ -20,4 +20,7 @@ public interface AdminAnnouncementMapper {
                               @Param("limit") Long limit);
 
     List<Announcement> getAllByLimit(Long limit);
+
+    List<Announcement> getBySearch(String searchText);
+    Long getCountBySearch(String searchText);
 }

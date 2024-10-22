@@ -35,4 +35,7 @@ public interface AdminReservationMapper {
     List<Reservation> getAllToInfo();
     Long getCountAllToInfo();
 
+    List<Reservation> getBySearch(String searchText);
+    Long getCountBySearch(String searchText);
+
 }

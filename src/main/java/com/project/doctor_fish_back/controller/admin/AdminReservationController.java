@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.controller.admin;
 
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.service.admin.AdminReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,12 @@ public class AdminReservationController {
     @DeleteMapping("/reservation/{reservationId}")
     public ResponseEntity<?> deleteReservationFromAdmin(@PathVariable Long reservationId) throws AuthorityException {
         return ResponseEntity.ok().body(reservationService.deleteReservationFromAdmin(reservationId));
+    }
+
+    // 예약 검색
+    @GetMapping("/reservation/search")
+    public ResponseEntity<?> searchReservation(ReqSearchDto dto) {
+        return ResponseEntity.ok().body(reservationService.searchReservation(dto));
     }
 
 }

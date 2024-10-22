@@ -5,6 +5,7 @@ import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.response.review.RespGetReviewListDto;
 import com.project.doctor_fish_back.dto.admin.response.review.RespReviewLikeInfoDto;
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.Review;
 import com.project.doctor_fish_back.entity.ReviewLike;
 import com.project.doctor_fish_back.exception.ReviewLikeException;
@@ -86,6 +87,16 @@ public class AdminReviewService {
         return RespReviewLikeInfoDto.builder()
                 .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())
                 .likeCount(likeCount)
+                .build();
+    }
+
+    public RespGetReviewListDto searchReview(ReqSearchDto dto) {
+        List<Review> reviews = reviewMapper.getBySearch(dto.getSearchText());
+        Long reviewCount = reviewMapper.getCountBySearch(dto.getSearchText());
+
+        return RespGetReviewListDto.builder()
+                .reviews(reviews)
+                .reviewCount(reviewCount)
                 .build();
     }
 

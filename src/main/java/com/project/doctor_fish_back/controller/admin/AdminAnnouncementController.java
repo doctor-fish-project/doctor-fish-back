@@ -4,6 +4,7 @@ import com.project.doctor_fish_back.aspect.annotation.ValidAop;
 import com.project.doctor_fish_back.dto.admin.request.announcement.ReqModifyAnnounce;
 import com.project.doctor_fish_back.dto.admin.request.announcement.ReqWriteAnnounceDto;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.service.admin.AdminAnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,10 @@ public class AdminAnnouncementController {
         return ResponseEntity.ok().body(announcementService.getAnnouncement(announceId));
     }
 
-
+    // 공지사항 검색
+    @GetMapping("/announce/search")
+    public ResponseEntity<?> searchAnnouncement(ReqSearchDto dto) {
+        return ResponseEntity.ok().body(announcementService.searchAnnouncement(dto));
+    }
 
 }

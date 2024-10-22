@@ -5,6 +5,7 @@ import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimi
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationCountMonth;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationListDto;
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.repository.admin.AdminMonthMapper;
@@ -141,6 +142,16 @@ public class AdminReservationService {
 
         reservationMapper.deleteById(reservationId);
         return true;
+    }
+
+    public RespGetReservationListDto searchReservation(ReqSearchDto dto) {
+        List<Reservation> reservations = reservationMapper.getBySearch(dto.getSearchText());
+        Long totalCount = reservationMapper.getCountBySearch(dto.getSearchText());
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservations)
+                .totalCount(totalCount)
+                .build();
     }
 
 }

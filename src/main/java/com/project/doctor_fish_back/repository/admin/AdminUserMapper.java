@@ -21,4 +21,7 @@ public interface AdminUserMapper {
                       @Param("limit") Long limit);
     Long getCountAll();
     int modifyEmailValidById(Long id);
+
+    List<User> getBySearch(String searchText);
+    Long getCountBySearch(String searchText);
 }

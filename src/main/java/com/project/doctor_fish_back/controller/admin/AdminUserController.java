@@ -5,6 +5,7 @@ import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimi
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyAdminUsernameDto;
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserPasswordDto;
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.service.admin.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,12 @@ public class AdminUserController {
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         return ResponseEntity.ok().body(userService.deleteUser(userId));
+    }
+
+    // 회원 검색
+    @GetMapping("/user/search")
+    public ResponseEntity<?> searchUser(ReqSearchDto dto) {
+        return ResponseEntity.ok().body(userService.searchUser(dto));
     }
 
 }

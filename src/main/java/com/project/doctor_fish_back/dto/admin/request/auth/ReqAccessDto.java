@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ReqAccessDto {
-    private String accessToken;
+    private String adminAccessToken;
 }

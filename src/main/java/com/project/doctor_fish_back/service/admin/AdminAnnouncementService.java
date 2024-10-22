@@ -7,6 +7,7 @@ import com.project.doctor_fish_back.dto.admin.request.announcement.ReqWriteAnnou
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceListDto;
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.Announcement;
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.exception.AuthorityException;
@@ -100,6 +101,16 @@ public class AdminAnnouncementService {
                 .content(announcement.getContent())
                 .registerDate(announcement.getRegisterDate())
                 .updateDate(announcement.getUpdateDate())
+                .build();
+    }
+
+    public RespGetAnnounceListDto searchAnnouncement(ReqSearchDto dto) {
+        List<Announcement> announcements = announcementMapper.getBySearch(dto.getSearchText());
+        Long announceCount = announcementMapper.getCountBySearch(dto.getSearchText());
+
+        return RespGetAnnounceListDto.builder()
+                .announcements(announcements)
+                .announceCount(announceCount)
                 .build();
     }
 
