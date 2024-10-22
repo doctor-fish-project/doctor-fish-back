@@ -4,7 +4,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.project.doctor_fish_back.repository.user.UserRoleMapper">
+<mapper namespace="com.project.doctor_fish_back.repository.user.RoleMapper">
 
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into role_tb

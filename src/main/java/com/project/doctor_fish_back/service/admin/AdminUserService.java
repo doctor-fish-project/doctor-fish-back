@@ -130,6 +130,20 @@ public class AdminUserService {
         return true;
     }
 
+    @NotFoundAop
+    @AuthorityAop
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Boolean deleteUser(Long userId) {
+        try {
+            userMapper.deleteById(userId);
+            userRolesMapper.deleteByUserId(userId);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return true;
+    }
+
     @Transactional(rollbackFor = SignupException.class)
     public Boolean adminSignup(ReqAdminSignupDto dto) throws SignupException {
         User user = null;

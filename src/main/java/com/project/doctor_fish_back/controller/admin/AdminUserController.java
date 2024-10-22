@@ -47,4 +47,10 @@ public class AdminUserController {
         return ResponseEntity.ok().body(userService.modifyUserPassword(userId, dto));
     }
 
+    // 회원 탈퇴
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        return ResponseEntity.ok().body(userService.deleteUser(userId));
+    }
+
 }
