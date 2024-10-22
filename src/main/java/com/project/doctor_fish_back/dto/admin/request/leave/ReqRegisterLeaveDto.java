@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 
 @Data
 public class ReqRegisterLeaveDto {
-    private Long doctorId;
+    private Long userId;
     private LocalDateTime leaveDate;
     private LocalDateTime endDate;
 
     public Leave toEntity() {
         return Leave.builder()
-                .doctorId(doctorId)
+                .userId(userId)
                 .leaveDate(leaveDate)
                 .endDate(endDate)
                 .build();

@@ -48,7 +48,7 @@
     <select id="getAllToDoctor" resultType="com.project.doctor_fish_back.entity.Leave">
         select
             lt.id,
-            lt.doctor_id as doctorId,
+            lt.user_id as userId,
             lt.status,
             lt.leave_date as leaveDate,
             lt.end_date as endDate,
@@ -78,7 +78,7 @@
     <select id="getAllToInfo" resultType="com.project.doctor_fish_back.entity.Leave">
         select
             lt.id,
-            lt.doctor_id as doctorId,
+            lt.user_id as userId,
             lt.status,
             lt.leave_date as leaveDate,
             lt.end_date as endDate,
@@ -104,7 +104,7 @@
     <select id="findLeaveById" resultType="com.project.doctor_fish_back.entity.Leave">
         select
             lt.id,
-            lt.doctor_id as doctorId,
+            lt.user_id as userId,
             lt.status,
             lt.leave_date as leaveDate,
             lt.end_date as endDate,

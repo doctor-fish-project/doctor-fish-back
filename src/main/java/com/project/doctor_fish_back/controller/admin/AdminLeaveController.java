@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
-public class LeaveController {
+public class AdminLeaveController {
 
     @Autowired
     private AdminLeaveService leaveService;
@@ -26,9 +26,9 @@ public class LeaveController {
         return ResponseEntity.ok().body(leaveService.getAllLeavesToDoctor(doctorId));
     }
 
-    // 관리자 연차 전체 조회
+    // 연차 전체 조회
     @GetMapping("/leave/list/info")
-    public ResponseEntity<?> getAllLeavesToInfo() {
+    public ResponseEntity<?> getAllLeaves() {
         return ResponseEntity.ok().body(leaveService.getAllLeavesToInfo());
     }
 

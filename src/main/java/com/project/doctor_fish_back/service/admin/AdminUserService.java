@@ -10,6 +10,7 @@ import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.dto.admin.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.admin.response.user.RespGetUserListDto;
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
@@ -142,6 +143,15 @@ public class AdminUserService {
         }
 
         return true;
+    }
+
+    public RespGetUserListDto searchUser(ReqSearchDto dto) {
+        List<User> users = userMapper.getBySearch(dto.getSearchText());
+        Long userCount = userMapper.getCountBySearch(dto.getSearchText());
+        return RespGetUserListDto.builder()
+                .users(users)
+                .userCount(userCount)
+                .build();
     }
 
     @Transactional(rollbackFor = SignupException.class)

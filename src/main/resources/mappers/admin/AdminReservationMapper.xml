@@ -43,6 +43,8 @@
         <result property="phoneNumber" column="phone_number" />
         <result property="img" column="ut_img" />
         <result property="emailValid" column="email_valid" />
+        <result property="registerDate" column="ut_register_date" />
+        <result property="updateDate" column="ut_update_date" />
     </resultMap>
 
     <resultMap id="departResultMap" type="com.project.doctor_fish_back.entity.Depart">
@@ -99,6 +101,8 @@
             ut.phone_number,
             ut.img as ut_img,
             ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date,
             det.id as det_id,
             det.name as det_name
         from
@@ -123,7 +127,9 @@
             ut.password,
             ut.phone_number,
             ut.img as ut_img,
-            ut.email_valid
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
         from
             reservation_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
@@ -145,7 +151,9 @@
             ut.password,
             ut.phone_number,
             ut.img as ut_img,
-            ut.email_valid
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
         from
             reservation_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
@@ -192,6 +200,8 @@
             ut.phone_number,
             ut.img as ut_img,
             ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date,
             det.id as det_id,
             det.name as det_name
         from
@@ -230,6 +240,8 @@
             ut.phone_number,
             ut.img as ut_img,
             ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date,
             det.id as det_id,
             det.name as det_name
         from
@@ -298,7 +310,9 @@
             ut.password,
             ut.phone_number,
             ut.img as ut_img,
-            ut.email_valid
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
         from
             reservation_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
@@ -320,7 +334,9 @@
             ut.password,
             ut.phone_number,
             ut.img as ut_img,
-            ut.email_valid
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
         from
             reservation_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
@@ -329,6 +345,43 @@
         order by
             rt.reservation_date desc
         limit 0, #{limit}
+    </select>
+
+    <select id="getBySearch" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            ut.email like concat("%", #{searchText}, "%")
+            or ut.name like concat("%", #{searchText}, "%")
+        order by
+            rt.reservation_date desc
+    </select>
+
+    <select id="getCountBySearch" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            ut.email like concat("%", #{searchText}, "%")
+            or ut.name like concat("%", #{searchText}, "%")
     </select>
 
 </mapper>

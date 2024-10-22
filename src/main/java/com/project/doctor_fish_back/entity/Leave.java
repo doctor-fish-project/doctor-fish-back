@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class Leave {
     private Long id;
-    private Long doctorId;
+    private Long userId;
     private int status;
     private LocalDateTime leaveDate;
     private LocalDateTime endDate;

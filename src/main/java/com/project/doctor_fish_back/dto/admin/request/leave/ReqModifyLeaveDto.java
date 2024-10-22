@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
 
 @Data
 public class ReqModifyLeaveDto {
-    private Long doctorId;
+    private Long userId;
     private LocalDateTime leaveDate;
     private LocalDateTime endDate;
 
     public Leave toEntity(Long id) {
         return Leave.builder()
                 .id(id)
-                .doctorId(doctorId)
+                .userId(userId)
                 .leaveDate(leaveDate)
                 .endDate(endDate)
                 .build();

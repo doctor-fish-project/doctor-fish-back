@@ -50,7 +50,7 @@ public class AdminLeaveService {
 
         return RespGetLeaveDto.builder()
                 .id(leave.getId())
-                .doctorId(leave.getDoctorId())
+                .doctorId(leave.getUserId())
                 .status(leave.getStatus())
                 .leaveDate(leave.getLeaveDate())
                 .endDate(leave.getEndDate())
