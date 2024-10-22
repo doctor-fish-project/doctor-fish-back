@@ -26,7 +26,7 @@ public class UserUserController {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok().body(userService.getUserInfo(principalUser.getId()));
     }
-
+    // FIXME: 이 부분 수정 부탁드립니다
     // 사용자 정보 수정(이름, 전화번호, 프로필사진)
     @ValidAop
     @PutMapping("/user/{userId}")
