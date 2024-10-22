@@ -4,7 +4,7 @@ import com.project.doctor_fish_back.entity.Role;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface UserRoleMapper {
+public interface RoleMapper {
     Role findByPosition(String position);
     int save(Role role);
 
