@@ -8,7 +8,7 @@
 
     <insert id="save">
         insert into leave_tb
-        values(default, #{doctorId}, default, #{leaveDate}, #{endDate}, now(), now())
+        values(default, #{userId}, default, #{reason}, #{leaveDate}, #{endDate}, now(), now())
     </insert>
 
     <update id="modify">
@@ -47,23 +47,18 @@
 
     <select id="getAllToDoctor" resultType="com.project.doctor_fish_back.entity.Leave">
         select
-            lt.id,
-            lt.user_id as userId,
-            lt.status,
-            lt.leave_date as leaveDate,
-            lt.end_date as endDate,
-            lt.register_date as registerDate,
-            lt.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg,
-            dpt.name as departName
+            id,
+            user_id as userId,
+            reason,
+            status,
+            leave_date as leaveDate,
+            end_date as endDate,
+            register_date as registerDate,
+            update_date as updateDate
         from
-            leave_tb lt
-            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
-            left outer join user_tb ut on(dt.user_id = ut.id)
-            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
+            leave_tb
         where
-            doctor_id = #{doctorId}
+            user_id = #{userId}
     </select>
 
     <select id="getCountAllToDoctor" resultType="java.lang.Long">
@@ -72,7 +67,7 @@
         from
             leave_tb
         where
-            doctor_id = #{doctorId}
+            user_id = #{userId}
     </select>
 
     <select id="getAllToInfo" resultType="com.project.doctor_fish_back.entity.Leave">

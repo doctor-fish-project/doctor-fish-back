@@ -17,7 +17,7 @@
         where
             ct.link = #{pathName}
         order by
-            tht.id;
+            ctht.sequence;
     </select>
 
 </mapper>

@@ -24,9 +24,9 @@ public class AdminLeaveService {
         return true;
     }
 
-    public RespGetLeaveListDto getAllLeavesToDoctor(Long doctorId) {
-        List<Leave> leaves = leaveMapper.getAllToDoctor(doctorId);
-        Long leaveCount = leaveMapper.getCountAllToDoctor(doctorId);
+    public RespGetLeaveListDto getAllLeavesToDoctor(Long userId) {
+        List<Leave> leaves = leaveMapper.getAllToDoctor(userId);
+        Long leaveCount = leaveMapper.getCountAllToDoctor(userId);
 
         return RespGetLeaveListDto.builder()
                 .leaves(leaves)

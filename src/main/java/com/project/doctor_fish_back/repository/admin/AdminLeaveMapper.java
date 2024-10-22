@@ -14,8 +14,8 @@ public interface AdminLeaveMapper {
     int cancelById(Long id);
     int deleteById(Long id);
 
-    List<Leave> getAllToDoctor(Long doctorId);
-    Long getCountAllToDoctor(Long doctorId);
+    List<Leave> getAllToDoctor(Long userId);
+    Long getCountAllToDoctor(Long userId);
 
     List<Leave> getAllToInfo();
     Long getCountAllToInfo();

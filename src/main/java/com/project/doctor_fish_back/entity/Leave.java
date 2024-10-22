@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class Leave {
     private Long id;
     private Long userId;
+    private String reason;
     private int status;
     private LocalDateTime leaveDate;
     private LocalDateTime endDate;

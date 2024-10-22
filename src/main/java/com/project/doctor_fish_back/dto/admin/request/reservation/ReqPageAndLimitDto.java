@@ -6,6 +6,6 @@ import java.util.Optional;
 
 @Data
 public class ReqPageAndLimitDto {
-    private Long page = 1L;
+    private Long page;
     private Long limit;
 }
