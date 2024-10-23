@@ -356,6 +356,7 @@
             rt.user_id = #{userId}
             and <![CDATA[ rt.reservation_date < now() ]]>
             and rt.review_status = 0
+            and rt.status = 2
         order by
             rt.reservation_date desc
     </select>
@@ -369,6 +370,7 @@
             user_id = #{userId}
             and <![CDATA[ reservation_date < now() ]]>
             and review_status = 0
+            and status = 2
     </select>
 
 </mapper>

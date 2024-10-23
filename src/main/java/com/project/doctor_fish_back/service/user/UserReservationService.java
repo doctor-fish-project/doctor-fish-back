@@ -67,7 +67,6 @@ public class UserReservationService {
 
             List<Reservation> reservations = reservationMapper.getAllToUser(principalUser.getId());
             Long totalCount = reservationMapper.getCountAllToUser(principalUser.getId());
-
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
                     .totalCount(totalCount)

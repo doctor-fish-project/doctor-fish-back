@@ -48,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/announce/**",
                         "/user/**",
                         "/doctor/**"
-
                 )
                 .permitAll()
                 .anyRequest()
