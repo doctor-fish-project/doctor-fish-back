@@ -4,6 +4,7 @@ import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimi
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.response.review.RespGetReviewListDto;
+import com.project.doctor_fish_back.dto.admin.response.review.RespReviewDto;
 import com.project.doctor_fish_back.dto.admin.response.review.RespReviewLikeInfoDto;
 import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.Review;
@@ -34,6 +35,20 @@ public class AdminReviewService {
         return RespGetReviewListDto.builder()
                 .reviews(reviews)
                 .reviewCount(reviewCount)
+                .build();
+    }
+
+    public RespReviewDto getReview(Long reviewId) {
+        Review review = reviewMapper.findById(reviewId);
+        return RespReviewDto.builder()
+                .id(review.getId())
+                .userId(review.getUserId())
+                .img(review.getImg())
+                .content(review.getContent())
+                .registerDate(review.getRegisterDate())
+                .updateDate(review.getUpdateDate())
+                .userName(review.getUserName())
+                .userImg(review.getUserImg())
                 .build();
     }
 

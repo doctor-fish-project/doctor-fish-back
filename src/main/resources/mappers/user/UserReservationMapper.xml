@@ -12,6 +12,7 @@
         <result property="status" column="status" />
         <result property="reservationDate" column="reservation_date" />
         <result property="registerDate" column="register_date" />
+        <result property="reviewStatus" column="review_status" />
         <association property="user" resultMap="userResultMap" />
     </resultMap>
 
@@ -22,6 +23,7 @@
         <result property="status" column="status" />
         <result property="reservationDate" column="reservation_date" />
         <result property="registerDate" column="register_date" />
+        <result property="reviewStatus" column="review_status" />
         <association property="doctor" resultMap="doctorResultMap" />
     </resultMap>
 
@@ -76,6 +78,14 @@
             id = #{id}
     </update>
 
+    <update id="modifyReviewStatusById">
+        update reservation_tb
+        set
+            review_status = 1
+        where
+            id = #{id}
+    </update>
+
     <delete id="deleteById">
         delete
         from
@@ -92,6 +102,7 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
+            rt.review_status,
             dot.id as dot_id,
             dot.user_id as dot_user_id,
             dot.depart_id,
@@ -122,6 +133,7 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
+            rt.review_status,
             ut.id as ut_id,
             ut.email,
             ut.name as ut_name,
@@ -144,6 +156,7 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
+            rt.review_status,
             ut.id as ut_id,
             ut.email,
             ut.name as ut_name,
@@ -169,6 +182,7 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
+            rt.review_status,
             dot.id as dot_id,
             dot.user_id as dot_user_id,
             dot.depart_id,
@@ -202,6 +216,7 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
+            rt.review_status,
             dot.id as dot_id,
             dot.user_id as dot_user_id,
             dot.depart_id,
@@ -268,6 +283,7 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
+            rt.review_status,
             ut.id as ut_id,
             ut.email,
             ut.name as ut_name,
@@ -290,6 +306,7 @@
             rt.status,
             rt.reservation_date,
             rt.register_date,
+            rt.review_status,
             ut.id as ut_id,
             ut.email,
             ut.name as ut_name,
@@ -305,6 +322,53 @@
         order by
             rt.reservation_date desc
         limit 0, #{limit}
+    </select>
+
+    <select id="getEndAll" resultMap="reservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.doctor_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            rt.review_status,
+            dot.id as dot_id,
+            dot.user_id as dot_user_id,
+            dot.depart_id,
+            dot.comment,
+            dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            det.id as det_id,
+            det.name as det_name
+        from
+            reservation_tb rt
+            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+            left outer join user_tb ut on(dot.user_id = ut.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
+        where
+            rt.user_id = #{userId}
+            and <![CDATA[ rt.reservation_date < now() ]]>
+            and rt.review_status = 0
+        order by
+            rt.reservation_date desc
+    </select>
+
+    <select id="getCountEndAll" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            user_id = #{userId}
+            and <![CDATA[ reservation_date < now() ]]>
+            and review_status = 0
     </select>
 
 </mapper>

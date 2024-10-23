@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class ReqWriteReviewDto {
+    private Long reservationId;
     private String imgList;
     @NotBlank(message = "내용을 입력하세요.")
     private String content;

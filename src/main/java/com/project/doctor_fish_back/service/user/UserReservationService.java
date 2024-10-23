@@ -91,5 +91,17 @@ public class UserReservationService {
         return true;
     }
 
+    public RespGetReservationListDto getEndReservation() {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Reservation> reservations = reservationMapper.getEndAll(principalUser.getId());
+        Long totalCount = reservationMapper.getCountEndAll(principalUser.getId());
+
+        return RespGetReservationListDto.builder()
+                .reservations(reservations)
+                .totalCount(totalCount)
+                .build();
+    }
+
 }
 
