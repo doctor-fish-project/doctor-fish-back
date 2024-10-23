@@ -39,7 +39,7 @@ public class UserAuthenticationController {
     // 사용자 로그인
     @ValidAop
     @PostMapping("/auth/signin")
-    public ResponseEntity<?> signin(@Valid @RequestBody ReqSigninDto dto, BindingResult bindingResult) throws SigninException {
+    public ResponseEntity<?> signin(@Valid @RequestBody ReqSigninDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(userService.getGeneratedAccessToken(dto));
     }
 

@@ -223,7 +223,7 @@ public class AdminUserService {
 
             user.setUserRoles(Set.of(userRoles));
         } catch (Exception e) {
-            throw new SignupException(e.getMessage());
+            throw new SignupException("로그인 도중 오류 발생");
         }
     }
 
@@ -263,7 +263,7 @@ public class AdminUserService {
 
             doctorMapper.save(doctor);
         } catch (Exception e) {
-            throw new SignupException(e.getMessage());
+            throw new SignupException("로그인 도중 오류 발생");
         }
     }
 
