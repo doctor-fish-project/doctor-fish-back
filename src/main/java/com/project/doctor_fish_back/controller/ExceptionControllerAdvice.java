@@ -55,4 +55,9 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler(ExecutionException.class)
+    public ResponseEntity<?> executionException(ExecutionException e) {
+        return ResponseEntity.status(500).body(e.getMessage());
+    }
+
 }

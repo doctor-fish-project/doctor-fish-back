@@ -7,6 +7,7 @@ import com.project.doctor_fish_back.dto.admin.request.leave.ReqRegisterLeaveDto;
 import com.project.doctor_fish_back.dto.admin.response.leave.RespGetLeaveDto;
 import com.project.doctor_fish_back.dto.admin.response.leave.RespGetLeaveListDto;
 import com.project.doctor_fish_back.entity.Leave;
+import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.admin.AdminLeaveMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,70 +21,102 @@ public class AdminLeaveService {
     private AdminLeaveMapper leaveMapper;
 
     public Boolean registerLeave(ReqRegisterLeaveDto dto) {
-        leaveMapper.save(dto.toEntity());
+        try {
+            leaveMapper.save(dto.toEntity());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     public RespGetLeaveListDto getAllLeavesToDoctor(Long userId) {
-        List<Leave> leaves = leaveMapper.getAllToDoctor(userId);
-        Long leaveCount = leaveMapper.getCountAllToDoctor(userId);
+        try {
+            List<Leave> leaves = leaveMapper.getAllToDoctor(userId);
+            Long leaveCount = leaveMapper.getCountAllToDoctor(userId);
 
-        return RespGetLeaveListDto.builder()
-                .leaves(leaves)
-                .leaveCount(leaveCount)
-                .build();
+            return RespGetLeaveListDto.builder()
+                    .leaves(leaves)
+                    .leaveCount(leaveCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     public RespGetLeaveListDto getAllLeavesToInfo() {
-        List<Leave> leaves = leaveMapper.getAllToInfo();
-        Long leaveCount = leaveMapper.getCountAllToInfo();
+        try {
+            List<Leave> leaves = leaveMapper.getAllToInfo();
+            Long leaveCount = leaveMapper.getCountAllToInfo();
 
-        return RespGetLeaveListDto.builder()
-                .leaves(leaves)
-                .leaveCount(leaveCount)
-                .build();
+            return RespGetLeaveListDto.builder()
+                    .leaves(leaves)
+                    .leaveCount(leaveCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
     public RespGetLeaveDto getLeaveToDoctorAndInfo(Long leaveId) {
-        Leave leave = leaveMapper.findLeaveById(leaveId);
+        try {
+            Leave leave = leaveMapper.findLeaveById(leaveId);
 
-        return RespGetLeaveDto.builder()
-                .id(leave.getId())
-                .doctorId(leave.getUserId())
-                .status(leave.getStatus())
-                .leaveDate(leave.getLeaveDate())
-                .endDate(leave.getEndDate())
-                .registerDate(leave.getRegisterDate())
-                .updateDate(leave.getUpdateDate())
-                .userName(leave.getUserName())
-                .userImg(leave.getUserImg())
-                .departName(leave.getDepartName())
-                .build();
+            return RespGetLeaveDto.builder()
+                    .id(leave.getId())
+                    .doctorId(leave.getUserId())
+                    .status(leave.getStatus())
+                    .leaveDate(leave.getLeaveDate())
+                    .endDate(leave.getEndDate())
+                    .registerDate(leave.getRegisterDate())
+                    .updateDate(leave.getUpdateDate())
+                    .userName(leave.getUserName())
+                    .userImg(leave.getUserImg())
+                    .departName(leave.getDepartName())
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyLeave(Long leaveId, ReqModifyLeaveDto dto) {
-        leaveMapper.modify(dto.toEntity(leaveId));
+        try {
+            leaveMapper.modify(dto.toEntity(leaveId));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     public Boolean acceptLeave(Long leaveId) {
-        leaveMapper.acceptById(leaveId);
+        try {
+            leaveMapper.acceptById(leaveId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     public Boolean cancelLeave(Long leaveId) {
-        leaveMapper.cancelById(leaveId);
+        try {
+            leaveMapper.cancelById(leaveId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     public Boolean deleteLeave(Long leaveId) {
-        leaveMapper.deleteById(leaveId);
+        try {
+            leaveMapper.deleteById(leaveId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
