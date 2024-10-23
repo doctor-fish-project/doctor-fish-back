@@ -4,6 +4,7 @@ import com.project.doctor_fish_back.aspect.annotation.ValidAop;
 import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserPasswordDto;
+import com.project.doctor_fish_back.exception.SignupException;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.user.UserUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class UserUserController {
     // 사용자 이메일 변경
     @ValidAop
     @PutMapping("/user/{userId}/email")
-    public ResponseEntity<?> modifyUserEmail(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserEmailDto dto, BindingResult bindingResult) {
+    public ResponseEntity<?> modifyUserEmail(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserEmailDto dto, BindingResult bindingResult) throws SignupException {
         return ResponseEntity.ok().body(userService.modifyUserEmail(userId, dto));
     }
 

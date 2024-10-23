@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.service;
 
 import com.project.doctor_fish_back.dto.category.RespCategoryDto;
 import com.project.doctor_fish_back.entity.Category;
+import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.CategoryMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserRolesMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
@@ -22,9 +23,13 @@ public class CategoryService {
 
 
     public List<RespCategoryDto> getCategory() {
-        PrincipalUser user = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long roleId = (long) userRolesMapper.findRoleIdByUserId(user.getId());
+        try {
+            PrincipalUser user = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long roleId = (long) userRolesMapper.findRoleIdByUserId(user.getId());
 
-        return categoryMapper.getCategory(roleId).stream().map(Category::toDto).collect(Collectors.toList());
+            return categoryMapper.getCategory(roleId).stream().map(Category::toDto).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 }

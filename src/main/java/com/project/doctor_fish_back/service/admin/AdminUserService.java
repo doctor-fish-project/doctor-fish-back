@@ -13,6 +13,7 @@ import com.project.doctor_fish_back.dto.admin.response.user.RespGetUserListDto;
 import com.project.doctor_fish_back.dto.admin.response.user.RespMyInfoDto;
 import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
+import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
 import com.project.doctor_fish_back.repository.admin.AdminDepartMapper;
@@ -53,8 +54,6 @@ public class AdminUserService {
     @Autowired
     private AdminUserRolesMapper userRolesMapper;
     @Autowired
-    private EmailService emailService;
-    @Autowired
     private AdminDepartMapper departMapper;
     @Autowired
     private AdminDoctorMapper doctorMapper;
@@ -64,7 +63,7 @@ public class AdminUserService {
         try {
             return Optional.ofNullable(userMapper.findByEmail(email)).isPresent();
         } catch (Exception e) {
-            throw new RuntimeException("실행 도중 오류가 발생했습니다.");
+            throw new ExecutionException("실행 도중 오류 발생");
         }
     }
 
@@ -72,66 +71,114 @@ public class AdminUserService {
         try {
             return Optional.ofNullable(userMapper.findByPhoneNumber(phoneNumber)).isPresent();
         } catch (Exception e) {
-            throw new RuntimeException("실행 도중 오류가 발생했습니다.");
+            throw new ExecutionException("실행 도중 오류 발생");
         }
     }
 
     public RespSigninDto getGeneratedAccessToken(ReqAdminSigninDto dto) throws SigninException {
-        User user = checkUsernameAndPassword(dto.getUsername(), dto.getPassword());
+        try {
+            User user = checkUsernameAndPassword(dto.getUsername(), dto.getPassword());
 
-        return RespSigninDto.builder()
-                .expireDate(jwtProvider.getExpireDate().toLocaleString())
-                .accessToken(jwtProvider.generateAccessToken(user))
-                .build();
+            return RespSigninDto.builder()
+                    .expireDate(jwtProvider.getExpireDate().toLocaleString())
+                    .accessToken(jwtProvider.generateAccessToken(user))
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     private User checkUsernameAndPassword(String email, String password) throws SigninException {
-        User user = userMapper.findByEmail(email);
+        try {
+            User user = userMapper.findByEmail(email);
 
-        if(user == null) {
-            throw new SigninException("사용자 정보를 다시 확인하세요.");
+            if(user == null) {
+                throw new SigninException("사용자 정보를 다시 확인하세요.");
+            }
+
+            if(!passwordEncoder.matches(password, user.getPassword())) {
+                throw new SigninException("사용자 정보를 다시 확인하세요.");
+            }
+
+            return user;
+        } catch (SigninException e) {
+            throw new SigninException(e.getMessage());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
         }
-
-        if(!passwordEncoder.matches(password, user.getPassword())) {
-            throw new SigninException("사용자 정보를 다시 확인하세요.");
-        }
-
-        return user;
     }
 
     public RespGetUserListDto getUserList(ReqPageAndLimitDto dto) {
-        Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-        List<User> users = userMapper.getAll(startIndex, dto.getLimit());
-        Long userCount = userMapper.getCountAll();
+        try {
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<User> users = userMapper.getAll(startIndex, dto.getLimit());
+            Long userCount = userMapper.getCountAll();
 
-        return RespGetUserListDto.builder()
-                .users(users)
-                .userCount(userCount)
-                .build();
+            return RespGetUserListDto.builder()
+                    .users(users)
+                    .userCount(userCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyUser(Long userId, ReqModifyUserDto dto) {
-        if(dto.getImg() == null || dto.getImg().equals("")) {
-            dto.setImg(userDefaultProfileImg);
-        }
+        try {
+            User user = userMapper.findById(userId);
 
-        userMapper.modify(dto.toEntity(userId));
+            Set<String> roles = user.getUserRoles().stream().map(
+                    userRole -> userRole.getRole().getPosition()
+            ).collect(Collectors.toSet());
+
+            if(roles.contains("ROLE_DOCTOR")) {
+                if(dto.getImg() == null || dto.getImg().equals("")) {
+                    dto.setImg(doctorDefaultProfileImg);
+                }
+                userMapper.modify(dto.toEntity(userId));
+
+                Doctor doctor = doctorMapper.findByUserId(userId);
+                doctorMapper.modify(Doctor.builder()
+                                .id(doctor.getId())
+                                .comment(dto.getComment())
+                                .record(dto.getRecord())
+                                .build());
+
+                return true;
+            }
+
+            if(dto.getImg() == null || dto.getImg().equals("")) {
+                dto.setImg(userDefaultProfileImg);
+            }
+
+            userMapper.modify(dto.toEntity(userId));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
 
         return true;
     }
 
     @NotFoundAop
     public Boolean modifyAdminUsername(Long userId, ReqModifyAdminUsernameDto dto) {
-        userMapper.modifyEmail(dto.toEntity(userId));
+        try {
+            userMapper.modifyEmail(dto.toEntity(userId));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) {
-        userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+        try {
+            userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
@@ -150,12 +197,16 @@ public class AdminUserService {
     }
 
     public RespGetUserListDto searchUser(ReqSearchDto dto) {
-        List<User> users = userMapper.getBySearch(dto.getSearchText());
-        Long userCount = userMapper.getCountBySearch(dto.getSearchText());
-        return RespGetUserListDto.builder()
-                .users(users)
-                .userCount(userCount)
-                .build();
+        try {
+            List<User> users = userMapper.getBySearch(dto.getSearchText());
+            Long userCount = userMapper.getCountBySearch(dto.getSearchText());
+            return RespGetUserListDto.builder()
+                    .users(users)
+                    .userCount(userCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @Transactional(rollbackFor = SignupException.class)
@@ -178,77 +229,89 @@ public class AdminUserService {
         return true;
     }
 
-    private void insertInfoOrAdminAndUserRoles(ReqAdminSignupDto dto, User user) {
-        user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
-        userMapper.save(user);
+    private void insertInfoOrAdminAndUserRoles(ReqAdminSignupDto dto, User user) throws SignupException {
+        try {
+            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
+            userMapper.save(user);
 
-        userMapper.modifyEmailValidById(user.getId());
+            userMapper.modifyEmailValidById(user.getId());
 
-        UserRoles userRoles = UserRoles.builder()
-                .userId(user.getId())
-                .roleId(dto.getRoleId())
-                .build();
+            UserRoles userRoles = UserRoles.builder()
+                    .userId(user.getId())
+                    .roleId(dto.getRoleId())
+                    .build();
 
-        userRolesMapper.save(userRoles);
+            userRolesMapper.save(userRoles);
 
-        user.setUserRoles(Set.of(userRoles));
+            user.setUserRoles(Set.of(userRoles));
+        } catch (Exception e) {
+            throw new SignupException("로그인 도중 오류 발생");
+        }
     }
 
     private void doctorSignup(ReqAdminSignupDto dto, User user) throws SignupException {
-        if(dto.getDepartName() == null || dto.getDepartName().equals("")) {
-            throw new SignupException("부서이름을 입력하세요.");
+        try {
+            if(dto.getDepartName() == null || dto.getDepartName().equals("")) {
+                throw new SignupException("부서이름을 입력하세요.");
+            }
+
+            user = dto.toEntity(passwordEncoder, doctorDefaultProfileImg);
+            userMapper.save(user);
+
+            userMapper.modifyEmailValidById(user.getId());
+
+            UserRoles userRoles = UserRoles.builder()
+                    .userId(user.getId())
+                    .roleId(dto.getRoleId())
+                    .build();
+
+            userRolesMapper.save(userRoles);
+
+            user.setUserRoles(Set.of(userRoles));
+
+            Depart depart = departMapper.findByName(dto.getDepartName());
+
+            if(depart == null) {
+                departMapper.save(Depart.builder().name(dto.getDepartName()).build());
+                depart = departMapper.findByName(dto.getDepartName());
+            }
+
+            Doctor doctor = Doctor.builder()
+                    .userId(user.getId())
+                    .departId(depart.getId())
+                    .comment(dto.getComment())
+                    .record(dto.getRecord())
+                    .build();
+
+            doctorMapper.save(doctor);
+        } catch (Exception e) {
+            throw new SignupException("로그인 도중 오류 발생");
         }
-
-        user = dto.toEntity(passwordEncoder, doctorDefaultProfileImg);
-        userMapper.save(user);
-
-        userMapper.modifyEmailValidById(user.getId());
-
-        UserRoles userRoles = UserRoles.builder()
-                .userId(user.getId())
-                .roleId(dto.getRoleId())
-                .build();
-
-        userRolesMapper.save(userRoles);
-
-        user.setUserRoles(Set.of(userRoles));
-
-        Depart depart = departMapper.findByName(dto.getDepartName());
-
-        if(depart == null) {
-            departMapper.save(Depart.builder().name(dto.getDepartName()).build());
-            depart = departMapper.findByName(dto.getDepartName());
-        }
-
-        Doctor doctor = Doctor.builder()
-                .userId(user.getId())
-                .departId(depart.getId())
-                .comment(dto.getComment())
-                .record(dto.getRecord())
-                .build();
-
-        doctorMapper.save(doctor);
     }
 
     public RespMyInfoDto getMyInfo() {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userMapper.findById(principalUser.getId());
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userMapper.findById(principalUser.getId());
 
-        Set<String> roles = user.getUserRoles().stream().map(
-                userRole -> userRole.getRole().getName()
-        ).collect(Collectors.toSet());
+            Set<String> roles = user.getUserRoles().stream().map(
+                    userRole -> userRole.getRole().getName()
+            ).collect(Collectors.toSet());
 
-        return RespMyInfoDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .phoneNumber(user.getPhoneNumber())
-                .img(user.getImg())
-                .emailValid(user.getEmailValid())
-                .registerDate(user.getRegisterDate())
-                .updateDate(user.getUpdateDate())
-                .roles(roles)
-                .build();
+            return RespMyInfoDto.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .phoneNumber(user.getPhoneNumber())
+                    .img(user.getImg())
+                    .emailValid(user.getEmailValid())
+                    .registerDate(user.getRegisterDate())
+                    .updateDate(user.getUpdateDate())
+                    .roles(roles)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
 }

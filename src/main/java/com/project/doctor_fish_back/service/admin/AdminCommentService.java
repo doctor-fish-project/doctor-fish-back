@@ -6,6 +6,7 @@ import com.project.doctor_fish_back.dto.admin.request.comment.ReqModifyCommentDt
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqRegisterCommentDto;
 import com.project.doctor_fish_back.dto.admin.response.comment.RespGetCommentListDto;
 import com.project.doctor_fish_back.entity.Comment;
+import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.admin.AdminCommentMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,37 +23,53 @@ public class AdminCommentService {
 
     @NotFoundAop
     public Boolean writeComment(ReqRegisterCommentDto dto) {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Comment comment = dto.toEntity(principalUser.getId());
+            Comment comment = dto.toEntity(principalUser.getId());
 
-        commentMapper.save(comment);
+            commentMapper.save(comment);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
 
         return true;
     }
 
     @NotFoundAop
     public RespGetCommentListDto getComments(Long reviewId) {
-        List<Comment> comments = commentMapper.findAllByReviewId(reviewId);
-        Long commentCount = commentMapper.getCommentCountByReviewId(reviewId);
+        try {
+            List<Comment> comments = commentMapper.findAllByReviewId(reviewId);
+            Long commentCount = commentMapper.getCommentCountByReviewId(reviewId);
 
-        return RespGetCommentListDto.builder()
-                .comments(comments)
-                .commentCount(commentCount)
-                .build();
+            return RespGetCommentListDto.builder()
+                    .comments(comments)
+                    .commentCount(commentCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyComment(ReqModifyCommentDto dto) {
-        commentMapper.modifyById(dto.toEntity());
+        try {
+            commentMapper.modifyById(dto.toEntity());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean deleteComment(Long commentId) {
-        commentMapper.deleteById(commentId);
+        try {
+            commentMapper.deleteById(commentId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 

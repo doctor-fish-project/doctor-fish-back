@@ -13,4 +13,5 @@ public interface AdminDoctorMapper {
     int modify(Doctor doctor);
     Doctor findById(Long id);
     int deleteById(Long id);
+    Doctor findByUserId(Long userId);
 }

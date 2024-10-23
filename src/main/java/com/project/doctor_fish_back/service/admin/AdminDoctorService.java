@@ -5,6 +5,7 @@ import com.project.doctor_fish_back.dto.admin.request.doctor.ReqModifyDoctorDto;
 import com.project.doctor_fish_back.dto.admin.response.doctor.RespGetDoctorListDto;
 import com.project.doctor_fish_back.entity.Doctor;
 import com.project.doctor_fish_back.entity.User;
+import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.admin.AdminDoctorMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserRolesMapper;
@@ -29,32 +30,40 @@ public class AdminDoctorService {
     private AdminUserRolesMapper userRolesMapper;
 
     public RespGetDoctorListDto getDoctors() {
-        List<Doctor> doctors = doctorMapper.getAll();
-        Long doctorCount = doctorMapper.getCountAll();
+        try {
+            List<Doctor> doctors = doctorMapper.getAll();
+            Long doctorCount = doctorMapper.getCountAll();
 
-        return RespGetDoctorListDto.builder()
-                .doctors(doctors)
-                .doctorCount(doctorCount)
-                .build();
+            return RespGetDoctorListDto.builder()
+                    .doctors(doctors)
+                    .doctorCount(doctorCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
     public Boolean modifyDoctor(Long doctorId, ReqModifyDoctorDto dto) {
-        Doctor doctor = doctorMapper.findById(doctorId);
+        try {
+            Doctor doctor = doctorMapper.findById(doctorId);
 
-        if(dto.getImg() == null || dto.getImg().equals("")) {
-            dto.setImg(doctorDefaultProfileImg);
+            if(dto.getImg() == null || dto.getImg().equals("")) {
+                dto.setImg(doctorDefaultProfileImg);
+            }
+
+            doctorMapper.modify(dto.toEntity(doctorId));
+
+            User user = User.builder()
+                    .id(doctor.getUserId())
+                    .name(dto.getName())
+                    .phoneNumber(dto.getPhoneNumber())
+                    .img(dto.getImg())
+                    .build();
+            userMapper.modify(user);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
         }
-
-        doctorMapper.modify(dto.toEntity(doctorId));
-
-        User user = User.builder()
-                .id(doctor.getUserId())
-                .name(dto.getName())
-                .phoneNumber(dto.getPhoneNumber())
-                .img(dto.getImg())
-                .build();
-        userMapper.modify(user);
 
         return true;
     }

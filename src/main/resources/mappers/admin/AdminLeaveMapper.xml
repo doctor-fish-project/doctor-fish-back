@@ -81,7 +81,7 @@
             lt.register_date as registerDate,
             lt.update_date as updateDate,
             ut.name as userName,
-            ut.img as userImg,
+            ut.img as userImg
         from
             leave_tb lt
             left outer join user_tb ut on(lt.user_id = ut.id)
