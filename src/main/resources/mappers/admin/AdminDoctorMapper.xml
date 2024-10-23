@@ -24,6 +24,8 @@
         <result property="phoneNumber" column="phone_number" />
         <result property="img" column="img" />
         <result property="emailValid" column="email_valid" />
+        <result property="registerDate" column="register_date" />
+        <result property="updateDate" column="update_date" />
     </resultMap>
 
     <resultMap id="departResultMap" type="com.project.doctor_fish_back.entity.Depart">
@@ -66,6 +68,8 @@
             ut.phone_number,
             ut.img,
             ut.email_valid,
+            ut.register_date,
+            ut.update_date,
             det.id as det_id,
             det.name as det_name
         from
@@ -95,6 +99,8 @@
             ut.phone_number,
             ut.img,
             ut.email_valid,
+            ut.register_date,
+            ut.update_date,
             det.id as det_id,
             det.name as det_name
         from
@@ -103,6 +109,32 @@
             left outer join depart_tb det on(dot.depart_id = det.id)
         where
             dot.id = #{id}
+    </select>
+
+    <select id="findByUserId" resultMap="doctorResultMap">
+        select
+            dot.id as dot_id,
+            dot.user_id,
+            dot.depart_id,
+            dot.comment,
+            dot.record,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img,
+            ut.email_valid,
+            ut.register_date,
+            ut.update_date,
+            det.id as det_id,
+            det.name as det_name
+        from
+            doctor_tb dot
+            left outer join user_tb ut on(dot.user_id = ut.id)
+            left outer join depart_tb det on(dot.depart_id = det.id)
+        where
+            dot.user_id = #{userId}
     </select>
 
 </mapper>

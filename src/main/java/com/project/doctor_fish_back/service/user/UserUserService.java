@@ -80,7 +80,7 @@ public class UserUserService {
         return true;
     }
 
-    public RespSigninDto getGeneratedAccessToken(ReqSigninDto dto) {
+    public RespSigninDto getGeneratedAccessToken(ReqSigninDto dto) throws SigninException {
         try {
             User user = checkUsernameAndPassword(dto.getEmail(), dto.getPassword());
 
@@ -93,6 +93,8 @@ public class UserUserService {
                     .expireDate(jwtProvider.getExpireDate().toLocaleString())
                     .accessToken(jwtProvider.generateAccessToken(user))
                     .build();
+        } catch (SigninException e) {
+            throw new SigninException(e.getMessage());
         } catch (EmailValidException e) {
             throw new EmailValidException(e.getMessage());
         } catch (Exception e) {

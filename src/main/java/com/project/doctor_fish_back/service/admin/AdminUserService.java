@@ -127,6 +127,28 @@ public class AdminUserService {
     @AuthorityAop
     public Boolean modifyUser(Long userId, ReqModifyUserDto dto) {
         try {
+            User user = userMapper.findById(userId);
+
+            Set<String> roles = user.getUserRoles().stream().map(
+                    userRole -> userRole.getRole().getPosition()
+            ).collect(Collectors.toSet());
+
+            if(roles.contains("ROLE_DOCTOR")) {
+                if(dto.getImg() == null || dto.getImg().equals("")) {
+                    dto.setImg(doctorDefaultProfileImg);
+                }
+                userMapper.modify(dto.toEntity(userId));
+
+                Doctor doctor = doctorMapper.findByUserId(userId);
+                doctorMapper.modify(Doctor.builder()
+                                .id(doctor.getId())
+                                .comment(dto.getComment())
+                                .record(dto.getRecord())
+                                .build());
+
+                return true;
+            }
+
             if(dto.getImg() == null || dto.getImg().equals("")) {
                 dto.setImg(userDefaultProfileImg);
             }
