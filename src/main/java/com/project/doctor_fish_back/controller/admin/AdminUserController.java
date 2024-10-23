@@ -63,4 +63,10 @@ public class AdminUserController {
         return ResponseEntity.ok().body(userService.searchUser(dto));
     }
 
+    // 관리자 본인 정보 조회
+    @GetMapping("/user/me")
+    public ResponseEntity<?> getMyInfo() {
+        return ResponseEntity.ok().body(userService.getMyInfo());
+    }
+
 }

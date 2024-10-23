@@ -10,6 +10,7 @@ import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.dto.admin.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.admin.response.user.RespGetUserListDto;
+import com.project.doctor_fish_back.dto.admin.response.user.RespMyInfoDto;
 import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.SigninException;
@@ -19,9 +20,11 @@ import com.project.doctor_fish_back.repository.admin.AdminDoctorMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserRolesMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
+import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +33,7 @@ import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminUserService {
@@ -224,6 +228,27 @@ public class AdminUserService {
                 .build();
 
         doctorMapper.save(doctor);
+    }
+
+    public RespMyInfoDto getMyInfo() {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userMapper.findById(principalUser.getId());
+
+        Set<String> roles = user.getUserRoles().stream().map(
+                userRole -> userRole.getRole().getName()
+        ).collect(Collectors.toSet());
+
+        return RespMyInfoDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .phoneNumber(user.getPhoneNumber())
+                .img(user.getImg())
+                .emailValid(user.getEmailValid())
+                .registerDate(user.getRegisterDate())
+                .updateDate(user.getUpdateDate())
+                .roles(roles)
+                .build();
     }
 
 }
