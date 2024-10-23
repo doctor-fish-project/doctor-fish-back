@@ -3,6 +3,7 @@ package com.project.doctor_fish_back.service.user;
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.user.response.review.RespGetReviewListDto;
+import com.project.doctor_fish_back.dto.user.response.review.RespReviewDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespReviewLikeInfoDto;
 import com.project.doctor_fish_back.dto.user.request.review.ReqModifyReviewDto;
 import com.project.doctor_fish_back.dto.user.request.review.ReqWriteReviewDto;
@@ -113,6 +114,21 @@ public class UserReviewService {
         return RespReviewLikeInfoDto.builder()
                 .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())
                 .likeCount(likeCount)
+                .build();
+    }
+
+    public RespReviewDto getReview(Long reviewId) {
+        Review review = reviewMapper.findById(reviewId);
+
+        return RespReviewDto.builder()
+                .id(review.getId())
+                .userId(review.getUserId())
+                .img(review.getImg())
+                .content(review.getContent())
+                .registerDate(review.getRegisterDate())
+                .updateDate(review.getUpdateDate())
+                .userName(review.getUserName())
+                .userImg(review.getUserImg())
                 .build();
     }
 
