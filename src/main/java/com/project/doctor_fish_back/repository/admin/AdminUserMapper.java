@@ -24,4 +24,5 @@ public interface AdminUserMapper {
 
     List<User> getBySearch(String searchText);
     Long getCountBySearch(String searchText);
+
 }
