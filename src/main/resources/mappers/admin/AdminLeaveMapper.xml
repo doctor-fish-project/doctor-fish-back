@@ -75,18 +75,16 @@
             lt.id,
             lt.user_id as userId,
             lt.status,
+            lt.reason,
             lt.leave_date as leaveDate,
             lt.end_date as endDate,
             lt.register_date as registerDate,
             lt.update_date as updateDate,
             ut.name as userName,
-            ut.img as userImg,
-            dpt.name as departName
+            ut.img as userImg
         from
             leave_tb lt
-            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
-            left outer join user_tb ut on(dt.user_id = ut.id)
-            left outer join depart_tb dpt on(dt.depart_id = dpt.id)
+            left outer join user_tb ut on(lt.user_id = ut.id)
     </select>
 
     <select id="getCountAllToInfo" resultType="java.lang.Long">
