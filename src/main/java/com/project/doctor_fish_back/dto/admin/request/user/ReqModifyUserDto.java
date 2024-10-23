@@ -12,6 +12,8 @@ public class ReqModifyUserDto {
     @NotBlank(message = "전화번호는 공백일 수 없습니다.")
     private String phoneNumber;
     private String img;
+    private String comment;
+    private String record;
 
     public User toEntity(Long userId) {
         return User.builder()

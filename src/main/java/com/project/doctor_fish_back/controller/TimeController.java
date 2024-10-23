@@ -19,5 +19,6 @@ public class TimeController {
 
     @GetMapping("/times/reserved")
     public ResponseEntity<?> getReservedTimes(ReqReservedTimeDto dto) {
-        return ResponseEntity.ok().body(timeService.getReservedTimeList(dto));    }
+        return ResponseEntity.ok().body(timeService.getReservedTimeList(dto));
+    }
 }

@@ -35,7 +35,7 @@
                                                                 left join doctor_tb dt on(lt.user_id = dt.user_id)
                                                             where
                                                                 dt.id = #{doctorId}
-                                                                and lt.status != 3
+                                                                and lt.status = 2
                                                                 and lt.leave_date like concat(#{reservationDate}, "%"))
                                                     and (select
                                                             hour(lt.end_date)
@@ -44,7 +44,7 @@
                                                             left join doctor_tb dt on(lt.user_id = dt.user_id)
                                                         where
                                                             dt.id = #{doctorId}
-                                                            and lt.status != 3
+                                                            and lt.status = 2
                                                             and lt.leave_date like concat(#{reservationDate}, "%"));
     </select>
 </mapper>
