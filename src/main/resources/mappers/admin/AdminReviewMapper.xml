@@ -72,8 +72,6 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
             rt.id = #{id}
-        order by
-            rt.register_date desc
     </select>
 
     <select id="getBySearch" resultType="com.project.doctor_fish_back.entity.Review">
