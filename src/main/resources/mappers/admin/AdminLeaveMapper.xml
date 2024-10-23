@@ -108,8 +108,8 @@
             dpt.name as departName
         from
             leave_tb lt
-            left outer join doctor_tb dt on(lt.doctor_id = dt.id)
-            left outer join user_tb ut on(dt.user_id = ut.id)
+            left outer join user_tb ut on(lt.user_id = ut.id)
+            left outer join doctor_tb dt on(ut.id = dt.user_id)
             left outer join depart_tb dpt on(dt.depart_id = dpt.id)
         where
             lt.id = #{id}

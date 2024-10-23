@@ -161,6 +161,8 @@
             user_tb u
             left outer join user_roles_tb ur on(u.id = ur.user_id)
             left outer join role_tb r on(r.id = ur.role_id)
+        where
+            r.id = 1
         limit
             #{startIndex}, #{limit}
     </select>
