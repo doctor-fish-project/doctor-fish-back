@@ -32,6 +32,12 @@ public class UserReviewController {
         return ResponseEntity.ok().body(reviewService.getReviews());
     }
 
+    // 리뷰 단건 조회
+    @GetMapping("/review/{reviewId}")
+    public ResponseEntity<?> getReview(@PathVariable Long reviewId) {
+        return ResponseEntity.ok().body(reviewService.getReview(reviewId));
+    }
+
     // 사용자 내 리뷰 전체 조회
     @GetMapping("/review/me")
     public ResponseEntity<?> getReviewsToUser() {
