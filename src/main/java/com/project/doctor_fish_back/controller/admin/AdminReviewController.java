@@ -21,6 +21,12 @@ public class AdminReviewController {
         return ResponseEntity.ok().body(reviewService.getReviews());
     }
 
+    // 리뷰 단건 조회
+    @GetMapping("/review/{reviewId}")
+    public ResponseEntity<?> getReview(@PathVariable Long reviewId) {
+        return ResponseEntity.ok().body(reviewService.getReview(reviewId));
+    }
+
     // 관리자 페이지 전체 리뷰 조회
     @GetMapping("/review")
     public ResponseEntity<?> getReviewAllByLimit(ReqPageAndLimitDto dto) {

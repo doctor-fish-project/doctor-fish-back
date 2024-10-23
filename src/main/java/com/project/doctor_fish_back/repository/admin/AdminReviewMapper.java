@@ -17,4 +17,6 @@ public interface AdminReviewMapper {
 
     List<Review> getBySearch(String searchText);
     Long getCountBySearch(String searchText);
+
+
 }
