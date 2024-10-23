@@ -30,21 +30,21 @@ public class AdminUserController {
         return ResponseEntity.ok().body(userService.getUserList(dto));
     }
 
-    // 원무과, 관리자 정보 수정(이름, 전화번호, 프로필사진)
+    // 관리자 정보 수정(이름, 전화번호, 사진, 소개글, 이력)
     @ValidAop
     @PutMapping("/user/{userId}")
     public ResponseEntity<?> modifyUser(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(userService.modifyUser(userId, dto));
     }
 
-    // 원무과, 의사, 관리자 아이디 수정
+    // 관리자 아이디 수정
     @ValidAop
     @PutMapping("/user/{userId}/username")
     public ResponseEntity<?> modifyAdminUsername(@PathVariable Long userId, @Valid @RequestBody ReqModifyAdminUsernameDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(userService.modifyAdminUsername(userId, dto));
     }
 
-    // 사용자, 원무과, 의사, 관리자 비밀번호 변경
+    // 관리자 비밀번호 변경
     @ValidAop
     @PutMapping("/user/{userId}/password")
     public ResponseEntity<?> modifyUserPassword(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserPasswordDto dto, BindingResult bindingResult) {
