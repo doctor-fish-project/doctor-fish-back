@@ -57,7 +57,7 @@
 
     <insert id="register">
         insert into reservation_tb
-        values(default, #{userId}, #{doctorId}, default, #{reservationDate}, now())
+        values(default, #{userId}, #{doctorId}, default, #{reservationDate}, now(), default)
     </insert>
 
     <update id="cancelById">
