@@ -29,20 +29,22 @@
                                                         and status != 3
                                                         and reservation_date like concat(#{reservationDate}, "%"))
             or CAST(substr(time, 1, 2) AS UNSIGNED) between (select
-                                                                hour(leave_date)
+                                                                hour(lt.leave_date)
                                                             from
-                                                                leave_tb
+                                                                leave_tb lt
+                                                                left join doctor_tb dt on(lt.user_id = dt.user_id)
                                                             where
-                                                                doctor_id = #{doctorId}
-                                                                and status != 3
-                                                                and leave_date like concat(#{reservationDate}, "%"))
+                                                                dt.id = #{doctorId}
+                                                                and lt.status = 2
+                                                                and lt.leave_date like concat(#{reservationDate}, "%"))
                                                     and (select
-                                                            hour(end_date)
+                                                            hour(lt.end_date)
                                                         from
-                                                            leave_tb
+                                                            leave_tb lt
+                                                            left join doctor_tb dt on(lt.user_id = dt.user_id)
                                                         where
-                                                            doctor_id = #{doctorId}
-                                                            and status != 3
-                                                            and leave_date like concat(#{reservationDate}, "%"));
+                                                            dt.id = #{doctorId}
+                                                            and lt.status = 2
+                                                            and lt.leave_date like concat(#{reservationDate}, "%"));
     </select>
 </mapper>
