@@ -18,6 +18,7 @@ public class Reservation {
     private int status;
     private LocalDateTime reservationDate;
     private LocalDateTime registerDate;
+    private int reviewStatus;
 
     private Doctor doctor;
     private User user;
