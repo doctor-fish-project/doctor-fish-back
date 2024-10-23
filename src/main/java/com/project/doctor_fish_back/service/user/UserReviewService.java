@@ -9,6 +9,7 @@ import com.project.doctor_fish_back.dto.user.request.review.ReqWriteReviewDto;
 import com.project.doctor_fish_back.entity.Review;
 import com.project.doctor_fish_back.entity.ReviewLike;
 import com.project.doctor_fish_back.exception.ReviewLikeException;
+import com.project.doctor_fish_back.repository.user.UserReservationMapper;
 import com.project.doctor_fish_back.repository.user.UserReviewLikeMapper;
 import com.project.doctor_fish_back.repository.user.UserReviewMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
@@ -23,14 +24,17 @@ public class UserReviewService {
 
     @Autowired
     private UserReviewMapper reviewMapper;
-
     @Autowired
     private UserReviewLikeMapper reviewLikeMapper;
+    @Autowired
+    private UserReservationMapper reservationMapper;
 
     public Boolean writeReview(ReqWriteReviewDto dto) {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         reviewMapper.save(dto.toEntity(principalUser.getId()));
+        reservationMapper.modifyReviewStatusById(dto.getReservationId());
+
         return true;
     }
 
