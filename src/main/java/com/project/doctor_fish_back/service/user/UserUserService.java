@@ -109,9 +109,7 @@ public class UserUserService {
 
     public RespUserInfoDto getUserInfo(Long id) {
         User user = userMapper.findById(id);
-        Set<String> roles = user.getUserRoles().stream().map(
-                userRole -> userRole.getRole().getName()
-        ).collect(Collectors.toSet());
+        Set<Role> roles = user.getUserRoles().stream().map(userRole -> userRole.getRole()).collect(Collectors.toSet());
 
         return RespUserInfoDto.builder()
                 .id(user.getId())
