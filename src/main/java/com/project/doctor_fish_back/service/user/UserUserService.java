@@ -11,6 +11,7 @@ import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserEmailDto;
 import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.EmailValidException;
+import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
 import com.project.doctor_fish_back.repository.user.UserRoleMapper;
@@ -70,80 +71,104 @@ public class UserUserService {
             userRolesMapper.save(userRoles);
 
             user.setUserRoles(Set.of(userRoles));
+
+            emailService.sendAuthMail(dto.getEmail());
         } catch (Exception e) {
             throw new SignupException(e.getMessage());
         }
 
-        emailService.sendAuthMail(dto.getEmail());
-
         return true;
     }
 
-    public RespSigninDto getGeneratedAccessToken(ReqSigninDto dto) throws SigninException {
-        User user = checkUsernameAndPassword(dto.getEmail(), dto.getPassword());
+    public RespSigninDto getGeneratedAccessToken(ReqSigninDto dto) {
+        try {
+            User user = checkUsernameAndPassword(dto.getEmail(), dto.getPassword());
 
-        if(user.getEmailValid() != 1) {
-            emailService.sendAuthMail(dto.getEmail());
-            throw new EmailValidException("이메일 인증 후 로그인 가능합니다.");
+            if(user.getEmailValid() != 1) {
+                emailService.sendAuthMail(dto.getEmail());
+                throw new EmailValidException("이메일 인증 후 로그인 가능합니다.");
+            }
+
+            return RespSigninDto.builder()
+                    .expireDate(jwtProvider.getExpireDate().toLocaleString())
+                    .accessToken(jwtProvider.generateAccessToken(user))
+                    .build();
+        } catch (EmailValidException e) {
+            throw new EmailValidException(e.getMessage());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
         }
-
-        return RespSigninDto.builder()
-                .expireDate(jwtProvider.getExpireDate().toLocaleString())
-                .accessToken(jwtProvider.generateAccessToken(user))
-                .build();
     }
 
     private User checkUsernameAndPassword(String email, String password) throws SigninException {
-        User user = userMapper.findByEmail(email);
+        try {
+            User user = userMapper.findByEmail(email);
 
-        if(user == null) {
-            throw new SigninException("사용자 정보를 다시 확인하세요.");
+            if(user == null) {
+                throw new SigninException("사용자 정보를 다시 확인하세요.");
+            }
+
+            if(!passwordEncoder.matches(password, user.getPassword())) {
+                throw new SigninException("사용자 정보를 다시 확인하세요.");
+            }
+
+            return user;
+        } catch (SigninException e) {
+            throw new SigninException(e.getMessage());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
         }
-
-        if(!passwordEncoder.matches(password, user.getPassword())) {
-            throw new SigninException("사용자 정보를 다시 확인하세요.");
-        }
-
-        return user;
     }
 
     public RespUserInfoDto getUserInfo(Long id) {
-        User user = userMapper.findById(id);
-        Set<String> roles = user.getUserRoles().stream().map(
-                userRole -> userRole.getRole().getName()
-        ).collect(Collectors.toSet());
+        try {
+            User user = userMapper.findById(id);
+            Set<String> roles = user.getUserRoles().stream().map(
+                    userRole -> userRole.getRole().getName()
+            ).collect(Collectors.toSet());
 
-        return RespUserInfoDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .phoneNumber(user.getPhoneNumber())
-                .img(user.getImg())
-                .emailValid(user.getEmailValid())
-                .registerDate(user.getRegisterDate())
-                .updateDate(user.getUpdateDate())
-                .roles(roles)
-                .build();
+            return RespUserInfoDto.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .phoneNumber(user.getPhoneNumber())
+                    .img(user.getImg())
+                    .emailValid(user.getEmailValid())
+                    .registerDate(user.getRegisterDate())
+                    .updateDate(user.getUpdateDate())
+                    .roles(roles)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyUser(Long userId, ReqModifyUserDto dto) {
-        if(dto.getImg() == null || dto.getImg().equals("")) {
-            dto.setImg(userDefaultProfileImg);
+        try {
+            if(dto.getImg() == null || dto.getImg().equals("")) {
+                dto.setImg(userDefaultProfileImg);
+            }
+
+            userMapper.modify(dto.toEntity(userId));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
         }
-
-        userMapper.modify(dto.toEntity(userId));
-
         return true;
     }
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean modifyUserEmail(Long userId, ReqModifyUserEmailDto dto) {
-        userMapper.modifyEmail(dto.toEntity(userId));
-        userMapper.modifyEmailValidByEmail(dto.getEmail());
-        emailService.sendAuthMail(dto.getEmail());
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Boolean modifyUserEmail(Long userId, ReqModifyUserEmailDto dto) throws SignupException {
+        try {
+            userMapper.modifyEmail(dto.toEntity(userId));
+            userMapper.modifyEmailValidByEmail(dto.getEmail());
+            emailService.sendAuthMail(dto.getEmail());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
         return true;
     }
@@ -151,7 +176,11 @@ public class UserUserService {
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) {
-        userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+        try {
+            userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 

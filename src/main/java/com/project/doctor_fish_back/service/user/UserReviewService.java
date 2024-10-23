@@ -9,6 +9,7 @@ import com.project.doctor_fish_back.dto.user.request.review.ReqModifyReviewDto;
 import com.project.doctor_fish_back.dto.user.request.review.ReqWriteReviewDto;
 import com.project.doctor_fish_back.entity.Review;
 import com.project.doctor_fish_back.entity.ReviewLike;
+import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.ReviewLikeException;
 import com.project.doctor_fish_back.repository.user.UserReservationMapper;
 import com.project.doctor_fish_back.repository.user.UserReviewLikeMapper;
@@ -31,105 +32,141 @@ public class UserReviewService {
     private UserReservationMapper reservationMapper;
 
     public Boolean writeReview(ReqWriteReviewDto dto) {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        reviewMapper.save(dto.toEntity(principalUser.getId()));
-        reservationMapper.modifyReviewStatusById(dto.getReservationId());
-
+            reviewMapper.save(dto.toEntity(principalUser.getId()));
+            reservationMapper.modifyReviewStatusById(dto.getReservationId());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     public RespGetReviewListDto getReviews() {
-        List<Review> reviews = reviewMapper.getReviewAll();
-        Long reviewCount = reviewMapper.getReviewAllCount();
+        try {
+            List<Review> reviews = reviewMapper.getReviewAll();
+            Long reviewCount = reviewMapper.getReviewAllCount();
 
-        return RespGetReviewListDto.builder()
-                .reviews(reviews)
-                .reviewCount(reviewCount)
-                .build();
+            return RespGetReviewListDto.builder()
+                    .reviews(reviews)
+                    .reviewCount(reviewCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     public RespGetReviewListDto getReviewsToUser() {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<Review> reviews = reviewMapper.getReviewsToUser(principalUser.getId());
-        Long reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
+            List<Review> reviews = reviewMapper.getReviewsToUser(principalUser.getId());
+            Long reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
 
-        return RespGetReviewListDto.builder()
-                .reviews(reviews)
-                .reviewCount(reviewCount)
-                .build();
+            return RespGetReviewListDto.builder()
+                    .reviews(reviews)
+                    .reviewCount(reviewCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyReview(Long reviewId, ReqModifyReviewDto dto) {
-        reviewMapper.modify(dto.toEntity(reviewId));
+        try {
+            reviewMapper.modify(dto.toEntity(reviewId));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean deleteReview(Long reviewId) {
-        reviewMapper.deleteById(reviewId);
+        try {
+            reviewMapper.deleteById(reviewId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     public Boolean like(Long reviewId) throws ReviewLikeException {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = principalUser.getId();
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalUser.getId();
 
-        ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
+            ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
 
-        if(reviewLike != null) {
-            throw new ReviewLikeException("이미 좋아요한 리뷰입니다.");
+            if(reviewLike != null) {
+                throw new ReviewLikeException("이미 좋아요한 리뷰입니다.");
+            }
+
+            ReviewLike rl = ReviewLike.builder()
+                    .reviewId(reviewId)
+                    .userId(userId)
+                    .build();
+
+            reviewLikeMapper.save(rl);
+        } catch (ReviewLikeException e) {
+            throw new ReviewLikeException(e.getMessage());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
         }
-
-        ReviewLike rl = ReviewLike.builder()
-                .reviewId(reviewId)
-                .userId(userId)
-                .build();
-
-        reviewLikeMapper.save(rl);
-
         return true;
     }
 
     @NotFoundAop
     @AuthorityAop
     public Boolean dislike(Long reviewLikeId) {
-        reviewLikeMapper.deleteById(reviewLikeId);
+        try {
+            reviewLikeMapper.deleteById(reviewLikeId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
         return true;
     }
 
     @NotFoundAop
     public RespReviewLikeInfoDto getLikeCount(Long reviewId) {
-        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = principalUser.getId();
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalUser.getId();
 
-        ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
-        Long likeCount = reviewLikeMapper.getLikeCountByReviewId(reviewId);
+            ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
+            Long likeCount = reviewLikeMapper.getLikeCountByReviewId(reviewId);
 
-        return RespReviewLikeInfoDto.builder()
-                .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())
-                .likeCount(likeCount)
-                .build();
+            return RespReviewLikeInfoDto.builder()
+                    .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())
+                    .likeCount(likeCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     public RespReviewDto getReview(Long reviewId) {
-        Review review = reviewMapper.findById(reviewId);
+        try {
+            Review review = reviewMapper.findById(reviewId);
 
-        return RespReviewDto.builder()
-                .id(review.getId())
-                .userId(review.getUserId())
-                .img(review.getImg())
-                .content(review.getContent())
-                .registerDate(review.getRegisterDate())
-                .updateDate(review.getUpdateDate())
-                .userName(review.getUserName())
-                .userImg(review.getUserImg())
-                .build();
+            return RespReviewDto.builder()
+                    .id(review.getId())
+                    .userId(review.getUserId())
+                    .img(review.getImg())
+                    .content(review.getContent())
+                    .registerDate(review.getRegisterDate())
+                    .updateDate(review.getUpdateDate())
+                    .userName(review.getUserName())
+                    .userImg(review.getUserImg())
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
 }
