@@ -7,11 +7,13 @@ import java.time.LocalDateTime;
 
 @Data
 public class ReqModifyReservationDto {
+    private Long doctorId;
     private LocalDateTime reserveDate;
 
     public Reservation toEntity(Long id) {
         return Reservation.builder()
                 .id(id)
+                .doctorId(doctorId)
                 .reservationDate(reserveDate)
                 .build();
         }
