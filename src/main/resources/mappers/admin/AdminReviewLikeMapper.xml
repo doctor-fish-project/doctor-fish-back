@@ -42,8 +42,8 @@
     <select id="findByReviewIdAndUserId" resultType="com.project.doctor_fish_back.entity.ReviewLike">
         select
             id,
-            review_id,
-            user_id
+            review_id as reviewId,
+            user_id as userId
         from
             review_like_tb
         where

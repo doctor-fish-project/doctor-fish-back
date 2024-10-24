@@ -13,6 +13,8 @@
         <result property="reservationDate" column="reservation_date" />
         <result property="registerDate" column="register_date" />
         <result property="reviewStatus" column="review_status" />
+        <result property="likeCount" column="like_count" />
+        <result property="isLike" column="is_like" />
         <association property="user" resultMap="userResultMap" />
     </resultMap>
 

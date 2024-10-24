@@ -81,7 +81,7 @@ public class UserReservationService {
     public RespGetReservationDto getReservationToUser(Long reservationId) {
         try {
             Reservation reservation = reservationMapper.findById(reservationId);
-
+            System.out.println(reservation);
             return RespGetReservationDto.builder()
                     .id(reservation.getId())
                     .userId(reservation.getUserId())
