@@ -45,7 +45,9 @@ public class UserReviewService {
 
     public RespGetReviewListDto getReviews() {
         try {
-            List<Review> reviews = reviewMapper.getReviewAll();
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            List<Review> reviews = reviewMapper.getReviewAll(principalUser.getId());
             Long reviewCount = reviewMapper.getReviewAllCount();
 
             return RespGetReviewListDto.builder()
@@ -53,6 +55,7 @@ public class UserReviewService {
                     .reviewCount(reviewCount)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
@@ -123,9 +126,10 @@ public class UserReviewService {
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean dislike(Long reviewLikeId) {
+    public Boolean dislike(Long reviewId) {
         try {
-            reviewLikeMapper.deleteById(reviewLikeId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            reviewLikeMapper.deleteById(reviewId, principalUser.getId());
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
