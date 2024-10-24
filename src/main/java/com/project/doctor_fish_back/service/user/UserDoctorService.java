@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.service.user;
 
+import com.project.doctor_fish_back.dto.user.response.doctor.RespGetDoctorDto;
 import com.project.doctor_fish_back.dto.user.response.doctor.RespGetDoctorListDto;
 import com.project.doctor_fish_back.entity.Doctor;
 import com.project.doctor_fish_back.exception.ExecutionException;
@@ -27,5 +28,16 @@ public class UserDoctorService {
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
+    }
+
+    public RespGetDoctorDto getDoctor(Long doctorId) {
+        Doctor doctor = doctorMapper.getDoctorById(doctorId);
+
+        return RespGetDoctorDto.builder()
+                .doctorId(doctor.getId())
+                .name(doctor.getUser().getName())
+                .departName(doctor.getDepart().getName())
+                .build();
+
     }
 }

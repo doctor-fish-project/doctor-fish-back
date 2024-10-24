@@ -7,6 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface UserDoctorMapper {
+    Doctor getDoctorById(Long id);
     List<Doctor> getAll();
     Long getCountAll();
 }
