@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,6 +18,12 @@ public class UserDoctorController {
     @GetMapping("/doctor/list")
     public ResponseEntity<?> getDoctors() {
         return ResponseEntity.ok().body(doctorService.getDoctors());
+    }
+
+    // 의사 단건 조회
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<?> getDoctorById(@PathVariable Long doctorId) {
+        return ResponseEntity.ok().body(doctorService.getDoctor(doctorId));
     }
 
 }
