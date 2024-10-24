@@ -23,6 +23,7 @@ public class UserDoctorController {
     // 의사 단건 조회
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<?> getDoctorById(@PathVariable Long doctorId) {
+        System.out.println(doctorId);
         return ResponseEntity.ok().body(doctorService.getDoctor(doctorId));
     }
 

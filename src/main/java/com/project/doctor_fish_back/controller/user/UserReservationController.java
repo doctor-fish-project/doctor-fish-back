@@ -47,6 +47,7 @@ public class UserReservationController {
     // 예약 정보 수정
     @PutMapping("/reservation/{reservationId}")
     public ResponseEntity<?> modifyReservation(@PathVariable Long reservationId, @RequestBody ReqModifyReservationDto dto) {
+        System.out.println(dto);
         return ResponseEntity.ok().body(reservationService.modifyReservation(reservationId, dto));
     }
 
