@@ -22,7 +22,6 @@ public class UserReviewController {
     @ValidAop
     @PostMapping("/review")
     public ResponseEntity<?> writeReview(@Valid @RequestBody ReqWriteReviewDto dto, BindingResult bindingResult) {
-        System.out.println(dto);
         return ResponseEntity.ok().body(reviewService.writeReview(dto));
     }
 
@@ -64,9 +63,9 @@ public class UserReviewController {
     }
 
     // 리뷰 좋아요 취소
-    @DeleteMapping("/review/like/{reviewLikeId}")
-    public ResponseEntity<?> dislike(@PathVariable Long reviewLikeId) {
-        return ResponseEntity.ok().body(reviewService.dislike(reviewLikeId));
+    @DeleteMapping("/review/like/{reviewId}")
+    public ResponseEntity<?> dislike(@PathVariable Long reviewId) {
+        return ResponseEntity.ok().body(reviewService.dislike(reviewId));
     }
 
     // 리뷰 좋아요 수 조회
