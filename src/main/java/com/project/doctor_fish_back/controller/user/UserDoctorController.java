@@ -16,6 +16,7 @@ public class UserDoctorController {
     // 의사 전체 조회
     @GetMapping("/doctor/list")
     public ResponseEntity<?> getDoctors() {
+        System.out.println("요청");
         return ResponseEntity.ok().body(doctorService.getDoctors());
     }
 
