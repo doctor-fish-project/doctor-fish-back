@@ -4,12 +4,14 @@ import com.project.doctor_fish_back.dto.admin.request.comment.ReqModifyCommentDt
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqRegisterCommentDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.repository.admin.*;
+import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -229,10 +231,13 @@ public class NotFoundAspect {
     private void dislike(Object[] args) throws NotFoundException {
         for(Object arg : args) {
             if(arg.getClass() == Long.class) {
-                Long reviewLikeId = (Long) arg;
+                Long reviewId = (Long) arg;
 
-                ReviewLike reviewLike = reviewLikeMapper.findById(reviewLikeId);
-
+                PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                System.out.println(reviewId);
+                System.out.println(principalUser.getId());
+                ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, principalUser.getId());
+                System.out.println();
                 if(reviewLike == null) {
                     throw new NotFoundException("좋아요를 취소할 수 없습니다.");
                 }

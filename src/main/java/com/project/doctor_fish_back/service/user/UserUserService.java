@@ -126,7 +126,7 @@ public class UserUserService {
         try {
             User user = userMapper.findById(id);
             Set<Role> roles = user.getUserRoles().stream().map(
-                    UserRoles::getRole).collect(Collectors.toSet());
+                    userRole -> userRole.getRole()).collect(Collectors.toSet());
 
             return RespUserInfoDto.builder()
                     .id(user.getId())

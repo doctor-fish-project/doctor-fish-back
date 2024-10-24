@@ -178,12 +178,12 @@ public class AuthorityAspect {
     private void dislike(Object[] args) throws AuthorityException {
         for(Object arg : args) {
             if(arg.getClass() == Long.class) {
-                Long reviewLikeId = (Long) arg;
-
+                Long reviewId = (Long) arg;
+                System.out.println(reviewId);
                 PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-                ReviewLike reviewLike = reviewLikeMapper.findById(reviewLikeId);
-
+                System.out.println(principalUser.getId());
+                ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, principalUser.getId());
+                System.out.println(reviewLike);
                 if(reviewLike.getUserId() != principalUser.getId()) {
                     throw new AuthorityException("권한이 없습니다.");
                 }
