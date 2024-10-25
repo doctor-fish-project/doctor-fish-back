@@ -18,9 +18,11 @@ import com.project.doctor_fish_back.repository.user.UserRoleMapper;
 import com.project.doctor_fish_back.repository.user.UserUserMapper;
 import com.project.doctor_fish_back.repository.user.UserUserRolesMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
+import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,13 +148,15 @@ public class UserUserService {
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean modifyUser(Long userId, ReqModifyUserDto dto) {
+    public Boolean modifyUser(ReqModifyUserDto dto) {
         try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
             if(dto.getImg() == null || dto.getImg().equals("")) {
                 dto.setImg(userDefaultProfileImg);
             }
 
-            userMapper.modify(dto.toEntity(userId));
+            userMapper.modify(dto.toEntity( principalUser.getId()));
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
@@ -162,9 +166,11 @@ public class UserUserService {
     @NotFoundAop
     @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
-    public Boolean modifyUserEmail(Long userId, ReqModifyUserEmailDto dto) throws SignupException {
+    public Boolean modifyUserEmail(ReqModifyUserEmailDto dto) {
         try {
-            userMapper.modifyEmail(dto.toEntity(userId));
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            userMapper.modifyEmail(dto.toEntity(principalUser.getId()));
             userMapper.modifyEmailValidByEmail(dto.getEmail());
             emailService.sendAuthMail(dto.getEmail());
         } catch (Exception e) {
@@ -176,9 +182,11 @@ public class UserUserService {
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) {
+    public Boolean modifyUserPassword(ReqModifyUserPasswordDto dto) {
         try {
-            userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            userMapper.modifyPassword(dto.toEntity( principalUser.getId(), passwordEncoder));
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
@@ -188,10 +196,12 @@ public class UserUserService {
     @NotFoundAop
     @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
-    public Boolean deleteUser(Long userId) {
+    public Boolean deleteUser() {
         try {
-            userMapper.deleteById(userId);
-            userRolesMapper.deleteByUserId(userId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            userMapper.deleteById(principalUser.getId());
+            userRolesMapper.deleteByUserId(principalUser.getId());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

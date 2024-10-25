@@ -32,29 +32,29 @@ public class AdminUserController {
 
     // 관리자 정보 수정(이름, 전화번호, 사진, 소개글, 이력)
     @ValidAop
-    @PutMapping("/user/{userId}")
-    public ResponseEntity<?> modifyUser(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserDto dto, BindingResult bindingResult) {
-        return ResponseEntity.ok().body(userService.modifyUser(userId, dto));
+    @PutMapping("/user")
+    public ResponseEntity<?> modifyUser(@Valid @RequestBody ReqModifyUserDto dto, BindingResult bindingResult) {
+        return ResponseEntity.ok().body(userService.modifyUser(dto));
     }
 
     // 관리자 아이디 수정
     @ValidAop
-    @PutMapping("/user/{userId}/username")
-    public ResponseEntity<?> modifyAdminUsername(@PathVariable Long userId, @Valid @RequestBody ReqModifyAdminUsernameDto dto, BindingResult bindingResult) {
-        return ResponseEntity.ok().body(userService.modifyAdminUsername(userId, dto));
+    @PutMapping("/user/username")
+    public ResponseEntity<?> modifyAdminUsername(@Valid @RequestBody ReqModifyAdminUsernameDto dto, BindingResult bindingResult) {
+        return ResponseEntity.ok().body(userService.modifyAdminUsername(dto));
     }
 
     // 관리자 비밀번호 변경
     @ValidAop
-    @PutMapping("/user/{userId}/password")
-    public ResponseEntity<?> modifyUserPassword(@PathVariable Long userId, @Valid @RequestBody ReqModifyUserPasswordDto dto, BindingResult bindingResult) {
-        return ResponseEntity.ok().body(userService.modifyUserPassword(userId, dto));
+    @PutMapping("/user/password")
+    public ResponseEntity<?> modifyUserPassword(@Valid @RequestBody ReqModifyUserPasswordDto dto, BindingResult bindingResult) {
+        return ResponseEntity.ok().body(userService.modifyUserPassword(dto));
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/user/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
-        return ResponseEntity.ok().body(userService.deleteUser(userId));
+    @DeleteMapping("/user")
+    public ResponseEntity<?> deleteUser() {
+        return ResponseEntity.ok().body(userService.deleteUser());
     }
 
     // 회원 검색

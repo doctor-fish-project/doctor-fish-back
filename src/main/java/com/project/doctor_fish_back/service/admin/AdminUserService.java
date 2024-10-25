@@ -125,9 +125,11 @@ public class AdminUserService {
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean modifyUser(Long userId, ReqModifyUserDto dto) {
+    public Boolean modifyUser(ReqModifyUserDto dto) {
         try {
-            User user = userMapper.findById(userId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            User user = userMapper.findById(principalUser.getId());
 
             Set<String> roles = user.getUserRoles().stream().map(
                     userRole -> userRole.getRole().getPosition()
@@ -137,9 +139,9 @@ public class AdminUserService {
                 if(dto.getImg() == null || dto.getImg().equals("")) {
                     dto.setImg(doctorDefaultProfileImg);
                 }
-                userMapper.modify(dto.toEntity(userId));
+                userMapper.modify(dto.toEntity(principalUser.getId()));
 
-                Doctor doctor = doctorMapper.findByUserId(userId);
+                Doctor doctor = doctorMapper.findByUserId(principalUser.getId());
                 doctorMapper.modify(Doctor.builder()
                                 .id(doctor.getId())
                                 .comment(dto.getComment())
@@ -153,7 +155,7 @@ public class AdminUserService {
                 dto.setImg(userDefaultProfileImg);
             }
 
-            userMapper.modify(dto.toEntity(userId));
+            userMapper.modify(dto.toEntity(principalUser.getId()));
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
@@ -162,9 +164,11 @@ public class AdminUserService {
     }
 
     @NotFoundAop
-    public Boolean modifyAdminUsername(Long userId, ReqModifyAdminUsernameDto dto) {
+    public Boolean modifyAdminUsername(ReqModifyAdminUsernameDto dto) {
         try {
-            userMapper.modifyEmail(dto.toEntity(userId));
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            userMapper.modifyEmail(dto.toEntity(principalUser.getId()));
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
@@ -173,9 +177,11 @@ public class AdminUserService {
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean modifyUserPassword(Long userId, ReqModifyUserPasswordDto dto) {
+    public Boolean modifyUserPassword(ReqModifyUserPasswordDto dto) {
         try {
-            userMapper.modifyPassword(dto.toEntity(userId, passwordEncoder));
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            userMapper.modifyPassword(dto.toEntity( principalUser.getId(), passwordEncoder));
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
@@ -185,10 +191,12 @@ public class AdminUserService {
     @NotFoundAop
     @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
-    public Boolean deleteUser(Long userId) {
+    public Boolean deleteUser() {
         try {
-            userMapper.deleteById(userId);
-            userRolesMapper.deleteByUserId(userId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            userMapper.deleteById(principalUser.getId());
+            userRolesMapper.deleteByUserId(principalUser.getId());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
