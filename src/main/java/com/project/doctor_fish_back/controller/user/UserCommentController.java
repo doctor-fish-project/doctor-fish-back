@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.controller.user;
 
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.request.comment.ReqModifyCommentDto;
 import com.project.doctor_fish_back.dto.user.request.comment.ReqRegisterCommentDto;
 import com.project.doctor_fish_back.service.user.UserCommentService;
@@ -26,8 +27,8 @@ public class UserCommentController {
 
     // 댓글 조회
     @GetMapping("/review/{reviewId}/comments")
-    public ResponseEntity<?> getComments(@PathVariable Long reviewId) {
-        return ResponseEntity.ok().body(commentService.getComments(reviewId));
+    public ResponseEntity<?> getComments(@PathVariable Long reviewId, ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(commentService.getComments(reviewId, dto));
     }
 
     // 댓글 수정

@@ -2,10 +2,12 @@ package com.project.doctor_fish_back.service.user;
 
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.response.comment.RespGetCommentListDto;
 import com.project.doctor_fish_back.dto.user.request.comment.ReqModifyCommentDto;
 import com.project.doctor_fish_back.dto.user.request.comment.ReqRegisterCommentDto;
 import com.project.doctor_fish_back.entity.Comment;
+import com.project.doctor_fish_back.entity.Reservation;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.user.UserCommentMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
@@ -37,9 +39,10 @@ public class UserCommentService {
     }
 
     @NotFoundAop
-    public RespGetCommentListDto getComments(Long reviewId) {
+    public RespGetCommentListDto getComments(Long reviewId, ReqPageAndLimitDto dto) {
         try {
-            List<Comment> comments = commentMapper.findAllByReviewId(reviewId);
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Comment> comments = commentMapper.findAllByReviewId(reviewId, startIndex, dto.getLimit());
             Long commentCount = commentMapper.getCommentCountByReviewId(reviewId);
 
             return RespGetCommentListDto.builder()
@@ -47,6 +50,7 @@ public class UserCommentService {
                     .commentCount(commentCount)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
 

@@ -1,6 +1,7 @@
 package com.project.doctor_fish_back.controller.user;
 
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.request.review.ReqModifyReviewDto;
 import com.project.doctor_fish_back.dto.user.request.review.ReqWriteReviewDto;
 import com.project.doctor_fish_back.exception.ReviewLikeException;
@@ -27,8 +28,8 @@ public class UserReviewController {
 
     // 리뷰 전체 조회
     @GetMapping("/review/list")
-    public ResponseEntity<?> getReviews() {
-        return ResponseEntity.ok().body(reviewService.getReviews());
+    public ResponseEntity<?> getReviews(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reviewService.getReviews(dto));
     }
 
     // 리뷰 단건 조회

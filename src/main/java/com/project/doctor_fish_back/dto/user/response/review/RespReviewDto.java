@@ -15,6 +15,9 @@ public class RespReviewDto {
     private LocalDateTime registerDate;
     private LocalDateTime updateDate;
 
+    private Integer likeCount;
+    private Integer isLike;
+
     private String userName;
     private String userImg;
 }

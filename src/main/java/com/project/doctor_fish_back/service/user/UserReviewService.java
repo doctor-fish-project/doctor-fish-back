@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.service.user;
 
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespGetReviewListDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespReviewDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespReviewLikeInfoDto;
@@ -43,11 +44,11 @@ public class UserReviewService {
         return true;
     }
 
-    public RespGetReviewListDto getReviews() {
+    public RespGetReviewListDto getReviews(ReqPageAndLimitDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            List<Review> reviews = reviewMapper.getReviewAll(principalUser.getId());
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Review> reviews = reviewMapper.getReviewAll(principalUser.getId(), startIndex, dto.getLimit());
             Long reviewCount = reviewMapper.getReviewAllCount();
 
             return RespGetReviewListDto.builder()
@@ -156,7 +157,8 @@ public class UserReviewService {
 
     public RespReviewDto getReview(Long reviewId) {
         try {
-            Review review = reviewMapper.findById(reviewId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Review review = reviewMapper.findById(principalUser.getId(), reviewId);
 
             return RespReviewDto.builder()
                     .id(review.getId())
@@ -165,10 +167,13 @@ public class UserReviewService {
                     .content(review.getContent())
                     .registerDate(review.getRegisterDate())
                     .updateDate(review.getUpdateDate())
+                    .likeCount(review.getLikeCount())
+                    .isLike(review.getIsLike())
                     .userName(review.getUserName())
                     .userImg(review.getUserImg())
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
