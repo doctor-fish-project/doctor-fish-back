@@ -43,6 +43,7 @@
             left outer join user_tb ut on(ct.user_id = ut.id)
         where
             review_id = #{reviewId}
+        limit #{startIndex}, #{limit}
     </select>
 
     <select id="getCommentCountByReviewId" resultType="java.lang.Long">

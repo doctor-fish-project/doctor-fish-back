@@ -27,7 +27,10 @@ public interface UserReservationMapper {
     List<Reservation> getToUser(Long userId);
     Long getCountToUser(Long userId);
 
-    List<Reservation> getAllToUser(Long userId);
+    List<Reservation> getAllToUser(@Param("userId") Long userId,
+                                   @Param("startIndex") Long startIndex,
+                                   @Param("limit") Long limit);
+
     Long getCountAllToUser(Long userId);
 
     int modify(Reservation reservation);
