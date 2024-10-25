@@ -242,6 +242,7 @@
             rt.user_id = #{userId}
         order by
             rt.reservation_date desc
+        limit #{startIndex}, #{limit}
     </select>
 
     <select id="getCountAll" resultType="java.lang.Long">

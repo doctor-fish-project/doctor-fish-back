@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.controller.user;
 
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.request.reservation.ReqModifyReservationDto;
 import com.project.doctor_fish_back.dto.user.request.reservation.ReqRegisterReservationDto;
 import com.project.doctor_fish_back.service.user.UserReservationService;
@@ -34,8 +35,8 @@ public class UserReservationController {
 
     // 사용자 내 예약 전체 조회
     @GetMapping("/reservation/list")
-    public ResponseEntity<?> getAllReservationsToUser() {
-        return ResponseEntity.ok().body(reservationService.getAllReservationsToUser());
+    public ResponseEntity<?> getAllReservationsToUser(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reservationService.getAllReservationsToUser(dto));
     }
 
     // 사용자 내 예약 단건 조회

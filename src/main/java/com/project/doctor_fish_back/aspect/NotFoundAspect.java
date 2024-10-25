@@ -234,10 +234,7 @@ public class NotFoundAspect {
                 Long reviewId = (Long) arg;
 
                 PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                System.out.println(reviewId);
-                System.out.println(principalUser.getId());
                 ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, principalUser.getId());
-                System.out.println();
                 if(reviewLike == null) {
                     throw new NotFoundException("좋아요를 취소할 수 없습니다.");
                 }

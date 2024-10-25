@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.repository.user;
 
 import com.project.doctor_fish_back.entity.Review;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public interface UserReviewMapper {
     Long getReviewAllCount();
 
     List<Review> getReviewsToUser(Long userId);
-    List<Review> getReviewAll(Long userId);
+    List<Review> getReviewAll(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
     List<Review> getReviewAllByLimit(Long startIndex, Long limit);
 
-    Review findById(Long id);
+    Review findById(@Param("userId") Long userId, @Param("reviewId") Long reviewId);
 
 }

@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.service.user;
 
 import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.user.response.reservation.RespGetReservationListDto;
 import com.project.doctor_fish_back.dto.user.request.reservation.ReqModifyReservationDto;
@@ -61,11 +62,12 @@ public class UserReservationService {
         }
     }
 
-    public RespGetReservationListDto getAllReservationsToUser() {
+    public RespGetReservationListDto getAllReservationsToUser(ReqPageAndLimitDto dto) {
         try {
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Reservation> reservations = reservationMapper.getAllToUser(principalUser.getId());
+            List<Reservation> reservations = reservationMapper.getAllToUser(principalUser.getId(), startIndex, dto.getLimit());
             Long totalCount = reservationMapper.getCountAllToUser(principalUser.getId());
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
@@ -81,7 +83,7 @@ public class UserReservationService {
     public RespGetReservationDto getReservationToUser(Long reservationId) {
         try {
             Reservation reservation = reservationMapper.findById(reservationId);
-            System.out.println(reservation);
+
             return RespGetReservationDto.builder()
                     .id(reservation.getId())
                     .userId(reservation.getUserId())

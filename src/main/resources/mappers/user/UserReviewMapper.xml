@@ -61,6 +61,7 @@
         from
             review_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
+        limit #{startIndex}, #{limit}
     </select>
 
     <select id="getReviewAllByLimit" resultType="com.project.doctor_fish_back.entity.Review">
@@ -104,12 +105,14 @@
             rt.register_date as registerDate,
             rt.update_date as updateDate,
             ut.name as userName,
-            ut.img as userImg
+            ut.img as userImg,
+            (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
+            (select count(*) from review_like_tb where user_id = #{userId} and review_id = rt.id) as isLike
         from
             review_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
-            rt.id = #{id}
+            rt.id = #{reviewId}
     </select>
 
 </mapper>
