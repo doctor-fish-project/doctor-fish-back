@@ -9,7 +9,9 @@ import com.project.doctor_fish_back.dto.admin.response.leave.RespGetLeaveListDto
 import com.project.doctor_fish_back.entity.Leave;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.admin.AdminLeaveMapper;
+import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,10 +31,12 @@ public class AdminLeaveService {
         return true;
     }
 
-    public RespGetLeaveListDto getAllLeavesToDoctor(Long userId) {
+    public RespGetLeaveListDto getAllLeavesToDoctor() {
         try {
-            List<Leave> leaves = leaveMapper.getAllToDoctor(userId);
-            Long leaveCount = leaveMapper.getCountAllToDoctor(userId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            List<Leave> leaves = leaveMapper.getAllToDoctor(principalUser.getId());
+            Long leaveCount = leaveMapper.getCountAllToDoctor(principalUser.getId());
 
             return RespGetLeaveListDto.builder()
                     .leaves(leaves)

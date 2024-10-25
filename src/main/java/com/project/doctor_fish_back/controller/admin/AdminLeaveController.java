@@ -21,9 +21,9 @@ public class AdminLeaveController {
     }
 
     // 관리자 연차 전체 조회
-    @GetMapping("/leave/list/{userId}")
-    public ResponseEntity<?> getAllLeavesToDoctor(@PathVariable Long userId) {
-        return ResponseEntity.ok().body(leaveService.getAllLeavesToDoctor(userId));
+    @GetMapping("/leave/list")
+    public ResponseEntity<?> getAllLeavesToDoctor() {
+        return ResponseEntity.ok().body(leaveService.getAllLeavesToDoctor());
     }
 
     // 연차 전체 조회
