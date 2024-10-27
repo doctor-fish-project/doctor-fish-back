@@ -40,8 +40,8 @@ public class UserReviewController {
 
     // 사용자 내 리뷰 전체 조회
     @GetMapping("/review/me")
-    public ResponseEntity<?> getReviewsToUser() {
-        return ResponseEntity.ok().body(reviewService.getReviewsToUser());
+    public ResponseEntity<?> getReviewsToUser(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reviewService.getReviewsToUser(dto));
     }
 
     // 리뷰 수정

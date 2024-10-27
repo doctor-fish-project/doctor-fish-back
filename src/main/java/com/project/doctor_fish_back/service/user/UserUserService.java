@@ -156,7 +156,7 @@ public class UserUserService {
                 dto.setImg(userDefaultProfileImg);
             }
 
-            userMapper.modify(dto.toEntity( principalUser.getId()));
+            userMapper.modify(dto.toEntity(principalUser.getId()));
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
