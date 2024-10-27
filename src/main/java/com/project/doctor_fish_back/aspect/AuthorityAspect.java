@@ -32,6 +32,8 @@ public class AuthorityAspect {
     private AdminReviewLikeMapper reviewLikeMapper;
     @Autowired
     private AdminUserMapper userMapper;
+    @Autowired
+    private AdminRoleMapper roleMapper;
 
     @Pointcut("@annotation(com.project.doctor_fish_back.aspect.annotation.AuthorityAop)")
     private void pointCut() {}
@@ -85,7 +87,7 @@ public class AuthorityAspect {
                 PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
                 Announcement announcement = announcementMapper.findById(announceId);
-
+                roleMapper.getRoles();
                 if(announcement.getUserId() != principalUser.getId()) {
                     throw new AuthorityException("권한이 없습니다.");
                 }

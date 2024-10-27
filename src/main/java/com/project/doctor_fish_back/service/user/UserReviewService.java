@@ -45,10 +45,16 @@ public class UserReviewService {
     }
 
     public RespGetReviewListDto getReviews(ReqPageAndLimitDto dto) {
+
         try {
-            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = null;
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (principal instanceof PrincipalUser) {
+                userId = ((PrincipalUser) principal).getId();
+            }
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Review> reviews = reviewMapper.getReviewAll(principalUser.getId(), startIndex, dto.getLimit());
+            List<Review> reviews = reviewMapper.getReviewAll(userId, startIndex, dto.getLimit());
             Long reviewCount = reviewMapper.getReviewAllCount();
 
             return RespGetReviewListDto.builder()
@@ -61,11 +67,11 @@ public class UserReviewService {
         }
     }
 
-    public RespGetReviewListDto getReviewsToUser() {
+    public RespGetReviewListDto getReviewsToUser(ReqPageAndLimitDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            List<Review> reviews = reviewMapper.getReviewsToUser(principalUser.getId());
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Review> reviews = reviewMapper.getReviewsToUser(principalUser.getId(), startIndex, dto.getLimit());
             Long reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
 
             return RespGetReviewListDto.builder()
@@ -157,8 +163,13 @@ public class UserReviewService {
 
     public RespReviewDto getReview(Long reviewId) {
         try {
-            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Review review = reviewMapper.findById(principalUser.getId(), reviewId);
+            Long userId = null;
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (principal instanceof PrincipalUser) {
+                userId = ((PrincipalUser) principal).getId();
+            }
+            Review review = reviewMapper.findById(userId, reviewId);
 
             return RespReviewDto.builder()
                     .id(review.getId())
