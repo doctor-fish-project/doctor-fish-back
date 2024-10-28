@@ -35,13 +35,13 @@ public class UserReviewController {
     // 리뷰 단건 조회
     @GetMapping("/review/{reviewId}")
     public ResponseEntity<?> getReview(@PathVariable Long reviewId) {
-        return ResponseEntity.ok().body(reviewService.getReview(reviewId));
+        return ResponseEntity.ok().body(reviewService.getReviewById(reviewId));
     }
 
     // 사용자 내 리뷰 전체 조회
     @GetMapping("/review/me")
     public ResponseEntity<?> getReviewsToUser(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(reviewService.getReviewsToUser(dto));
+        return ResponseEntity.ok().body(reviewService.getReviewsByUserId(dto));
     }
 
     // 리뷰 수정
@@ -67,12 +67,6 @@ public class UserReviewController {
     @DeleteMapping("/review/like/{reviewId}")
     public ResponseEntity<?> dislike(@PathVariable Long reviewId) {
         return ResponseEntity.ok().body(reviewService.dislike(reviewId));
-    }
-
-    // 리뷰 좋아요 수 조회
-    @GetMapping("/review/like/{reviewId}")
-    public ResponseEntity<?> getLikeCount(@PathVariable Long reviewId) {
-        return ResponseEntity.ok().body(reviewService.getLikeCount(reviewId));
     }
 
 }

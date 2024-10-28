@@ -8,36 +8,25 @@ import java.util.List;
 
 @Mapper
 public interface UserReservationMapper {
+    // 유저 페이지 예약 등록, 수정, 취소, 삭제
     int register(Reservation reservation);
     int cancelById(Long id);
-    Reservation findById(Long id);
     int deleteById(Long id);
-
-    List<Reservation> getAll(@Param("startIndex") Long startIndex,
-                             @Param("limit") Long limit);
-    Long getCountAll();
-
-    List<Reservation> getToday(@Param("startIndex") Long startIndex,
-                               @Param("limit") Long limit);
-    Long getCountToday();
-
-    List<Reservation> getAllByLimit(Long limit);
-    List<Reservation> getTodayByLimit(Long limit);
-
-    List<Reservation> getToUser(Long userId);
-    Long getCountToUser(Long userId);
-
-    List<Reservation> getAllToUser(@Param("userId") Long userId,
-                                   @Param("startIndex") Long startIndex,
-                                   @Param("limit") Long limit);
-
-    Long getCountAllToUser(Long userId);
-
     int modify(Reservation reservation);
-
     int modifyReviewStatusById(Long id);
 
-    List<Reservation> getEndAll(Long userId);
-    Long getCountEndAll(Long userId);
+    // 유저 페이지 예약 단건 조회
+    Reservation findById(Long id);
+
+    // 유저 페이지 오늘 예약 조회
+    List<Reservation> getReservationsToday(@Param("userId") Long userId);
+
+    // 유저 페이지 예약 전체 조회
+    List<Reservation> getReservations(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    Long getCountReservations(Long userId);
+
+    // 유저 페이지 리뷰 작성가능한 예약 전체 조회
+    List<Reservation> getReservationsForReview(Long userId);
+    Long getCountForReview(Long userId);
 
 }

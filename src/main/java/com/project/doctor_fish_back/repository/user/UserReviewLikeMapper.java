@@ -6,12 +6,10 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserReviewLikeMapper {
+    // 유저 페이지 리뷰 좋아요, 좋아요 삭제
     int save(ReviewLike reviewLike);
-    int deleteById(@Param("reviewId") Long reviewId,
-                    @Param("userId")  Long userId);
-    ReviewLike findById(Long id);
-    Long getLikeCountByReviewId(Long reviewId);
-    ReviewLike findByReviewIdAndUserId(
-            @Param("reviewId") Long reviewId,
-            @Param("userId")  Long userId);
+    int deleteById(@Param("reviewId") Long reviewId, @Param("userId")  Long userId);
+
+    // 리뷰 좋아요 아이디 및 유저 아이디 단건 조회
+    ReviewLike findByReviewIdAndUserId(@Param("reviewId") Long reviewId, @Param("userId")  Long userId);
 }

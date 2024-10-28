@@ -3,7 +3,7 @@ package com.project.doctor_fish_back.service.admin;
 import com.project.doctor_fish_back.dto.admin.response.Role.RespRolesDto;
 import com.project.doctor_fish_back.entity.Role;
 import com.project.doctor_fish_back.exception.ExecutionException;
-import com.project.doctor_fish_back.repository.admin.AdminRoleMapper;
+import com.project.doctor_fish_back.repository.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +14,11 @@ import java.util.List;
 public class AdminRoleService {
 
     @Autowired
-    private AdminRoleMapper adminRoleMapper;
+    private RoleMapper RoleMapper;
 
     public List<RespRolesDto> getRoles() {
         try {
-            List<Role> roles = adminRoleMapper.getRoles();
+            List<Role> roles = RoleMapper.getRoles();
             List<RespRolesDto> dtos = new ArrayList<>();
 
             for(Role role : roles) {

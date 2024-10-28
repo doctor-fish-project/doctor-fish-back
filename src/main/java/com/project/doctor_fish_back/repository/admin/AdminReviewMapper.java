@@ -7,16 +7,11 @@ import java.util.List;
 
 @Mapper
 public interface AdminReviewMapper {
-    Long getReviewCountByUserId(Long userId);
-    Long getReviewAllCount();
-
-    List<Review> getReviewAll();
     List<Review> getReviewAllByLimit(Long startIndex, Long limit);
+    Long getCountReviews();
 
     Review findById(Long id);
 
     List<Review> getBySearch(String searchText);
     Long getCountBySearch(String searchText);
-
-
 }

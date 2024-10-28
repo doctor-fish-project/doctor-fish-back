@@ -4,6 +4,7 @@ import com.project.doctor_fish_back.dto.admin.request.comment.ReqModifyCommentDt
 import com.project.doctor_fish_back.dto.admin.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
+import com.project.doctor_fish_back.repository.RoleMapper;
 import com.project.doctor_fish_back.repository.admin.*;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -33,7 +34,7 @@ public class AuthorityAspect {
     @Autowired
     private AdminUserMapper userMapper;
     @Autowired
-    private AdminRoleMapper roleMapper;
+    private RoleMapper roleMapper;
 
     @Pointcut("@annotation(com.project.doctor_fish_back.aspect.annotation.AuthorityAop)")
     private void pointCut() {}

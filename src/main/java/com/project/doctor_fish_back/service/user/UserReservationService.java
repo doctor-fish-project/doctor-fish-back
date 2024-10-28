@@ -46,29 +46,26 @@ public class UserReservationService {
         return true;
     }
 
-    public RespGetReservationListDto getReservationsToUser() {
+    public RespGetReservationListDto getReservationsToday() {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            List<Reservation> reservations = reservationMapper.getToUser(principalUser.getId());
-            Long totalCount = reservationMapper.getCountToUser(principalUser.getId());
+            List<Reservation> reservations = reservationMapper.getReservationsToday(principalUser.getId());
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
-                    .totalCount(totalCount)
                     .build();
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
 
-    public RespGetReservationListDto getAllReservationsToUser(ReqPageAndLimitDto dto) {
+    public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Reservation> reservations = reservationMapper.getAllToUser(principalUser.getId(), startIndex, dto.getLimit());
-            Long totalCount = reservationMapper.getCountAllToUser(principalUser.getId());
+            List<Reservation> reservations = reservationMapper.getReservations(principalUser.getId(), startIndex, dto.getLimit());
+            Long totalCount = reservationMapper.getCountReservations(principalUser.getId());
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
                     .totalCount(totalCount)
@@ -80,7 +77,7 @@ public class UserReservationService {
 
     @NotFoundAop
     @AuthorityAop
-    public RespGetReservationDto getReservationToUser(Long reservationId) {
+    public RespGetReservationDto getReservationById(Long reservationId) {
         try {
             Reservation reservation = reservationMapper.findById(reservationId);
 
@@ -111,7 +108,7 @@ public class UserReservationService {
 
     @NotFoundAop
     @AuthorityAop
-    public Boolean deleteReservationFromUser(Long reservationId) {
+    public Boolean deleteReservation(Long reservationId) {
         try {
             reservationMapper.deleteById(reservationId);
         } catch (Exception e) {
@@ -124,8 +121,8 @@ public class UserReservationService {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Reservation> reservations = reservationMapper.getEndAll(principalUser.getId());
-            Long totalCount = reservationMapper.getCountEndAll(principalUser.getId());
+            List<Reservation> reservations = reservationMapper.getReservationsForReview(principalUser.getId());
+            Long totalCount = reservationMapper.getCountForReview(principalUser.getId());
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)

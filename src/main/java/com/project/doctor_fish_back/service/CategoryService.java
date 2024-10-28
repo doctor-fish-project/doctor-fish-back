@@ -4,7 +4,7 @@ import com.project.doctor_fish_back.dto.category.RespCategoryDto;
 import com.project.doctor_fish_back.entity.Category;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.CategoryMapper;
-import com.project.doctor_fish_back.repository.admin.AdminUserRolesMapper;
+import com.project.doctor_fish_back.repository.UserRolesMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ public class CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
     @Autowired
-    private AdminUserRolesMapper userRolesMapper;
+    private UserRolesMapper userRolesMapper;
 
 
     public List<RespCategoryDto> getCategory() {

@@ -11,5 +11,4 @@ public interface TimeMapper {
     List<Time> getTimes();
     List<Time> getReservedTimes(
             Map<String, Object> params);
-
 }

@@ -8,17 +8,17 @@ import java.util.List;
 
 @Mapper
 public interface UserUserMapper {
-    User findById(Long id);
-    User findByEmail(String email);
-    User findByPhoneNumber(String phoneNumber);
+    // 유저 페이지 가입, 로그인, 수정,
     int save(User user);
-    int modifyEmailValidByEmail(String email);
     int deleteById(Long id);
     int modify(User user);
     int modifyEmail(User user);
     int modifyPassword(User user);
-    List<User> getAll(@Param("startIndex") Long startIndex,
-                      @Param("limit") Long limit);
-    Long getCountAll();
+    int modifyEmailValidByEmail(String email);
     int modifyEmailValidById(Long id);
+
+    User findById(Long id);
+    User findByEmail(String email);
+    User findByPhoneNumber(String phoneNumber);
+
 }

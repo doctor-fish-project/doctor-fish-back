@@ -21,26 +21,12 @@ public class UserAnnouncementService {
     public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Announcement> announcements = announcementMapper.getAll(startIndex, dto.getLimit());
-            Long totalCount = announcementMapper.getCountAll();
+            List<Announcement> announcements = announcementMapper.getAnnouncements(startIndex, dto.getLimit());
+            Long totalCount = announcementMapper.getCountAnnouncements();
 
             return RespGetAnnounceListDto.builder()
                     .announcements(announcements)
                     .announceCount(totalCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-
-    }
-
-    public RespGetAnnounceListDto getDashBoardAnnouncements() {
-        try {
-            Long limit = 6L;
-            List<Announcement> announcements = announcementMapper.getAllByLimit(limit);
-
-            return RespGetAnnounceListDto.builder()
-                    .announcements(announcements)
                     .build();
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");

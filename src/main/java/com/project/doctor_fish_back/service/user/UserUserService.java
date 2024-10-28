@@ -14,9 +14,9 @@ import com.project.doctor_fish_back.exception.EmailValidException;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
-import com.project.doctor_fish_back.repository.user.UserRoleMapper;
+import com.project.doctor_fish_back.repository.RoleMapper;
+import com.project.doctor_fish_back.repository.UserRolesMapper;
 import com.project.doctor_fish_back.repository.user.UserUserMapper;
-import com.project.doctor_fish_back.repository.user.UserUserRolesMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.EmailService;
@@ -44,9 +44,9 @@ public class UserUserService {
     @Autowired
     private UserUserMapper userMapper;
     @Autowired
-    private UserRoleMapper roleMapper;
+    private RoleMapper roleMapper;
     @Autowired
-    private UserUserRolesMapper userRolesMapper;
+    private UserRolesMapper userRolesMapper;
     @Autowired
     private EmailService emailService;
     private ContentNegotiatingViewResolver viewResolver;

@@ -31,7 +31,8 @@ public class AdminAnnouncementService {
 
     @Autowired
     private AdminUserMapper userMapper;
-
+    
+    // 관리자 페이지 공지사항 작성
     public Boolean writeAnnounce(ReqWriteAnnounceDto dto) throws AuthorityException {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -60,7 +61,8 @@ public class AdminAnnouncementService {
 
         return true;
     }
-
+    
+    // 관리자 페이지 공지사항 수정
     @NotFoundAop
     @AuthorityAop
     public boolean modifyAnnounce(Long announceId, ReqModifyAnnounce dto) {
@@ -72,7 +74,8 @@ public class AdminAnnouncementService {
         return true;
 
     }
-
+    
+    // 관리자 페이지 공지사항 삭제
     @NotFoundAop
     @AuthorityAop
     public Boolean deleteAnnounce(Long announceId) {
@@ -84,11 +87,25 @@ public class AdminAnnouncementService {
         return true;
     }
 
+    public RespGetAnnounceListDto getDashBoardAnnouncements() {
+        try {
+            Long limit = 6L;
+            List<Announcement> announcements = announcementMapper.getAnnouncementsByLimit(limit);
+
+            return RespGetAnnounceListDto.builder()
+                    .announcements(announcements)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+    }
+    
+    // 관리자 페이지 공지사항 전체 조회
     public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Announcement> announcements = announcementMapper.getAll(startIndex, dto.getLimit());
-            Long totalCount = announcementMapper.getCountAll();
+            List<Announcement> announcements = announcementMapper.getAnnouncements(startIndex, dto.getLimit());
+            Long totalCount = announcementMapper.getCountAnnouncements();
 
             return RespGetAnnounceListDto.builder()
                     .announcements(announcements)
@@ -99,20 +116,8 @@ public class AdminAnnouncementService {
         }
 
     }
-
-    public RespGetAnnounceListDto getDashBoardAnnouncements() {
-        try {
-            Long limit = 6L;
-            List<Announcement> announcements = announcementMapper.getAllByLimit(limit);
-
-            return RespGetAnnounceListDto.builder()
-                    .announcements(announcements)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
+    
+    // 관리자 페이지 공지사항 단건 조회
     @NotFoundAop
     public RespGetAnnounceDto getAnnouncement(Long announceId) {
         try {
@@ -130,11 +135,12 @@ public class AdminAnnouncementService {
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
-
+    
+    // 관리자 페이지 공지사항 검색 조회
     public RespGetAnnounceListDto searchAnnouncement(ReqSearchDto dto) {
         try {
-            List<Announcement> announcements = announcementMapper.getBySearch(dto.getSearchText());
-            Long announceCount = announcementMapper.getCountBySearch(dto.getSearchText());
+            List<Announcement> announcements = announcementMapper.getAnnouncementsBySearch(dto.getSearchText());
+            Long announceCount = announcementMapper.getCountAnnouncementsBySearch(dto.getSearchText());
 
             return RespGetAnnounceListDto.builder()
                     .announcements(announcements)
@@ -144,6 +150,5 @@ public class AdminAnnouncementService {
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
-
 }
 

@@ -37,14 +37,6 @@
         values(default, #{email}, #{name}, #{password}, #{phoneNumber}, #{img}, default, now(), now())
     </insert>
 
-    <update id="modifyEmailValidByEmail">
-        update user_tb
-        set
-            email_valid = if(email_valid = 0, 1, 0)
-        where
-            email = #{email}
-    </update>
-
     <update id="modify">
         update user_tb
         set
@@ -140,7 +132,7 @@
             email = #{email}
     </select>
 
-    <select id="getAll" resultMap="userResultMap">
+    <select id="getUsers" resultMap="userResultMap">
         select
             u.id as user_id,
             u.email,
@@ -167,7 +159,7 @@
             #{startIndex}, #{limit}
     </select>
 
-    <select id="getCountAll" resultType="java.lang.Long">
+    <select id="getCountUsers" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -199,7 +191,7 @@
             phone_number = #{phoneNumber}
     </select>
 
-    <select id="getBySearch" resultMap="userResultMap">
+    <select id="getUsersBySearch" resultMap="userResultMap">
         select
             u.id as user_id,
             u.email,
@@ -226,7 +218,7 @@
             or r.name like concat("%", #{searchText}, "%")
     </select>
 
-    <select id="getCountBySearch" resultType="java.lang.Long">
+    <select id="getCountUsersBySearch" resultType="java.lang.Long">
         select
             count(*)
         from

@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface AdminDepartMapper {
     int save(Depart depart);
+
     Depart findByName(String name);
+
     List<Depart> getDeparts();
 }

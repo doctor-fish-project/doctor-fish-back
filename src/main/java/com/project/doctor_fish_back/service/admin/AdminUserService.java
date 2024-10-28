@@ -16,13 +16,12 @@ import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
+import com.project.doctor_fish_back.repository.UserRolesMapper;
 import com.project.doctor_fish_back.repository.admin.AdminDepartMapper;
 import com.project.doctor_fish_back.repository.admin.AdminDoctorMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
-import com.project.doctor_fish_back.repository.admin.AdminUserRolesMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
-import com.project.doctor_fish_back.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,7 +51,7 @@ public class AdminUserService {
     @Autowired
     private AdminUserMapper userMapper;
     @Autowired
-    private AdminUserRolesMapper userRolesMapper;
+    private UserRolesMapper userRolesMapper;
     @Autowired
     private AdminDepartMapper departMapper;
     @Autowired
@@ -111,8 +110,8 @@ public class AdminUserService {
     public RespGetUserListDto getUserList(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<User> users = userMapper.getAll(startIndex, dto.getLimit());
-            Long userCount = userMapper.getCountAll();
+            List<User> users = userMapper.getUsers(startIndex, dto.getLimit());
+            Long userCount = userMapper.getCountUsers();
 
             return RespGetUserListDto.builder()
                     .users(users)
@@ -188,6 +187,7 @@ public class AdminUserService {
         return true;
     }
 
+    // 관리자 유저 삭제
     @NotFoundAop
     @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
@@ -204,10 +204,11 @@ public class AdminUserService {
         return true;
     }
 
+    // 관리자 회원가입
     public RespGetUserListDto searchUser(ReqSearchDto dto) {
         try {
-            List<User> users = userMapper.getBySearch(dto.getSearchText());
-            Long userCount = userMapper.getCountBySearch(dto.getSearchText());
+            List<User> users = userMapper.getUsersBySearch(dto.getSearchText());
+            Long userCount = userMapper.getCountUsersBySearch(dto.getSearchText());
             return RespGetUserListDto.builder()
                     .users(users)
                     .userCount(userCount)
