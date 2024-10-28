@@ -6,10 +6,31 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.user.UserCommentMapper">
 
+    <resultMap id="findCommentsByUserIdResultMap" type="com.project.doctor_fish_back.entity.Review">
+        <id property="id" column="review_id" />
+        <collection property="comment" javaType="java.util.List" resultMap="commentResultMap" />
+    </resultMap>
+
+    <resultMap id="commentResultMap" type="com.project.doctor_fish_back.entity.Comment">
+        <id property="id" column="comment_id" />
+        <result property="userId" column="user_id" />
+        <result property="content" column="content" />
+        <result property="registerDate" column="register_date" />
+        <result property="updateDate" column="update_date" />
+        <association property="user" resultMap="userResultMap" />
+    </resultMap>
+
+    <resultMap id="userResultMap" type="com.project.doctor_fish_back.entity.User">
+        <id property="id" column="user_id" />
+        <result property="name" column="username" />
+        <result property="img" column="userImg" />
+    </resultMap>
+
     <insert id="save">
         insert into comment_tb
         values(default, #{reviewId}, #{userId}, #{content}, now(), now())
     </insert>
+
 
     <update id="modifyById">
         update comment_tb
@@ -30,28 +51,28 @@
 
     <select id="getCommentCountByReviewId" resultType="java.lang.Long">
         select
-        count(*)
+            count(*)
         from
-        comment_tb
+            comment_tb
         where
-        review_id = #{reviewId}
+            review_id = #{reviewId}
     </select>
 
     <select id="findById" resultType="com.project.doctor_fish_back.entity.Comment">
         select
-        ct.id,
-        ct.review_id as reviewId,
-        ct.user_id as userId,
-        ct.content,
-        ct.register_date as registerDate,
-        ct.update_date as updateDate,
-        ut.name as userName,
-        ut.img as userImg
+            ct.id,
+            ct.review_id as reviewId,
+            ct.user_id as userId,
+            ct.content,
+            ct.register_date as registerDate,
+            ct.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg
         from
-        comment_tb ct
-        left outer join user_tb ut on(ct.user_id = ut.id)
+            comment_tb ct
+            left outer join user_tb ut on(ct.user_id = ut.id)
         where
-        ct.id = #{id}
+            ct.id = #{id}
     </select>
 
     <select id="findAllByReviewId" resultType="com.project.doctor_fish_back.entity.Comment">
@@ -70,6 +91,34 @@
         where
             review_id = #{reviewId}
         limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="findCommentsByUserId" resultMap="findCommentsByUserIdResultMap">
+        select
+            rt.id as review_id,
+            ct.id as comment_id,
+            ct.content as content,
+            ct.register_date as register_date,
+            ct.update_date as update_date,
+            ut.id as user_id,
+            ut.name as username,
+            ut.img as userImg
+        from
+            review_tb rt
+            left outer join comment_tb ct on (rt.id = ct.review_id)
+            left outer join user_tb ut on(ct.user_id = ut.id)
+        where
+            ct.user_id = #{userId}
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="getCountCommentsByUserId" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            comment_tb
+        where
+            user_id = #{userId}
     </select>
 
 </mapper>

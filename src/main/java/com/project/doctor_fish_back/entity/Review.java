@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -24,4 +25,6 @@ public class Review {
 
     private String userName;
     private String userImg;
+
+    private List<Comment> comment;
 }

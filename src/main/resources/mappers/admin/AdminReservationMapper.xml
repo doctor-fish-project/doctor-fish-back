@@ -52,11 +52,6 @@
         <result property="name" column="det_name" />
     </resultMap>
 
-    <resultMap id="getReservationMonthResultMap" type="com.project.doctor_fish_back.entity.GetReservationMonthDoctors">
-        <result property="id" column="id" />
-        <result property="name" column="name" />
-    </resultMap>
-
     <resultMap id="monthCountsByDoctors" type="java.util.HashMap">
         <id property="doctorId" column="doctor_id" />
         <result property="name" column="name" />
@@ -123,7 +118,7 @@
             rt.id = #{id}
     </select>
 
-    <select id="getAll" resultMap="adminReservationResultMap">
+    <select id="getReservations" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -147,7 +142,33 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getToday" resultMap="adminReservationResultMap">
+    <select id="getReservationsByDoctorId" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            rt.doctor_id = #{doctorId}
+        order by
+            rt.reservation_date desc
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="getTodayReservations" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -173,35 +194,13 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getCountAll" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            reservation_tb
-    </select>
-
-    <select id="getCountToday" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            reservation_tb
-        where
-            DATE(reservation_date) = DATE(NOW())
-    </select>
-
-    <select id="getReservationsByDoctorId" resultMap="reservationResultMap">
+    <select id="getTodayReservationsByDoctorId" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
-            rt.doctor_id,
             rt.status,
             rt.reservation_date,
             rt.register_date,
-            dot.id as dot_id,
-            dot.user_id as dot_user_id,
-            dot.depart_id,
-            dot.comment,
-            dot.record,
             ut.id as ut_id,
             ut.email,
             ut.name as ut_name,
@@ -210,18 +209,31 @@
             ut.img as ut_img,
             ut.email_valid,
             ut.register_date as ut_register_date,
-            ut.update_date as ut_update_date,
-            det.id as det_id,
-            det.name as det_name
+            ut.update_date as ut_update_date
         from
             reservation_tb rt
-            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
-            left outer join user_tb ut on(dot.user_id = ut.id)
-            left outer join depart_tb det on(dot.depart_id = det.id)
+            left outer join user_tb ut on(rt.user_id = ut.id)
         where
-            doctor_id = #{doctorId}
+            rt.doctor_id = #{doctorId} and DATE(reservation_date) = DATE(NOW())
         order by
             rt.reservation_date desc
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="getCountReservations" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+    </select>
+
+    <select id="getCountTodayReservations" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            DATE(reservation_date) = DATE(NOW())
     </select>
 
     <select id="getCountReservationsByDoctorId" resultType="java.lang.Long">
@@ -231,6 +243,15 @@
             reservation_tb
         where
             doctor_id = #{doctorId}
+    </select>
+
+    <select id="getCountTodayReservationsByDoctorId" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            doctor_id = #{doctorId} and DATE(reservation_date) = DATE(NOW())
     </select>
 
     <select id="getAllByLimit" resultMap="adminReservationResultMap">
@@ -278,6 +299,58 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
             DATE(reservation_date) = DATE(NOW())
+        order by
+            rt.reservation_date desc
+        limit 0, #{limit}
+    </select>
+
+    <select id="getDashBoardReservationsByDoctorId" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            rt.doctor_id = #{doctorId}
+        order by
+            rt.reservation_date desc
+        limit 0, #{limit}
+    </select>
+
+    <select id="getDashBoardTodayReservationsByDoctorId" resultMap="adminReservationResultMap">
+        select
+            rt.id as rt_id,
+            rt.user_id as rt_user_id,
+            rt.status,
+            rt.reservation_date,
+            rt.register_date,
+            ut.id as ut_id,
+            ut.email,
+            ut.name as ut_name,
+            ut.password,
+            ut.phone_number,
+            ut.img as ut_img,
+            ut.email_valid,
+            ut.register_date as ut_register_date,
+            ut.update_date as ut_update_date
+        from
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            rt.doctor_id = #{doctorId} and DATE(reservation_date) = DATE(NOW())
         order by
             rt.reservation_date desc
         limit 0, #{limit}
@@ -344,5 +417,34 @@
             doctor_id,
             month
     </select>
+
+    <select id="getMonthCountsByDoctorId" resultMap="monthCountsByDoctors">
+        select
+            dt.id as doctor_id,
+            ut.name,
+            mt.id as month,
+            ifnull(count, 0) as count
+        from
+            doctor_tb dt
+            join month_tb mt
+            left outer join (select
+                                substr(reservation_date, 6, 2) as id,
+                                doctor_id,
+                                count(*) as count
+                            from
+                                reservation_tb
+                            group by
+                                doctor_id,
+                                substr(reservation_date, 6, 2)
+                            order by doctor_id) rt on(rt.id = mt.id and dt.id = rt.doctor_id)
+            left outer join user_tb ut on(ut.id = dt.user_id)
+        where
+            dt.id = #{doctorId}
+        order by
+            doctor_id,
+            month
+    </select>
+
+
 
 </mapper>
