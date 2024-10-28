@@ -29,65 +29,6 @@
             id = #{id}
     </delete>
 
-    <select id="getReviewsToUser" resultType="com.project.doctor_fish_back.entity.Review">
-        select
-            rt.id,
-            rt.user_id as userId,
-            rt.img,
-            rt.content,
-            rt.register_date as registerDate,
-            rt.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg,
-            (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
-            (select count(*) from review_like_tb where user_id = #{userId} and review_id = rt.id) as isLike
-        from
-            review_tb rt
-            left outer join user_tb ut on(rt.user_id = ut.id)
-        where
-            user_id = #{userId}
-        limit #{startIndex}, #{limit}
-    </select>
-
-    <select id="getReviewAll" resultType="com.project.doctor_fish_back.entity.Review">
-        select
-            rt.id,
-            rt.user_id as userId,
-            rt.img,
-            rt.content,
-            rt.register_date as registerDate,
-            rt.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg,
-            (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
-            <if test="userId != null">
-                (SELECT COUNT(*) FROM review_like_tb WHERE user_id = #{userId} AND review_id = rt.id) AS isLike
-            </if>
-            <if test="userId == null">
-                0 AS isLike
-            </if>
-        from
-            review_tb rt
-            left outer join user_tb ut on(rt.user_id = ut.id)
-        limit #{startIndex}, #{limit}
-    </select>
-
-    <select id="getReviewCountByUserId" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            review_tb
-        where
-            user_id = #{userId}
-    </select>
-
-    <select id="getReviewAllCount" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            review_tb;
-    </select>
-
     <select id="findById" resultType="com.project.doctor_fish_back.entity.Review">
         select
             rt.id,
@@ -105,6 +46,60 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
             rt.id = #{reviewId}
+    </select>
+
+    <select id="getReviewsByUserId" resultType="com.project.doctor_fish_back.entity.Review">
+        select
+            rt.id,
+            rt.user_id as userId,
+            rt.img,
+            rt.content,
+            rt.register_date as registerDate,
+            rt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
+            (select count(*) from review_like_tb where user_id = #{userId} and review_id = rt.id) as isLike
+        from
+            review_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            user_id = #{userId}
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="getReviewCountByUserId" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            review_tb
+        where
+            user_id = #{userId}
+    </select>
+
+    <select id="getReviews" resultType="com.project.doctor_fish_back.entity.Review">
+        select
+            rt.id,
+            rt.user_id as userId,
+            rt.img,
+            rt.content,
+            rt.register_date as registerDate,
+            rt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg,
+            (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
+            (select count(*) from review_like_tb where user_id = #{userId} and review_id = rt.id) as isLike
+        from
+            review_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="getCountReviews" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            review_tb;
     </select>
 
 </mapper>

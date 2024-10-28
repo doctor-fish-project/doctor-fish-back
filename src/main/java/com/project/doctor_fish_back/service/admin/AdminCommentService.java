@@ -39,8 +39,8 @@ public class AdminCommentService {
     @NotFoundAop
     public RespGetCommentListDto getComments(Long reviewId) {
         try {
-            List<Comment> comments = commentMapper.findAllByReviewId(reviewId);
-            Long commentCount = commentMapper.getCommentCountByReviewId(reviewId);
+            List<Comment> comments = commentMapper.getCommentsByReviewId(reviewId);
+            Long commentCount = commentMapper.getCountCommentsByReviewId(reviewId);
 
             return RespGetCommentListDto.builder()
                     .comments(comments)

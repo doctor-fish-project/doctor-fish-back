@@ -8,16 +8,20 @@ import java.util.List;
 
 @Mapper
 public interface UserReviewMapper {
+    // 유저 페이지 리뷰 저장, 수정, 삭제
     int save(Review review);
     int modify(Review review);
     int deleteById(Long id);
 
-    Long getReviewCountByUserId(Long userId);
-    Long getReviewAllCount();
-
-    List<Review> getReviewsToUser(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
-    List<Review> getReviewAll(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
-
+    // 유저 페이지 사용자의 리뷰 단건 조회
     Review findById(@Param("userId") Long userId, @Param("reviewId") Long reviewId);
+
+    // 유저 페이지 사용자의 리뷰 조회
+    List<Review> getReviewsByUserId(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    Long getReviewCountByUserId(Long userId);
+
+    // 유저 페이지 리뷰 페이지 전체 조회
+    List<Review> getReviews(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    Long getCountReviews();
 
 }

@@ -18,12 +18,6 @@ public class UserAnnouncementController {
         return ResponseEntity.ok().body(announcementService.getAllAnnouncements(dto));
     }
 
-    // 대쉬보드 공지사항 조회
-    @GetMapping("/announce/dashboard/list")
-    public ResponseEntity<?> getDashBoardAnnouncements() {
-        return ResponseEntity.ok().body(announcementService.getDashBoardAnnouncements());
-    }
-
     // 공지사항 단건조회
     @GetMapping("/announce/{announceId}")
     public ResponseEntity<?> getAnnouncement(@PathVariable Long announceId) {

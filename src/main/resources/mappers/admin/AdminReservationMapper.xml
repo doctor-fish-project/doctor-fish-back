@@ -57,6 +57,15 @@
         <result property="name" column="name" />
     </resultMap>
 
+    <resultMap id="monthCountsByDoctors" type="java.util.HashMap">
+        <id property="doctorId" column="doctor_id" />
+        <result property="name" column="name" />
+        <collection property="counts" javaType="java.util.ArrayList" ofType="java.util.HashMap">
+            <id property="month" column="month" />
+            <result property="count" column="count" />
+        </collection>
+    </resultMap>
+
     <update id="acceptById">
         update reservation_tb
         set
@@ -180,47 +189,7 @@
             DATE(reservation_date) = DATE(NOW())
     </select>
 
-    <select id="getAllToInfo" resultMap="reservationResultMap">
-        select
-            rt.id as rt_id,
-            rt.user_id as rt_user_id,
-            rt.doctor_id,
-            rt.status,
-            rt.reservation_date,
-            rt.register_date,
-            dot.id as dot_id,
-            dot.user_id as dot_user_id,
-            dot.depart_id,
-            dot.comment,
-            dot.record,
-            ut.id as ut_id,
-            ut.email,
-            ut.name as ut_name,
-            ut.password,
-            ut.phone_number,
-            ut.img as ut_img,
-            ut.email_valid,
-            ut.register_date as ut_register_date,
-            ut.update_date as ut_update_date,
-            det.id as det_id,
-            det.name as det_name
-        from
-            reservation_tb rt
-            left outer join doctor_tb dot on(rt.doctor_id = dot.id)
-            left outer join user_tb ut on(dot.user_id = ut.id)
-            left outer join depart_tb det on(dot.depart_id = det.id)
-        order by
-            rt.reservation_date desc
-    </select>
-
-    <select id="getCountAllToInfo" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            reservation_tb
-    </select>
-
-    <select id="getAllToDoctor" resultMap="reservationResultMap">
+    <select id="getReservationsByDoctorId" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -255,46 +224,13 @@
             rt.reservation_date desc
     </select>
 
-    <select id="getCountAllToDoctor" resultType="java.lang.Long">
+    <select id="getCountReservationsByDoctorId" resultType="java.lang.Long">
         select
             count(*)
         from
             reservation_tb
         where
             doctor_id = #{doctorId}
-    </select>
-
-    <select id="getDoctors" resultMap="getReservationMonthResultMap">
-        select
-            rt.doctor_id as id,
-            ut.name as name
-        from
-            reservation_tb rt
-            left join doctor_tb dt on(rt.doctor_id = dt.id)
-            left join user_tb ut on(dt.user_id = ut.id)
-        where
-            rt.reservation_date like concat(#{year}, "%")
-        group by
-            rt.doctor_id;
-    </select>
-
-    <select id="getCounts" resultType="java.lang.Integer">
-        select
-            ifnull(temp_tb.count, 0)
-        from
-            month_tb mt
-            left outer join
-                (select
-                    substr(reservation_date, 6, 2) as id,
-                    count(*) as count
-                from
-                    reservation_tb
-                where
-                    doctor_id = #{doctorId}
-                group by
-                    substr(reservation_date, 6, 2)) as temp_tb on(mt.id = temp_tb.id)
-        order by
-            mt.id;
     </select>
 
     <select id="getAllByLimit" resultMap="adminReservationResultMap">
@@ -347,7 +283,7 @@
         limit 0, #{limit}
     </select>
 
-    <select id="getBySearch" resultMap="adminReservationResultMap">
+    <select id="getReservationsBySearch" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -373,7 +309,7 @@
             rt.reservation_date desc
     </select>
 
-    <select id="getCountBySearch" resultType="java.lang.Long">
+    <select id="getCountReservationsBySearch" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -382,6 +318,31 @@
         where
             ut.email like concat("%", #{searchText}, "%")
             or ut.name like concat("%", #{searchText}, "%")
+    </select>
+
+    <select id="getMonthCountsByDoctors" resultMap="monthCountsByDoctors">
+        select
+            dt.id as doctor_id,
+            ut.name,
+            mt.id as month,
+            ifnull(count, 0) as count
+        from
+            doctor_tb dt
+            join month_tb mt
+            left outer join (select
+                                substr(reservation_date, 6, 2) as id,
+                                doctor_id,
+                                count(*) as count
+                            from
+                                reservation_tb
+                            group by
+                                doctor_id,
+                                substr(reservation_date, 6, 2)
+                            order by doctor_id) rt on(rt.id = mt.id and dt.id = rt.doctor_id)
+            left outer join user_tb ut on(ut.id = dt.user_id)
+        order by
+            doctor_id,
+            month
     </select>
 
 </mapper>

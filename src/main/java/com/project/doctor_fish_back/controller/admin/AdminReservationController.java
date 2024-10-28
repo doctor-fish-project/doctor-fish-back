@@ -3,6 +3,7 @@ package com.project.doctor_fish_back.controller.admin;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.exception.AuthorityException;
+import com.project.doctor_fish_back.repository.admin.AdminReservationMapper;
 import com.project.doctor_fish_back.service.admin.AdminReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +28,10 @@ public class AdminReservationController {
         return ResponseEntity.ok().body(reservationService.cancelReservation(reservationId));
     }
 
-    // 관리자 페이지 전체 예약 조회
-    @GetMapping("/reservation/all")
-    public ResponseEntity<?> getReservationAll(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(reservationService.getReservations(dto));
-    }
-
-    // 관리자 페이지 오늘 예약 조회
-    @GetMapping("/reservation/today")
-    public ResponseEntity<?> getReservationToday(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(reservationService.getReservationsToday(dto));
+    // 대쉬보드 월 별 예약 전체 조회
+    @GetMapping("/reservation/dashboard/monthcounts/{year}")
+    public ResponseEntity<?> getAllReservationsMonth(@PathVariable String year) {
+        return ResponseEntity.ok().body(reservationService.getReservationCountMonth());
     }
 
     // 대쉬보드 전체 예약 조회
@@ -51,28 +46,22 @@ public class AdminReservationController {
         return ResponseEntity.ok().body(reservationService.getDashBoardReservationsToday());
     }
 
+    // 관리자 페이지 전체 예약 조회
+    @GetMapping("/reservation/all")
+    public ResponseEntity<?> getReservationAll(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reservationService.getReservations(dto));
+    }
+
+    // 관리자 페이지 오늘 예약 조회
+    @GetMapping("/reservation/today")
+    public ResponseEntity<?> getReservationToday(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reservationService.getReservationsToday(dto));
+    }
+
     // 의사 예약 전체 조회
     @GetMapping("/reservation/list/doctor/{doctorId}")
     public ResponseEntity<?> getAllReservationsToDoctor(@PathVariable Long doctorId) {
-        return ResponseEntity.ok().body(reservationService.getAllReservationsToDoctor(doctorId));
-    }
-
-    // 의사, 원무과 예약 단건 조회
-    @GetMapping("/reservation/{reservationId}")
-    public ResponseEntity<?> getReservationToInfoAndDoctor(@PathVariable Long reservationId) {
-        return ResponseEntity.ok().body(reservationService.getReservationToInfoAndDoctor(reservationId));
-    }
-
-    // 원무과 예약 전체 조회
-    @GetMapping("/reservation/list")
-    public ResponseEntity<?> getAllReservationsToInfo() {
-        return ResponseEntity.ok().body(reservationService.getAllReservationsToInfo());
-    }
-
-    // 월 별 예약 전체 조회
-    @GetMapping("/reservation/list/month/{year}")
-    public ResponseEntity<?> getAllReservationsMonth(@PathVariable String year) {
-        return ResponseEntity.ok().body(reservationService.getAllReservationsMonth(year));
+        return ResponseEntity.ok().body(reservationService.getReservationsByDoctorId(doctorId));
     }
 
     // 관리자 예약 삭제

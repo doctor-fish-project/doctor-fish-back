@@ -7,7 +7,11 @@ import java.util.List;
 
 @Mapper
 public interface UserDoctorMapper {
+    // 의사 단건 조회
     Doctor getDoctorById(Long id);
-    List<Doctor> getAll();
-    Long getCountAll();
+
+    // 유저 페이지 의사 전체 조회
+    List<Doctor> getDoctors();
+    Long getCountDoctors();
+
 }

@@ -7,11 +7,9 @@ import java.util.List;
 
 @Mapper
 public interface AdminDoctorMapper {
-    int save(Doctor doctor);
-    List<Doctor> getAll();
-    Long getCountAll();
     int modify(Doctor doctor);
+    int save(Doctor doctor);
+
     Doctor findById(Long id);
-    int deleteById(Long id);
     Doctor findByUserId(Long userId);
 }

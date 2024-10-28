@@ -19,26 +19,6 @@
             review_id = #{reviewId} and user_id = #{userId}
     </delete>
 
-    <select id="findById" resultType="com.project.doctor_fish_back.entity.ReviewLike">
-        select
-            id,
-            review_id as reviewId,
-            user_id as userId
-        from
-            review_like_tb
-        where
-            id = #{id}
-    </select>
-
-    <select id="getLikeCountByReviewId" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            review_like_tb
-        where
-            review_id = #{reviewId}
-    </select>
-
     <select id="findByReviewIdAndUserId" resultType="com.project.doctor_fish_back.entity.ReviewLike">
         select
             id,

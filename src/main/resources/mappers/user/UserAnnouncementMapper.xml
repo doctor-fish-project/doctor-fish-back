@@ -23,7 +23,7 @@
             id = #{id}
     </select>
 
-    <select id="getAll" resultType="com.project.doctor_fish_back.entity.Announcement">
+    <select id="getAnnouncements" resultType="com.project.doctor_fish_back.entity.Announcement">
         select
             at.id,
             at.user_id as userId,
@@ -41,29 +41,11 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getAllByLimit" resultType="com.project.doctor_fish_back.entity.Announcement">
+    <select id="getCountAnnouncements" resultType="java.lang.Long">
         select
-            at.id,
-            at.user_id as userId,
-            at.title,
-            at.content,
-            at.register_date as registerDate,
-            at.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg
+        count(*)
         from
-            announcement_tb at
-            left outer join user_tb ut on(at.user_id = ut.id)
-        order by
-            registerDate
-        limit 0, #{limit}
-    </select>
-
-    <select id="getCountAll" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            announcement_tb
+        announcement_tb
     </select>
 
 </mapper>

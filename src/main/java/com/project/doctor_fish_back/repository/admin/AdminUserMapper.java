@@ -8,21 +8,23 @@ import java.util.List;
 
 @Mapper
 public interface AdminUserMapper {
-    User findById(Long id);
-    User findByEmail(String email);
-    User findByPhoneNumber(String phoneNumber);
     int save(User user);
-    int modifyEmailValidByEmail(String email);
     int deleteById(Long id);
     int modify(User user);
     int modifyEmail(User user);
     int modifyPassword(User user);
-    List<User> getAll(@Param("startIndex") Long startIndex,
-                      @Param("limit") Long limit);
-    Long getCountAll();
     int modifyEmailValidById(Long id);
 
-    List<User> getBySearch(String searchText);
-    Long getCountBySearch(String searchText);
+    User findById(Long id);
+    User findByEmail(String email);
+    User findByPhoneNumber(String phoneNumber);
+
+    // 관리자 페이지 회원 전체 조회
+    List<User> getUsers(@Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    Long getCountUsers();
+
+    // 관리자 페이지 회원 검색 조회
+    List<User> getUsersBySearch(String searchText);
+    Long getCountUsersBySearch(String searchText);
 
 }

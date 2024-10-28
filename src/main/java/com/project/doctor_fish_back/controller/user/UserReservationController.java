@@ -30,19 +30,19 @@ public class UserReservationController {
     // 사용자 오늘 예약 조회
     @GetMapping("/reservation/today")
     public ResponseEntity<?> getReservationToUser() {
-        return ResponseEntity.ok().body(reservationService.getReservationsToUser());
+        return ResponseEntity.ok().body(reservationService.getReservationsToday());
     }
 
     // 사용자 내 예약 전체 조회
     @GetMapping("/reservation/list")
     public ResponseEntity<?> getAllReservationsToUser(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(reservationService.getAllReservationsToUser(dto));
+        return ResponseEntity.ok().body(reservationService.getReservations(dto));
     }
 
     // 사용자 내 예약 단건 조회
     @GetMapping("/reservation/{reservationId}")
     public ResponseEntity<?> getReservationToUser(@PathVariable Long reservationId) {
-        return ResponseEntity.ok().body(reservationService.getReservationToUser(reservationId));
+        return ResponseEntity.ok().body(reservationService.getReservationById(reservationId));
     }
 
     // 예약 정보 수정
@@ -55,7 +55,7 @@ public class UserReservationController {
     // 사용자 예약 삭제
     @DeleteMapping("/reservation/{reservationId}")
     public ResponseEntity<?> deleteReservationFromUser(@PathVariable Long reservationId) {
-        return ResponseEntity.ok().body(reservationService.deleteReservationFromUser(reservationId));
+        return ResponseEntity.ok().body(reservationService.deleteReservation(reservationId));
     }
 
     // 리뷰를 작성할 수 있는 예약 리스트 조회

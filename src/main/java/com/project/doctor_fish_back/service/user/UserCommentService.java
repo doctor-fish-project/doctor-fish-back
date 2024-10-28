@@ -7,7 +7,6 @@ import com.project.doctor_fish_back.dto.user.response.comment.RespGetCommentList
 import com.project.doctor_fish_back.dto.user.request.comment.ReqModifyCommentDto;
 import com.project.doctor_fish_back.dto.user.request.comment.ReqRegisterCommentDto;
 import com.project.doctor_fish_back.entity.Comment;
-import com.project.doctor_fish_back.entity.Reservation;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.user.UserCommentMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
@@ -27,9 +26,7 @@ public class UserCommentService {
     public Boolean writeComment(ReqRegisterCommentDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
             Comment comment = dto.toEntity(principalUser.getId());
-
             commentMapper.save(comment);
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");

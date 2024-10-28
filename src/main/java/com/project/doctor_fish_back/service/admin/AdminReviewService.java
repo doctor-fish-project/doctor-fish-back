@@ -29,20 +29,6 @@ public class AdminReviewService {
     @Autowired
     private AdminReviewLikeMapper reviewLikeMapper;
 
-    public RespGetReviewListDto getReviews() {
-        try {
-            List<Review> reviews = reviewMapper.getReviewAll();
-            Long reviewCount = reviewMapper.getReviewAllCount();
-
-            return RespGetReviewListDto.builder()
-                    .reviews(reviews)
-                    .reviewCount(reviewCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
     public RespReviewDto getReview(Long reviewId) {
         try {
             Review review = reviewMapper.findById(reviewId);
@@ -65,7 +51,7 @@ public class AdminReviewService {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             List<Review> reviews = reviewMapper.getReviewAllByLimit(startIndex, dto.getLimit());
-            Long reviewCount = reviewMapper.getReviewAllCount();
+            Long reviewCount = reviewMapper.getCountReviews();
 
             return RespGetReviewListDto.builder()
                     .reviews(reviews)

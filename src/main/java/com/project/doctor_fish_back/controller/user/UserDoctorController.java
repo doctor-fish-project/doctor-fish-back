@@ -24,7 +24,7 @@ public class UserDoctorController {
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<?> getDoctorById(@PathVariable Long doctorId) {
         System.out.println(doctorId);
-        return ResponseEntity.ok().body(doctorService.getDoctor(doctorId));
+        return ResponseEntity.ok().body(doctorService.getDoctorById(doctorId));
     }
 
 }

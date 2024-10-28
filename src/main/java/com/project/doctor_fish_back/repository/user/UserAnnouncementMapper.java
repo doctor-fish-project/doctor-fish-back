@@ -8,12 +8,10 @@ import java.util.List;
 
 @Mapper
 public interface UserAnnouncementMapper {
-    Long getCountAll();
-
+    // 유저 페이지 공지사항 단건 조회
     Announcement findById(Long id);
 
-    List<Announcement> getAll(@Param("startIndex") Long startIndex,
-                              @Param("limit") Long limit);
-
-    List<Announcement> getAllByLimit(Long limit);
+    // 유저 페이지 공지사항 조회
+    List<Announcement> getAnnouncements(@Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    Long getCountAnnouncements();
 }

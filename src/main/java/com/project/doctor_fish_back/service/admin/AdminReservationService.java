@@ -2,20 +2,21 @@ package com.project.doctor_fish_back.service.admin;
 
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
-import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationCountMonth;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationListDto;
+import com.project.doctor_fish_back.dto.admin.response.reservation.RespMonthReservationsCountByDoctorsDto;
 import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.ExecutionException;
-import com.project.doctor_fish_back.repository.admin.AdminMonthMapper;
+import com.project.doctor_fish_back.repository.MonthMapper;
 import com.project.doctor_fish_back.repository.admin.AdminReservationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -25,7 +26,7 @@ public class AdminReservationService {
     private AdminReservationMapper reservationMapper;
 
     @Autowired
-    private AdminMonthMapper monthMapper;
+    private MonthMapper monthMapper;
 
     @NotFoundAop
     public Boolean acceptReservation(Long reservationId) {
@@ -47,6 +48,44 @@ public class AdminReservationService {
         return true;
     }
 
+    // 대쉬보드 월 별 예약 수
+    public RespMonthReservationsCountByDoctorsDto getReservationCountMonth() {
+        List<Map<String, Object>> reservations = reservationMapper.getMonthCountsByDoctors();
+        List<Month> months = monthMapper.getAll();
+
+        return RespMonthReservationsCountByDoctorsDto.builder()
+                .reservations(reservations)
+                .months(months)
+                .build();
+    }
+
+    // 대쉬보드 전체 예약
+    public RespGetReservationListDto getDashBoardReservations() {
+        try {
+            Long limit = 6L;
+
+            return RespGetReservationListDto.builder()
+                    .reservations(reservationMapper.getAllByLimit(limit))
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+    }
+
+    // 대쉬보드 오늘 예약
+    public RespGetReservationListDto getDashBoardReservationsToday() {
+        try {
+            Long limit = 6L;
+
+            return RespGetReservationListDto.builder()
+                    .reservations(reservationMapper.getTodayByLimit(limit))
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+    }
+    
+    // 관리자 페이지 전체 예약
     public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
@@ -62,6 +101,7 @@ public class AdminReservationService {
         }
     }
 
+    // 관리자 페이지 오늘 예약
     public RespGetReservationListDto getReservationsToday(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
@@ -77,96 +117,14 @@ public class AdminReservationService {
         }
     }
 
-    public RespGetReservationListDto getDashBoardReservations() {
+    public RespGetReservationListDto getReservationsByDoctorId(Long doctorId) {
         try {
-            Long limit = 6L;
-
-            return RespGetReservationListDto.builder()
-                    .reservations(reservationMapper.getAllByLimit(limit))
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespGetReservationListDto getDashBoardReservationsToday() {
-        try {
-            Long limit = 6L;
-
-            return RespGetReservationListDto.builder()
-                    .reservations(reservationMapper.getTodayByLimit(limit))
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespGetReservationListDto getAllReservationsToDoctor(Long doctorId) {
-        try {
-            List<Reservation> reservations = reservationMapper.getAllToDoctor(doctorId);
-            Long totalCount = reservationMapper.getCountAllToDoctor(doctorId);
+            List<Reservation> reservations = reservationMapper.getReservationsByDoctorId(doctorId);
+            Long totalCount = reservationMapper.getCountReservationsByDoctorId(doctorId);
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
                     .totalCount(totalCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespGetReservationListDto getAllReservationsToInfo() {
-        try {
-            List<Reservation> reservations = reservationMapper.getAllToInfo();
-            Long totalCount = reservationMapper.getCountAllToInfo();
-
-            return RespGetReservationListDto.builder()
-                    .reservations(reservations)
-                    .totalCount(totalCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespGetReservationCountMonth getAllReservationsMonth(String year) {
-        try {
-            List<Month> months = monthMapper.getAll();
-            List<GetReservationMonthDoctors> doctors = reservationMapper.getDoctors(year);
-            List<GetReservationMonth> reserveList = new ArrayList<>();
-
-            for(GetReservationMonthDoctors doctor : doctors) {
-                List<Integer> data = reservationMapper.getCounts(doctor.getId());
-
-                GetReservationMonth reserve = GetReservationMonth.builder()
-                        .label(doctor.getName())
-                        .data(data)
-                        .build();
-                reserveList.add(reserve);
-
-            }
-            return RespGetReservationCountMonth.builder()
-                    .months(months)
-                    .getReservationMonths(reserveList)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    @NotFoundAop
-    public RespGetReservationDto getReservationToInfoAndDoctor(Long reservationId) {
-        try {
-            Reservation reservation = reservationMapper.findById(reservationId);
-
-            return RespGetReservationDto.builder()
-                    .id(reservation.getId())
-                    .userId(reservation.getUserId())
-                    .doctorId(reservation.getDoctorId())
-                    .status(reservation.getStatus())
-                    .reservationDate(reservation.getReservationDate())
-                    .registerDate(reservation.getReservationDate())
-                    .doctor(reservation.getDoctor())
                     .build();
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
@@ -193,8 +151,8 @@ public class AdminReservationService {
 
     public RespGetReservationListDto searchReservation(ReqSearchDto dto) {
         try {
-            List<Reservation> reservations = reservationMapper.getBySearch(dto.getSearchText());
-            Long totalCount = reservationMapper.getCountBySearch(dto.getSearchText());
+            List<Reservation> reservations = reservationMapper.getReservationsBySearch(dto.getSearchText());
+            Long totalCount = reservationMapper.getCountReservationsBySearch(dto.getSearchText());
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)

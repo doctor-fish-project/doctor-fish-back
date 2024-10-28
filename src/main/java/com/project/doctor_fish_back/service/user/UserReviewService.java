@@ -5,7 +5,6 @@ import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespGetReviewListDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespReviewDto;
-import com.project.doctor_fish_back.dto.user.response.review.RespReviewLikeInfoDto;
 import com.project.doctor_fish_back.dto.user.request.review.ReqModifyReviewDto;
 import com.project.doctor_fish_back.dto.user.request.review.ReqWriteReviewDto;
 import com.project.doctor_fish_back.entity.Review;
@@ -44,45 +43,6 @@ public class UserReviewService {
         return true;
     }
 
-    public RespGetReviewListDto getReviews(ReqPageAndLimitDto dto) {
-
-        try {
-            Long userId = null;
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if (principal instanceof PrincipalUser) {
-                userId = ((PrincipalUser) principal).getId();
-            }
-            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Review> reviews = reviewMapper.getReviewAll(userId, startIndex, dto.getLimit());
-            Long reviewCount = reviewMapper.getReviewAllCount();
-
-            return RespGetReviewListDto.builder()
-                    .reviews(reviews)
-                    .reviewCount(reviewCount)
-                    .build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespGetReviewListDto getReviewsToUser(ReqPageAndLimitDto dto) {
-        try {
-            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Review> reviews = reviewMapper.getReviewsToUser(principalUser.getId(), startIndex, dto.getLimit());
-            Long reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
-
-            return RespGetReviewListDto.builder()
-                    .reviews(reviews)
-                    .reviewCount(reviewCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
     @NotFoundAop
     @AuthorityAop
     public Boolean modifyReview(Long reviewId, ReqModifyReviewDto dto) {
@@ -103,6 +63,44 @@ public class UserReviewService {
             throw new ExecutionException("실행 도중 오류 발생");
         }
         return true;
+    }
+
+    public RespGetReviewListDto getReviewsByUserId(ReqPageAndLimitDto dto) {
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Review> reviews = reviewMapper.getReviewsByUserId(principalUser.getId(), startIndex, dto.getLimit());
+            Long reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
+
+            return RespGetReviewListDto.builder()
+                    .reviews(reviews)
+                    .reviewCount(reviewCount)
+                    .build();
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+    }
+
+    public RespGetReviewListDto getReviews(ReqPageAndLimitDto dto) {
+        try {
+            Long userId = null;
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (principal instanceof PrincipalUser) {
+                userId = ((PrincipalUser) principal).getId();
+            }
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Review> reviews = reviewMapper.getReviews(userId, startIndex, dto.getLimit());
+            Long reviewCount = reviewMapper.getCountReviews();
+
+            return RespGetReviewListDto.builder()
+                    .reviews(reviews)
+                    .reviewCount(reviewCount)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
     }
 
     @NotFoundAop
@@ -143,25 +141,7 @@ public class UserReviewService {
         return true;
     }
 
-    @NotFoundAop
-    public RespReviewLikeInfoDto getLikeCount(Long reviewId) {
-        try {
-            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Long userId = principalUser.getId();
-
-            ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
-            Long likeCount = reviewLikeMapper.getLikeCountByReviewId(reviewId);
-
-            return RespReviewLikeInfoDto.builder()
-                    .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())
-                    .likeCount(likeCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespReviewDto getReview(Long reviewId) {
+    public RespReviewDto getReviewById(Long reviewId) {
         try {
             Long userId = null;
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
