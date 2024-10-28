@@ -21,4 +21,6 @@ public class Comment {
 
     private String userName;
     private String userImg;
+
+    private User user;
 }

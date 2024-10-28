@@ -10,8 +10,12 @@ import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.MonthMapper;
+import com.project.doctor_fish_back.repository.UserRolesMapper;
+import com.project.doctor_fish_back.repository.admin.AdminDoctorMapper;
 import com.project.doctor_fish_back.repository.admin.AdminReservationMapper;
+import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +28,12 @@ public class AdminReservationService {
 
     @Autowired
     private AdminReservationMapper reservationMapper;
+
+    @Autowired
+    private AdminDoctorMapper adminDoctorMapper;
+
+    @Autowired
+    private UserRolesMapper userRolesMapper;
 
     @Autowired
     private MonthMapper monthMapper;
@@ -50,6 +60,20 @@ public class AdminReservationService {
 
     // 대쉬보드 월 별 예약 수
     public RespMonthReservationsCountByDoctorsDto getReservationCountMonth() {
+        PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = principalUser.getId();
+
+        if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
+            Doctor doctor = adminDoctorMapper.findByUserId(userId);
+            List<Map<String, Object>> reservations = reservationMapper.getMonthCountsByDoctorId(doctor.getId());
+            List<Month> months = monthMapper.getAll();
+
+            return RespMonthReservationsCountByDoctorsDto.builder()
+                    .reservations(reservations)
+                    .months(months)
+                    .build();
+        }
+
         List<Map<String, Object>> reservations = reservationMapper.getMonthCountsByDoctors();
         List<Month> months = monthMapper.getAll();
 
@@ -61,8 +85,18 @@ public class AdminReservationService {
 
     // 대쉬보드 전체 예약
     public RespGetReservationListDto getDashBoardReservations() {
+        Long limit = 6L;
+
         try {
-            Long limit = 6L;
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalUser.getId();
+
+            if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
+                Doctor doctor = adminDoctorMapper.findByUserId(userId);
+                return RespGetReservationListDto.builder()
+                        .reservations(reservationMapper.getDashBoardReservationsByDoctorId(doctor.getId(), limit))
+                        .build();
+            }
 
             return RespGetReservationListDto.builder()
                     .reservations(reservationMapper.getAllByLimit(limit))
@@ -74,8 +108,18 @@ public class AdminReservationService {
 
     // 대쉬보드 오늘 예약
     public RespGetReservationListDto getDashBoardReservationsToday() {
+        Long limit = 6L;
+
         try {
-            Long limit = 6L;
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalUser.getId();
+
+            if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
+                Doctor doctor = adminDoctorMapper.findByUserId(userId);
+                return RespGetReservationListDto.builder()
+                        .reservations(reservationMapper.getDashBoardTodayReservationsByDoctorId(doctor.getId(), limit))
+                        .build();
+            }
 
             return RespGetReservationListDto.builder()
                     .reservations(reservationMapper.getTodayByLimit(limit))
@@ -89,8 +133,19 @@ public class AdminReservationService {
     public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Reservation> reservations = reservationMapper.getAll(startIndex, dto.getLimit());
-            Long totalCount = reservationMapper.getCountAll();
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalUser.getId();
+
+            if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
+                Doctor doctor = adminDoctorMapper.findByUserId(userId);
+                return RespGetReservationListDto.builder()
+                        .reservations(reservationMapper.getReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit()))
+                        .totalCount(reservationMapper.getCountReservationsByDoctorId(doctor.getId()))
+                        .build();
+            }
+
+            List<Reservation> reservations = reservationMapper.getReservations(startIndex, dto.getLimit());
+            Long totalCount = reservationMapper.getCountReservations();
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
@@ -105,22 +160,18 @@ public class AdminReservationService {
     public RespGetReservationListDto getReservationsToday(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Reservation> reservations = reservationMapper.getToday(startIndex, dto.getLimit());
-            Long totalCount = reservationMapper.getCountToday();
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalUser.getId();
 
-            return RespGetReservationListDto.builder()
-                    .reservations(reservations)
-                    .totalCount(totalCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespGetReservationListDto getReservationsByDoctorId(Long doctorId) {
-        try {
-            List<Reservation> reservations = reservationMapper.getReservationsByDoctorId(doctorId);
-            Long totalCount = reservationMapper.getCountReservationsByDoctorId(doctorId);
+            if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
+                Doctor doctor = adminDoctorMapper.findByUserId(userId);
+                return RespGetReservationListDto.builder()
+                        .reservations(reservationMapper.getTodayReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit()))
+                        .totalCount(reservationMapper.getCountTodayReservationsByDoctorId(doctor.getId()))
+                        .build();
+            }
+            List<Reservation> reservations = reservationMapper.getTodayReservations(startIndex, dto.getLimit());
+            Long totalCount = reservationMapper.getCountTodayReservations();
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
@@ -159,6 +210,7 @@ public class AdminReservationService {
                     .totalCount(totalCount)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }

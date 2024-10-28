@@ -13,12 +13,14 @@ public interface UserCommentMapper {
     int modifyById(Comment comment);
     int deleteById(Long id);
 
-    // 유저 페이지 리뷰별 댓글 수 조회
-    Long getCommentCountByReviewId(Long reviewId);
-
     // 유저 페이지 리뷰 단건 조회
     Comment findById(Long id);
 
-    // 유저 페이지 리뷰 전체 조회
+    // 유저 페이지 리뷰별 전체 댓글 조회
     List<Comment> findAllByReviewId(@Param("reviewId") Long reviewId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    Long getCommentCountByReviewId(Long reviewId);
+
+    // 유저 페이지 내가 작성한 댓글 조회
+    List<Comment> findCommentsByUserId(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    Long getCountCommentsByUserId(Long userId);
 }
