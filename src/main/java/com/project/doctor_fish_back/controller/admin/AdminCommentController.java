@@ -3,6 +3,7 @@ package com.project.doctor_fish_back.controller.admin;
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqModifyCommentDto;
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqRegisterCommentDto;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.service.admin.AdminCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ public class AdminCommentController {
 
     // 댓글 조회
     @GetMapping("/review/{reviewId}/comments")
-    public ResponseEntity<?> getComments(@PathVariable Long reviewId) {
-        return ResponseEntity.ok().body(commentService.getComments(reviewId));
+    public ResponseEntity<?> getComments(@PathVariable Long reviewId, ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(commentService.getComments(reviewId, dto));
     }
 
     // 댓글 수정

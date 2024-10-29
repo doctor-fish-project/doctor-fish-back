@@ -4,6 +4,7 @@ import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
 import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqModifyCommentDto;
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqRegisterCommentDto;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.admin.response.comment.RespGetCommentListDto;
 import com.project.doctor_fish_back.entity.Comment;
 import com.project.doctor_fish_back.exception.ExecutionException;
@@ -37,9 +38,10 @@ public class AdminCommentService {
     }
 
     @NotFoundAop
-    public RespGetCommentListDto getComments(Long reviewId) {
+    public RespGetCommentListDto getComments(Long reviewId, ReqPageAndLimitDto dto) {
         try {
-            List<Comment> comments = commentMapper.getCommentsByReviewId(reviewId);
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Comment> comments = commentMapper.getCommentsByReviewId(reviewId, startIndex, dto.getLimit());
             Long commentCount = commentMapper.getCountCommentsByReviewId(reviewId);
 
             return RespGetCommentListDto.builder()
@@ -47,6 +49,7 @@ public class AdminCommentService {
                     .commentCount(commentCount)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
@@ -63,7 +66,6 @@ public class AdminCommentService {
     }
 
     @NotFoundAop
-    @AuthorityAop
     public Boolean deleteComment(Long commentId) {
         try {
             commentMapper.deleteById(commentId);

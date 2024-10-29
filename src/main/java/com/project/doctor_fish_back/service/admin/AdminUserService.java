@@ -303,10 +303,10 @@ public class AdminUserService {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User user = userMapper.findById(principalUser.getId());
 
-            Set<String> roles = user.getUserRoles().stream().map(
-                    userRole -> userRole.getRole().getName()
+            Set<Role> roles = user.getUserRoles().stream().map(
+                    userRole -> userRole.getRole()
             ).collect(Collectors.toSet());
-
+            System.out.println(roles);
             return RespMyInfoDto.builder()
                     .id(user.getId())
                     .email(user.getEmail())
