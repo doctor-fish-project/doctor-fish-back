@@ -101,11 +101,12 @@ public class AdminAnnouncementService {
     }
     
     // 관리자 페이지 공지사항 전체 조회
-    public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto) {
+    public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto, String searchText) {
         try {
+            System.out.println("searchText:" + searchText);
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Announcement> announcements = announcementMapper.getAnnouncements(startIndex, dto.getLimit());
-            Long totalCount = announcementMapper.getCountAnnouncements();
+            List<Announcement> announcements = announcementMapper.getAnnouncements(startIndex, dto.getLimit(), searchText);
+            Long totalCount = announcementMapper.getCountAnnouncements(searchText);
 
             return RespGetAnnounceListDto.builder()
                     .announcements(announcements)
@@ -135,20 +136,6 @@ public class AdminAnnouncementService {
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
-    
-    // 관리자 페이지 공지사항 검색 조회
-    public RespGetAnnounceListDto searchAnnouncement(ReqSearchDto dto) {
-        try {
-            List<Announcement> announcements = announcementMapper.getAnnouncementsBySearch(dto.getSearchText());
-            Long announceCount = announcementMapper.getCountAnnouncementsBySearch(dto.getSearchText());
 
-            return RespGetAnnounceListDto.builder()
-                    .announcements(announcements)
-                    .announceCount(announceCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
 }
 

@@ -130,7 +130,7 @@ public class AdminReservationService {
     }
     
     // 관리자 페이지 전체 예약
-    public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
+    public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto, String searchText) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -139,13 +139,13 @@ public class AdminReservationService {
             if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
                 Doctor doctor = adminDoctorMapper.findByUserId(userId);
                 return RespGetReservationListDto.builder()
-                        .reservations(reservationMapper.getReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit()))
-                        .totalCount(reservationMapper.getCountReservationsByDoctorId(doctor.getId()))
+                        .reservations(reservationMapper.getReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit(), searchText))
+                        .totalCount(reservationMapper.getCountReservationsByDoctorId(doctor.getId(), searchText))
                         .build();
             }
 
-            List<Reservation> reservations = reservationMapper.getReservations(startIndex, dto.getLimit());
-            Long totalCount = reservationMapper.getCountReservations();
+            List<Reservation> reservations = reservationMapper.getReservations(startIndex, dto.getLimit(), searchText);
+            Long totalCount = reservationMapper.getCountReservations(searchText);
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
@@ -157,7 +157,7 @@ public class AdminReservationService {
     }
 
     // 관리자 페이지 오늘 예약
-    public RespGetReservationListDto getReservationsToday(ReqPageAndLimitDto dto) {
+    public RespGetReservationListDto getReservationsToday(ReqPageAndLimitDto dto, String searchText) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -166,12 +166,12 @@ public class AdminReservationService {
             if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
                 Doctor doctor = adminDoctorMapper.findByUserId(userId);
                 return RespGetReservationListDto.builder()
-                        .reservations(reservationMapper.getTodayReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit()))
-                        .totalCount(reservationMapper.getCountTodayReservationsByDoctorId(doctor.getId()))
+                        .reservations(reservationMapper.getTodayReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit(), searchText))
+                        .totalCount(reservationMapper.getCountTodayReservationsByDoctorId(doctor.getId(), searchText))
                         .build();
             }
-            List<Reservation> reservations = reservationMapper.getTodayReservations(startIndex, dto.getLimit());
-            Long totalCount = reservationMapper.getCountTodayReservations();
+            List<Reservation> reservations = reservationMapper.getTodayReservations(startIndex, dto.getLimit(), searchText);
+            Long totalCount = reservationMapper.getCountTodayReservations(searchText);
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
@@ -198,21 +198,6 @@ public class AdminReservationService {
             throw new ExecutionException("실행 도중 오류 발생");
         }
         return true;
-    }
-
-    public RespGetReservationListDto searchReservation(ReqSearchDto dto) {
-        try {
-            List<Reservation> reservations = reservationMapper.getReservationsBySearch(dto.getSearchText());
-            Long totalCount = reservationMapper.getCountReservationsBySearch(dto.getSearchText());
-
-            return RespGetReservationListDto.builder()
-                    .reservations(reservations)
-                    .totalCount(totalCount)
-                    .build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
     }
 
 }

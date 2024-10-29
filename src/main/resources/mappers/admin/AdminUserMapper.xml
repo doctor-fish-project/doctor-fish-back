@@ -155,6 +155,7 @@
             left outer join role_tb r on(r.id = ur.role_id)
         where
             r.id = 1
+            and u.name like concat("%", #{searchText}, "%")
         limit
             #{startIndex}, #{limit}
     </select>
@@ -163,11 +164,12 @@
         select
             count(*)
         from
-        user_tb u
+            user_tb u
             left outer join user_roles_tb ur on(u.id = ur.user_id)
             left outer join role_tb r on(r.id = ur.role_id)
-        where
+       where
             r.id = 1
+            and u.name like concat("%", #{searchText}, "%")
     </select>
 
     <select id="findByPhoneNumber" resultMap="userResultMap">
@@ -193,46 +195,6 @@
             left outer join role_tb r on(r.id = ur.role_id)
         where
             phone_number = #{phoneNumber}
-    </select>
-
-    <select id="getUsersBySearch" resultMap="userResultMap">
-        select
-            u.id as user_id,
-            u.email,
-            u.name,
-            u.password,
-            u.phone_number,
-            u.img,
-            u.email_valid,
-            u.register_date,
-            u.update_date,
-            ur.id as user_roles_id,
-            ur.user_id as ur_user_id,
-            ur.role_id as ur_role_id,
-            r.id as role_id,
-            r.name as role_name,
-            r.position as role_position
-        from
-            user_tb u
-            left outer join user_roles_tb ur on(u.id = ur.user_id)
-            left outer join role_tb r on(r.id = ur.role_id)
-        where
-            u.email like concat("%", #{searchText}, "%")
-            or u.name like concat("%", #{searchText}, "%")
-            or r.name like concat("%", #{searchText}, "%")
-    </select>
-
-    <select id="getCountUsersBySearch" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            user_tb u
-            left outer join user_roles_tb ur on(u.id = ur.user_id)
-            left outer join role_tb r on(r.id = ur.role_id)
-        where
-            u.email like concat("%", #{searchText}, "%")
-            or u.name like concat("%", #{searchText}, "%")
-            or r.name like concat("%", #{searchText}, "%")
     </select>
 
 </mapper>

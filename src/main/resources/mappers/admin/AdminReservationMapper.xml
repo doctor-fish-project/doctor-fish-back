@@ -137,6 +137,8 @@
         from
             reservation_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            ut.name like concat("%", #{searchText}, "%")
         order by
             rt.reservation_date desc
         limit #{startIndex}, #{limit}
@@ -163,6 +165,7 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
             rt.doctor_id = #{doctorId}
+            and ut.name like concat("%", #{searchText}, "%")
         order by
             rt.reservation_date desc
         limit #{startIndex}, #{limit}
@@ -189,6 +192,7 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
             DATE(reservation_date) = DATE(NOW())
+            and ut.name like concat("%", #{searchText}, "%")
         order by
             rt.reservation_date desc
         limit #{startIndex}, #{limit}
@@ -215,6 +219,7 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
             rt.doctor_id = #{doctorId} and DATE(reservation_date) = DATE(NOW())
+            and ut.name like concat("%", #{searchText}, "%")
         order by
             rt.reservation_date desc
         limit #{startIndex}, #{limit}
@@ -224,34 +229,43 @@
         select
             count(*)
         from
-            reservation_tb
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            ut.name like concat("%", #{searchText}, "%")
     </select>
 
     <select id="getCountTodayReservations" resultType="java.lang.Long">
         select
             count(*)
         from
-            reservation_tb
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
         where
             DATE(reservation_date) = DATE(NOW())
+            and ut.name like concat("%", #{searchText}, "%")
     </select>
 
     <select id="getCountReservationsByDoctorId" resultType="java.lang.Long">
         select
             count(*)
         from
-            reservation_tb
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
         where
             doctor_id = #{doctorId}
+            and ut.name like concat("%", #{searchText}, "%")
     </select>
 
     <select id="getCountTodayReservationsByDoctorId" resultType="java.lang.Long">
         select
             count(*)
         from
-            reservation_tb
+            reservation_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
         where
             doctor_id = #{doctorId} and DATE(reservation_date) = DATE(NOW())
+            and ut.name like concat("%", #{searchText}, "%")
     </select>
 
     <select id="getAllByLimit" resultMap="adminReservationResultMap">
@@ -354,43 +368,6 @@
         order by
             rt.reservation_date desc
         limit 0, #{limit}
-    </select>
-
-    <select id="getReservationsBySearch" resultMap="adminReservationResultMap">
-        select
-            rt.id as rt_id,
-            rt.user_id as rt_user_id,
-            rt.status,
-            rt.reservation_date,
-            rt.register_date,
-            ut.id as ut_id,
-            ut.email,
-            ut.name as ut_name,
-            ut.password,
-            ut.phone_number,
-            ut.img as ut_img,
-            ut.email_valid,
-            ut.register_date as ut_register_date,
-            ut.update_date as ut_update_date
-        from
-            reservation_tb rt
-            left outer join user_tb ut on(rt.user_id = ut.id)
-        where
-            ut.email like concat("%", #{searchText}, "%")
-            or ut.name like concat("%", #{searchText}, "%")
-        order by
-            rt.reservation_date desc
-    </select>
-
-    <select id="getCountReservationsBySearch" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            reservation_tb rt
-            left outer join user_tb ut on(rt.user_id = ut.id)
-        where
-            ut.email like concat("%", #{searchText}, "%")
-            or ut.name like concat("%", #{searchText}, "%")
     </select>
 
     <select id="getMonthCountsByDoctors" resultMap="monthCountsByDoctors">

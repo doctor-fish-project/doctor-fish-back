@@ -47,11 +47,11 @@ public class AdminReviewService {
         }
     }
 
-    public RespGetReviewListDto getReviewAllByLimit(ReqPageAndLimitDto dto) {
+    public RespGetReviewListDto getReviewAllByLimit(ReqPageAndLimitDto dto, String searchText) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Review> reviews = reviewMapper.getReviewAllByLimit(startIndex, dto.getLimit());
-            Long reviewCount = reviewMapper.getCountReviews();
+            List<Review> reviews = reviewMapper.getReviewAllByLimit(startIndex, dto.getLimit(), searchText);
+            Long reviewCount = reviewMapper.getCountReviews(searchText);
 
             return RespGetReviewListDto.builder()
                     .reviews(reviews)
@@ -122,20 +122,6 @@ public class AdminReviewService {
             return RespReviewLikeInfoDto.builder()
                     .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())
                     .likeCount(likeCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
-    }
-
-    public RespGetReviewListDto searchReview(ReqSearchDto dto) {
-        try {
-            List<Review> reviews = reviewMapper.getBySearch(dto.getSearchText());
-            Long reviewCount = reviewMapper.getCountBySearch(dto.getSearchText());
-
-            return RespGetReviewListDto.builder()
-                    .reviews(reviews)
-                    .reviewCount(reviewCount)
                     .build();
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");

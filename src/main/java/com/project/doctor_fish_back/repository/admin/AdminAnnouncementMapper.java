@@ -20,10 +20,7 @@ public interface AdminAnnouncementMapper {
     List<Announcement> getAnnouncementsByLimit(Long limit);
 
     // 관리자 페이지 공지사항 전체 조회
-    List<Announcement> getAnnouncements(@Param("startIndex") Long startIndex, @Param("limit") Long limit);
-    Long getCountAnnouncements();
+    List<Announcement> getAnnouncements(@Param("startIndex") Long startIndex, @Param("limit") Long limit, @Param("searchText") String searchText);
+    Long getCountAnnouncements(String searchText);
 
-    // 관리자 페이지 공지사항 검색
-    List<Announcement> getAnnouncementsBySearch(String searchText);
-    Long getCountAnnouncementsBySearch(String searchText);
 }
