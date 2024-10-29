@@ -103,7 +103,6 @@ public class AdminAnnouncementService {
     // 관리자 페이지 공지사항 전체 조회
     public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto, String searchText) {
         try {
-            System.out.println("searchText:" + searchText);
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             List<Announcement> announcements = announcementMapper.getAnnouncements(startIndex, dto.getLimit(), searchText);
             Long totalCount = announcementMapper.getCountAnnouncements(searchText);
