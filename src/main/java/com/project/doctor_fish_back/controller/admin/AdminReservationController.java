@@ -58,11 +58,6 @@ public class AdminReservationController {
         return ResponseEntity.ok().body(reservationService.getReservationsToday(dto));
     }
 
-    // 의사 예약 전체 조회
-    @GetMapping("/reservation/list/doctor/{doctorId}")
-    public ResponseEntity<?> getAllReservationsToDoctor(@PathVariable Long doctorId) {
-        return ResponseEntity.ok().body(reservationService.getReservationsByDoctorId(doctorId));
-    }
 
     // 관리자 예약 삭제
     @DeleteMapping("/reservation/{reservationId}")

@@ -31,6 +31,11 @@ public class UserCommentController {
         return ResponseEntity.ok().body(commentService.getComments(reviewId, dto));
     }
 
+    @GetMapping("review/comments/me")
+    public ResponseEntity<?> getCommentsByUserId(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(commentService.getCommentsByUserId(dto));
+    }
+
     // 댓글 수정
     @ValidAop
     @PutMapping("/review/comment")

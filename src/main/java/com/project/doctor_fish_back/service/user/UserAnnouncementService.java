@@ -48,6 +48,7 @@ public class UserAnnouncementService {
                     .updateDate(announcement.getUpdateDate())
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
 

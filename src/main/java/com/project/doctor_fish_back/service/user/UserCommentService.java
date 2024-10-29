@@ -50,8 +50,26 @@ public class UserCommentService {
             e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
-
     }
+
+    public RespGetCommentListDto getCommentsByUserId(ReqPageAndLimitDto dto) {
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Comment> comments = commentMapper.findCommentsByUserId(principalUser.getId(), startIndex, dto.getLimit());
+            Long commentCount = commentMapper.getCountCommentsByUserId(principalUser.getId());
+
+            return RespGetCommentListDto.builder()
+                    .comments(comments)
+                    .commentCount(commentCount)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+    }
+
+
 
     @NotFoundAop
     @AuthorityAop
