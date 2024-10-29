@@ -20,6 +20,8 @@ public class Review {
     private LocalDateTime registerDate;
     private LocalDateTime updateDate;
 
+    private Integer commentCount;
+
     private Integer likeCount;
     private Integer isLike;
 

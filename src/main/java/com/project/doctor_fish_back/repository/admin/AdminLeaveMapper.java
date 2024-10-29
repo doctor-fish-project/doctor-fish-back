@@ -14,9 +14,11 @@ public interface AdminLeaveMapper {
     int cancelById(Long id);
     int deleteById(Long id);
 
-    List<Leave> getAllToDoctor(Long userId);
-    Long getCountAllToDoctor(Long userId);
+    // 관리자 페이지 연차 신청 페이지에 본인 연차 조회
+    List<Leave> getLeavesByUserId(Long userId);
+    Long getCountLeaveByUserId(Long userId);
 
-    List<Leave> getAllToInfo();
-    Long getCountAllToInfo();
+    // 관리자 페이지 연차 관리 페이지에 전체 조회
+    List<Leave> getLeaves();
+    Long getCountLeaves();
 }
