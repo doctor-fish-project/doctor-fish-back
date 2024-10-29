@@ -58,6 +58,7 @@ public class AdminCommentService {
     @AuthorityAop
     public Boolean modifyComment(ReqModifyCommentDto dto) {
         try {
+            System.out.println(dto.toEntity());
             commentMapper.modifyById(dto.toEntity());
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
@@ -65,7 +66,6 @@ public class AdminCommentService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean deleteComment(Long commentId) {
         try {
             commentMapper.deleteById(commentId);

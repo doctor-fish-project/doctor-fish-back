@@ -7,13 +7,14 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class ReqModifyCommentDto {
-    private Long id;
+    private Long commentId;
+    private Long reviewId;
     @NotBlank(message = "내용을 입력하세요.")
     private String content;
 
     public Comment toEntity() {
         return Comment.builder()
-                .id(id)
+                .id(commentId)
                 .content(content)
                 .build();
     }

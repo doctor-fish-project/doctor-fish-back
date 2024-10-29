@@ -100,8 +100,8 @@
         select
             rt.id as review_id,
             rt.content as review_content,
-            (select ut.name from review_tb rt left join user_tb ut on(rt.user_id = ut.id) where rt.id = 5) as writer_name,
-            (select ut.img from review_tb rt left join user_tb ut on(rt.user_id = ut.id) where rt.id = 5) as writer_img,
+            (select ut.name from review_tb rt left join user_tb ut on(rt.user_id = ut.id) where rt.id = ct.review_id) as writer_name,
+            (select ut.img from review_tb rt left join user_tb ut on(rt.user_id = ut.id) where rt.id = ct.review_id) as writer_img,
             ct.id as comment_id,
             ct.content as content,
             ct.register_date as register_date,
@@ -114,7 +114,7 @@
             left outer join comment_tb ct on (rt.id = ct.review_id)
             left outer join user_tb ut on(ct.user_id = ut.id)
         where
-            ct.user_id = 6;
+            ct.user_id = #{userId};
     </select>
 
     <select id="getCountCommentsByUserId" resultType="java.lang.Long">

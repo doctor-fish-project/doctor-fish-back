@@ -36,6 +36,7 @@ public class AdminCommentController {
     @ValidAop
     @PutMapping("/review/comment")
     public ResponseEntity<?> modifyComment(@Valid @RequestBody ReqModifyCommentDto dto, BindingResult bindingResult) {
+        System.out.println(dto);
         return ResponseEntity.ok().body(commentService.modifyComment(dto));
     }
 
