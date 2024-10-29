@@ -15,6 +15,7 @@ public class ReqWriteReviewDto {
     public Review toEntity(Long userId) {
         return Review.builder()
                 .userId(userId)
+                .reservationId(reservationId)
                 .img(imgList)
                 .content(content)
                 .build();

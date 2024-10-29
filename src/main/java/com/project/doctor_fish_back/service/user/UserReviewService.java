@@ -58,6 +58,9 @@ public class UserReviewService {
     @AuthorityAop
     public Boolean deleteReview(Long reviewId) {
         try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Review review = reviewMapper.findById(principalUser.getId(), reviewId);
+            reservationMapper.modifyReviewStatusById(review.getReservationId());
             reviewMapper.deleteById(reviewId);
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");

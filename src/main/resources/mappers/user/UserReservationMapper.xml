@@ -66,7 +66,7 @@
     <update id="modifyReviewStatusById">
         update reservation_tb
         set
-            review_status = 1
+            review_status = if(review_status = 1, 0, 1)
         where
             id = #{id}
     </update>
@@ -176,7 +176,7 @@
         where
             rt.user_id = #{userId}
         order by
-            rt.reservation_date desc
+            Date(rt.reservation_date) desc
         limit #{startIndex}, #{limit}
     </select>
 
