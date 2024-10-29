@@ -58,8 +58,18 @@ public class AdminReviewService {
                     .reviewCount(reviewCount)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
+    }
+
+    public Boolean deleteReview(Long reviewId) {
+        try {
+            reviewMapper.deleteById(reviewId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+        return true;
     }
 
     @NotFoundAop

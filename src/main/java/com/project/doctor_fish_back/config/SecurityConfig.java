@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(
                         HttpMethod.GET,
+                        "/review",
                         "/category",
                         "/tableheader",
                         "/review/**",

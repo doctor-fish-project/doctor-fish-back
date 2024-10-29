@@ -34,6 +34,7 @@ public class AdminUserController {
     @ValidAop
     @PutMapping("/user")
     public ResponseEntity<?> modifyUser(@Valid @RequestBody ReqModifyUserDto dto, BindingResult bindingResult) {
+        System.out.println(dto);
         return ResponseEntity.ok().body(userService.modifyUser(dto));
     }
 

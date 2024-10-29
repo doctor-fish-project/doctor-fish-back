@@ -11,14 +11,14 @@
         values(default, #{name})
     </insert>
 
-    <select id="findByName" resultType="com.project.doctor_fish_back.entity.Depart">
+    <select id="findByDepartId" resultType="com.project.doctor_fish_back.entity.Depart">
         select
             id,
             name
         from
             depart_tb
         where
-            name = #{name}
+            id = #{departId}
     </select>
 
     <select id="getDeparts" resultType="com.project.doctor_fish_back.entity.Depart">
