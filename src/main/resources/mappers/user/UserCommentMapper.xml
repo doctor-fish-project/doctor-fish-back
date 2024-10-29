@@ -8,6 +8,9 @@
 
     <resultMap id="findCommentsByUserIdResultMap" type="com.project.doctor_fish_back.entity.Review">
         <id property="id" column="review_id" />
+        <result property="content" column="review_content" />
+        <result property="userName" column="writer_name" />
+        <result property="userImg" column="writer_img" />
         <collection property="comment" javaType="java.util.List" resultMap="commentResultMap" />
     </resultMap>
 
@@ -96,6 +99,9 @@
     <select id="findCommentsByUserId" resultMap="findCommentsByUserIdResultMap">
         select
             rt.id as review_id,
+            rt.content as review_content,
+            (select ut.name from review_tb rt left join user_tb ut on(rt.user_id = ut.id) where rt.id = 5) as writer_name,
+            (select ut.img from review_tb rt left join user_tb ut on(rt.user_id = ut.id) where rt.id = 5) as writer_img,
             ct.id as comment_id,
             ct.content as content,
             ct.register_date as register_date,
@@ -108,8 +114,7 @@
             left outer join comment_tb ct on (rt.id = ct.review_id)
             left outer join user_tb ut on(ct.user_id = ut.id)
         where
-            ct.user_id = #{userId}
-        limit #{startIndex}, #{limit}
+            ct.user_id = 6;
     </select>
 
     <select id="getCountCommentsByUserId" resultType="java.lang.Long">

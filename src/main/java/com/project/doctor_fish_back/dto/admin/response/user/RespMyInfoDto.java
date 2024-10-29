@@ -18,5 +18,7 @@ public class RespMyInfoDto {
     private int emailValid;
     private LocalDateTime registerDate;
     private LocalDateTime updateDate;
+    private String record;
+    private String comment;
     private Set<Role> roles;
 }

@@ -31,12 +31,12 @@ public class AdminLeaveService {
         return true;
     }
 
-    public RespGetLeaveListDto getAllLeavesToDoctor() {
+    public RespGetLeaveListDto getLeavesByUserId() {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Leave> leaves = leaveMapper.getAllToDoctor(principalUser.getId());
-            Long leaveCount = leaveMapper.getCountAllToDoctor(principalUser.getId());
+            List<Leave> leaves = leaveMapper.getLeavesByUserId(principalUser.getId());
+            Long leaveCount = leaveMapper.getCountLeaveByUserId(principalUser.getId());
 
             return RespGetLeaveListDto.builder()
                     .leaves(leaves)
@@ -47,10 +47,10 @@ public class AdminLeaveService {
         }
     }
 
-    public RespGetLeaveListDto getAllLeavesToInfo() {
+    public RespGetLeaveListDto getLeaves() {
         try {
-            List<Leave> leaves = leaveMapper.getAllToInfo();
-            Long leaveCount = leaveMapper.getCountAllToInfo();
+            List<Leave> leaves = leaveMapper.getLeaves();
+            Long leaveCount = leaveMapper.getCountLeaves();
 
             return RespGetLeaveListDto.builder()
                     .leaves(leaves)

@@ -45,7 +45,7 @@
             id = #{id}
     </delete>
 
-    <select id="getAllToDoctor" resultType="com.project.doctor_fish_back.entity.Leave">
+    <select id="getLeavesByUserId" resultType="com.project.doctor_fish_back.entity.Leave">
         select
             id,
             user_id as userId,
@@ -61,7 +61,7 @@
             user_id = #{userId}
     </select>
 
-    <select id="getCountAllToDoctor" resultType="java.lang.Long">
+    <select id="getCountLeaveByUserId" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -70,7 +70,7 @@
             user_id = #{userId}
     </select>
 
-    <select id="getAllToInfo" resultType="com.project.doctor_fish_back.entity.Leave">
+    <select id="getLeaves" resultType="com.project.doctor_fish_back.entity.Leave">
         select
             lt.id,
             lt.user_id as userId,
@@ -87,7 +87,7 @@
             left outer join user_tb ut on(lt.user_id = ut.id)
     </select>
 
-    <select id="getCountAllToInfo" resultType="java.lang.Long">
+    <select id="getCountLeaves" resultType="java.lang.Long">
         select
             count(*)
         from

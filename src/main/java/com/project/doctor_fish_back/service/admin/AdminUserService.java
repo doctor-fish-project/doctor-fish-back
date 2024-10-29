@@ -139,7 +139,6 @@ public class AdminUserService {
                     dto.setImg(doctorDefaultProfileImg);
                 }
                 userMapper.modify(dto.toEntity(principalUser.getId()));
-
                 Doctor doctor = doctorMapper.findByUserId(principalUser.getId());
                 doctorMapper.modify(Doctor.builder()
                                 .id(doctor.getId())
@@ -260,7 +259,7 @@ public class AdminUserService {
 
     private void doctorSignup(ReqAdminSignupDto dto, User user) throws SignupException {
         try {
-            if(dto.getDepartName() == null || dto.getDepartName().equals("")) {
+            if(dto.getDepartId() == null || dto.getDepartId() == 0) {
                 throw new SignupException("부서이름을 입력하세요.");
             }
 
@@ -278,12 +277,12 @@ public class AdminUserService {
 
             user.setUserRoles(Set.of(userRoles));
 
-            Depart depart = departMapper.findByName(dto.getDepartName());
+            Depart depart = departMapper.findByDepartId(dto.getDepartId());
 
-            if(depart == null) {
-                departMapper.save(Depart.builder().name(dto.getDepartName()).build());
-                depart = departMapper.findByName(dto.getDepartName());
-            }
+//            if(depart == null) {
+//                departMapper.save(Depart.builder().name(dto.getDepartName()).build());
+//                depart = departMapper.findByName(dto.getDepartName());
+//            }
 
             Doctor doctor = Doctor.builder()
                     .userId(user.getId())
@@ -294,6 +293,7 @@ public class AdminUserService {
 
             doctorMapper.save(doctor);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new SignupException("로그인 도중 오류 발생");
         }
     }
@@ -302,11 +302,12 @@ public class AdminUserService {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User user = userMapper.findById(principalUser.getId());
+            Doctor doctor = doctorMapper.findByUserId(principalUser.getId());
 
             Set<Role> roles = user.getUserRoles().stream().map(
                     userRole -> userRole.getRole()
             ).collect(Collectors.toSet());
-            System.out.println(roles);
+
             return RespMyInfoDto.builder()
                     .id(user.getId())
                     .email(user.getEmail())
@@ -316,6 +317,8 @@ public class AdminUserService {
                     .emailValid(user.getEmailValid())
                     .registerDate(user.getRegisterDate())
                     .updateDate(user.getUpdateDate())
+                    .record(doctor.getRecord())
+                    .comment(doctor.getComment())
                     .roles(roles)
                     .build();
         } catch (Exception e) {

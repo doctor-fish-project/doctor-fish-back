@@ -31,6 +31,7 @@ public class UserCommentController {
         return ResponseEntity.ok().body(commentService.getComments(reviewId, dto));
     }
 
+    // 내가 작성한 댓글 조회
     @GetMapping("review/comments/me")
     public ResponseEntity<?> getCommentsByUserId(ReqPageAndLimitDto dto) {
         return ResponseEntity.ok().body(commentService.getCommentsByUserId(dto));

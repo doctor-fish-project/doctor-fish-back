@@ -7,14 +7,14 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class ReqModifyReviewDto {
-    private String img;
+    private String imgList;
     @NotBlank(message = "내용을 입력하세요.")
     private String content;
 
     public Review toEntity(Long reviewId) {
         return Review.builder()
                 .id(reviewId)
-                .img(img)
+                .img(imgList)
                 .content(content)
                 .build();
     }

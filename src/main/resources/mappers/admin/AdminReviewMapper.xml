@@ -40,7 +40,7 @@
             rt.update_date as updateDate,
             ut.name as userName,
             ut.img as userImg,
-            (select count(*) from comment_tb ct left outer join review_tb rt on(ct.review_id = rt.id)) as commentCount
+            (select count(*) from comment_tb where review_id = rt.id) as commentCount
         from
             review_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)

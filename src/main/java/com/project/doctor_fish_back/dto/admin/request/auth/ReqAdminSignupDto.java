@@ -20,7 +20,7 @@ public class ReqAdminSignupDto {
     private String checkPassword;
     @NotBlank(message = "전화번호는 공백일 수 없습니다.")
     private String phoneNumber;
-    private String departName;
+    private Long departId;
     private String comment;
     private String record;
 

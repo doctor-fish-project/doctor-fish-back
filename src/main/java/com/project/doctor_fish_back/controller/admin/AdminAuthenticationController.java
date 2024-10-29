@@ -35,6 +35,7 @@ public class AdminAuthenticationController {
     @ValidAop
     @PostMapping("/auth/signup")
     public ResponseEntity<?> adminSignup(@Valid @RequestBody ReqAdminSignupDto dto, BindingResult bindingResult) throws SignupException {
+        System.out.println(dto);
         return ResponseEntity.ok().body(userService.adminSignup(dto));
     }
 

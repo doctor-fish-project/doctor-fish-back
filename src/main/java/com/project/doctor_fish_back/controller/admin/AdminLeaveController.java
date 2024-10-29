@@ -22,14 +22,14 @@ public class AdminLeaveController {
 
     // 관리자 연차 전체 조회
     @GetMapping("/leave/list")
-    public ResponseEntity<?> getAllLeavesToDoctor() {
-        return ResponseEntity.ok().body(leaveService.getAllLeavesToDoctor());
+    public ResponseEntity<?> getAllLeavesByUserId() {
+        return ResponseEntity.ok().body(leaveService.getLeavesByUserId());
     }
 
     // 연차 전체 조회
     @GetMapping("/leave/list/info")
     public ResponseEntity<?> getAllLeaves() {
-        return ResponseEntity.ok().body(leaveService.getAllLeavesToInfo());
+        return ResponseEntity.ok().body(leaveService.getLeaves());
     }
 
     // 연차 단건 조회
