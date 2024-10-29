@@ -23,8 +23,8 @@ public class AdminReviewController {
 
     // 관리자 페이지 전체 리뷰 조회
     @GetMapping("/review")
-    public ResponseEntity<?> getReviewAllByLimit(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(reviewService.getReviewAllByLimit(dto));
+    public ResponseEntity<?> getReviewAllByLimit(ReqPageAndLimitDto dto, String searchText) {
+        return ResponseEntity.ok().body(reviewService.getReviewAllByLimit(dto, searchText));
     }
 
     // 리뷰 좋아요
@@ -43,12 +43,6 @@ public class AdminReviewController {
     @GetMapping("/review/like/{reviewId}")
     public ResponseEntity<?> getLikeCount(@PathVariable Long reviewId) {
         return ResponseEntity.ok().body(reviewService.getLikeCount(reviewId));
-    }
-
-    // 리뷰 검색
-    @GetMapping("/review/search")
-    public ResponseEntity<?> searchReview(ReqSearchDto dto) {
-        return ResponseEntity.ok().body(reviewService.searchReview(dto));
     }
 
 }

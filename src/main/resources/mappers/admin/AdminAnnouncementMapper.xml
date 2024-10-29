@@ -77,6 +77,8 @@
         from
             announcement_tb at
             left outer join user_tb ut on(at.user_id = ut.id)
+        where
+            at.title like concat("%", #{searchText}, "%")
         order by
             registerDate
         limit #{startIndex}, #{limit}
@@ -86,40 +88,10 @@
         select
             count(*)
         from
-            announcement_tb
-    </select>
-
-    <select id="getAnnouncementsBySearch" resultType="com.project.doctor_fish_back.entity.Announcement">
-        select
-            at.id,
-            at.user_id as userId,
-            at.title,
-            at.content,
-            at.register_date as registerDate,
-            at.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg
-        from
             announcement_tb at
             left outer join user_tb ut on(at.user_id = ut.id)
         where
             at.title like concat("%", #{searchText}, "%")
-            or at.content like concat("%", #{searchText}, "%")
-            or ut.name like concat("%", #{searchText}, "%")
-        order by
-            at.register_date desc
-    </select>
-
-    <select id="getCountAnnouncementsBySearch" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            announcement_tb at
-            left outer join user_tb ut on(at.user_id = ut.id)
-        where
-            at.title like concat("%", #{searchText}, "%")
-            or at.content like concat("%", #{searchText}, "%")
-            or ut.name like concat("%", #{searchText}, "%")
     </select>
 
 </mapper>

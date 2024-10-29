@@ -26,8 +26,8 @@ public class AdminUserController {
 
     // 사용자 전체 조회
     @GetMapping("/user/list")
-    public ResponseEntity<?> getUserList(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(userService.getUserList(dto));
+    public ResponseEntity<?> getUserList(ReqPageAndLimitDto dto, String searchText) {
+        return ResponseEntity.ok().body(userService.getUserList(dto, searchText));
     }
 
     // 관리자 정보 수정(이름, 전화번호, 사진, 소개글, 이력)
@@ -55,12 +55,6 @@ public class AdminUserController {
     @DeleteMapping("/user")
     public ResponseEntity<?> deleteUser() {
         return ResponseEntity.ok().body(userService.deleteUser());
-    }
-
-    // 회원 검색
-    @GetMapping("/user/search")
-    public ResponseEntity<?> searchUser(ReqSearchDto dto) {
-        return ResponseEntity.ok().body(userService.searchUser(dto));
     }
 
     // 관리자 본인 정보 조회

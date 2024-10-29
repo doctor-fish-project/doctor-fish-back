@@ -48,27 +48,20 @@ public class AdminReservationController {
 
     // 관리자 페이지 전체 예약 조회
     @GetMapping("/reservation/all")
-    public ResponseEntity<?> getReservationAll(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(reservationService.getReservations(dto));
+    public ResponseEntity<?> getReservationAll(ReqPageAndLimitDto dto, String searchText) {
+        return ResponseEntity.ok().body(reservationService.getReservations(dto, searchText));
     }
 
     // 관리자 페이지 오늘 예약 조회
     @GetMapping("/reservation/today")
-    public ResponseEntity<?> getReservationToday(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(reservationService.getReservationsToday(dto));
+    public ResponseEntity<?> getReservationToday(ReqPageAndLimitDto dto, String searchText) {
+        return ResponseEntity.ok().body(reservationService.getReservationsToday(dto, searchText));
     }
-
 
     // 관리자 예약 삭제
     @DeleteMapping("/reservation/{reservationId}")
     public ResponseEntity<?> deleteReservationFromAdmin(@PathVariable Long reservationId) throws AuthorityException {
         return ResponseEntity.ok().body(reservationService.deleteReservationFromAdmin(reservationId));
-    }
-
-    // 예약 검색
-    @GetMapping("/reservation/search")
-    public ResponseEntity<?> searchReservation(ReqSearchDto dto) {
-        return ResponseEntity.ok().body(reservationService.searchReservation(dto));
     }
 
 }

@@ -43,8 +43,8 @@ public class AdminAnnouncementController {
 
     // 공지사항 전체조회
     @GetMapping("/announce/list")
-    public ResponseEntity<?> getAllAnnouncements(ReqPageAndLimitDto dto) {
-        return ResponseEntity.ok().body(announcementService.getAllAnnouncements(dto));
+    public ResponseEntity<?> getAllAnnouncements(ReqPageAndLimitDto dto, String searchText) {
+        return ResponseEntity.ok().body(announcementService.getAllAnnouncements(dto, searchText));
     }
 
     // 대쉬보드 공지사항 조회
@@ -57,12 +57,6 @@ public class AdminAnnouncementController {
     @GetMapping("/announce/{announceId}")
     public ResponseEntity<?> getAnnouncement(@PathVariable Long announceId) {
         return ResponseEntity.ok().body(announcementService.getAnnouncement(announceId));
-    }
-
-    // 공지사항 검색
-    @GetMapping("/announce/search")
-    public ResponseEntity<?> searchAnnouncement(ReqSearchDto dto) {
-        return ResponseEntity.ok().body(announcementService.searchAnnouncement(dto));
     }
 
 }

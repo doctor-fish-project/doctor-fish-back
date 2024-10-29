@@ -107,11 +107,11 @@ public class AdminUserService {
         }
     }
 
-    public RespGetUserListDto getUserList(ReqPageAndLimitDto dto) {
+    public RespGetUserListDto getUserList(ReqPageAndLimitDto dto, String searchText) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<User> users = userMapper.getUsers(startIndex, dto.getLimit());
-            Long userCount = userMapper.getCountUsers();
+            List<User> users = userMapper.getUsers(startIndex, dto.getLimit(), searchText);
+            Long userCount = userMapper.getCountUsers(searchText);
 
             return RespGetUserListDto.builder()
                     .users(users)
@@ -202,20 +202,6 @@ public class AdminUserService {
         }
 
         return true;
-    }
-
-    // 관리자 회원가입
-    public RespGetUserListDto searchUser(ReqSearchDto dto) {
-        try {
-            List<User> users = userMapper.getUsersBySearch(dto.getSearchText());
-            Long userCount = userMapper.getCountUsersBySearch(dto.getSearchText());
-            return RespGetUserListDto.builder()
-                    .users(users)
-                    .userCount(userCount)
-                    .build();
-        } catch (Exception e) {
-            throw new ExecutionException("실행 도중 오류 발생");
-        }
     }
 
     @Transactional(rollbackFor = SignupException.class)

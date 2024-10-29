@@ -36,6 +36,8 @@
         from
             review_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            ut.name like concat("%", #{searchText}, "%")
         order by
             rt.register_date desc
         limit #{startIndex}, #{limit}
@@ -54,7 +56,10 @@
         select
             count(*)
         from
-            review_tb;
+            review_tb rt
+            left outer join user_tb ut on(rt.user_id = ut.id)
+        where
+            ut.name like concat("%", #{searchText}, "%")
     </select>
 
     <select id="findById" resultType="com.project.doctor_fish_back.entity.Review">
@@ -72,37 +77,6 @@
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
             rt.id = #{id}
-    </select>
-
-    <select id="getBySearch" resultType="com.project.doctor_fish_back.entity.Review">
-        select
-            rt.id,
-            rt.user_id as userId,
-            rt.img,
-            rt.content,
-            rt.register_date as registerDate,
-            rt.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg
-        from
-            review_tb rt
-            left outer join user_tb ut on(rt.user_id = ut.id)
-        where
-            rt.content like concat("%", #{searchText}, "%")
-            or ut.name like concat("%", #{searchText}, "%")
-        order by
-            rt.register_date desc
-    </select>
-
-    <select id="getCountBySearch" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            review_tb rt
-            left outer join user_tb ut on(rt.user_id = ut.id)
-        where
-            rt.content like concat("%", #{searchText}, "%")
-            or ut.name like concat("%", #{searchText}, "%")
     </select>
 
 </mapper>
