@@ -95,6 +95,7 @@ public class AuthorityAspect {
             }
         }
     }
+
     private void modifyComment(Object[] args) throws AuthorityException {
         for(Object arg : args) {
             if(arg.getClass() == ReqModifyCommentDto.class) {

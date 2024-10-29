@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.repository.admin;
 
 import com.project.doctor_fish_back.entity.Comment;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface AdminCommentMapper {
     Comment findById(Long id);
 
     // 관리자 페이지 리뷰별 댓글 조회
-    List<Comment> getCommentsByReviewId(Long reviewId);
+    List<Comment> getCommentsByReviewId(@Param("reviewId") Long reviewId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
 
     // 관리자 페이지 리뷰별 댓글 수 조회
     Long getCountCommentsByReviewId(Long reviewId);

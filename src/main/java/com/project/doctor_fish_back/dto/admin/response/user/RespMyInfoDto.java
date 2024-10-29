@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.dto.admin.response.user;
 
+import com.project.doctor_fish_back.entity.Role;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,5 +18,7 @@ public class RespMyInfoDto {
     private int emailValid;
     private LocalDateTime registerDate;
     private LocalDateTime updateDate;
-    private Set<String> roles;
+    private String record;
+    private String comment;
+    private Set<Role> roles;
 }

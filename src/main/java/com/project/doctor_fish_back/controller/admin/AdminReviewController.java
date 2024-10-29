@@ -27,6 +27,12 @@ public class AdminReviewController {
         return ResponseEntity.ok().body(reviewService.getReviewAllByLimit(dto));
     }
 
+    // 리뷰 삭제
+    @DeleteMapping("/review/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
+        return ResponseEntity.ok().body(reviewService.deleteReview(reviewId));
+    }
+
     // 리뷰 좋아요
     @PostMapping("/review/like/{reviewId}")
     public ResponseEntity<?> like(@PathVariable Long reviewId) throws ReviewLikeException {

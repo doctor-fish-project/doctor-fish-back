@@ -58,7 +58,6 @@ public class AdminReservationController {
         return ResponseEntity.ok().body(reservationService.getReservationsToday(dto));
     }
 
-
     // 관리자 예약 삭제
     @DeleteMapping("/reservation/{reservationId}")
     public ResponseEntity<?> deleteReservationFromAdmin(@PathVariable Long reservationId) throws AuthorityException {
