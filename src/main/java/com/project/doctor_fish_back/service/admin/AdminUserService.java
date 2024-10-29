@@ -293,6 +293,19 @@ public class AdminUserService {
             Set<Role> roles = user.getUserRoles().stream().map(
                     userRole -> userRole.getRole()
             ).collect(Collectors.toSet());
+            if(doctor == null) {
+                return RespMyInfoDto.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .phoneNumber(user.getPhoneNumber())
+                        .img(user.getImg())
+                        .emailValid(user.getEmailValid())
+                        .registerDate(user.getRegisterDate())
+                        .updateDate(user.getUpdateDate())
+                        .roles(roles)
+                        .build();
+            }
 
             return RespMyInfoDto.builder()
                     .id(user.getId())
@@ -308,6 +321,7 @@ public class AdminUserService {
                     .roles(roles)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
