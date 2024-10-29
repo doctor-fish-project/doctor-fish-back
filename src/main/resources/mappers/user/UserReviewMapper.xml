@@ -8,7 +8,7 @@
 
     <insert id="save">
         insert into review_tb
-        values(default, #{userId}, #{img}, #{content}, now(), now())
+        values(default, #{reservationId}, #{userId}, #{img}, #{content}, now(), now())
     </insert>
 
     <update id="modify">
@@ -33,6 +33,7 @@
         select
             rt.id,
             rt.user_id as userId,
+            rt.reservation_id as reservationId,
             rt.img,
             rt.content,
             rt.register_date as registerDate,
@@ -92,6 +93,8 @@
         from
             review_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
+        order by
+            registerDate desc
         limit #{startIndex}, #{limit}
     </select>
 

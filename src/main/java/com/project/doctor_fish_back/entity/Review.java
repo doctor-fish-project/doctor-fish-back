@@ -19,6 +19,7 @@ public class Review {
     private String content;
     private LocalDateTime registerDate;
     private LocalDateTime updateDate;
+    private Long reservationId;
 
     private Integer commentCount;
 
