@@ -1,7 +1,5 @@
 package com.project.doctor_fish_back.service.admin;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.dto.admin.request.leave.ReqRegisterLeaveDto;
 import com.project.doctor_fish_back.dto.admin.response.leave.RespGetLeaveDto;
@@ -61,7 +59,6 @@ public class AdminLeaveService {
         }
     }
 
-    @NotFoundAop
     public RespGetLeaveDto getLeaveToDoctorAndInfo(Long leaveId) {
         try {
             Leave leave = leaveMapper.findLeaveById(leaveId);
@@ -83,8 +80,6 @@ public class AdminLeaveService {
         }
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyLeave(Long leaveId, ReqModifyLeaveDto dto) {
         try {
             leaveMapper.modify(dto.toEntity(leaveId));
@@ -94,7 +89,6 @@ public class AdminLeaveService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean acceptLeave(Long leaveId) {
         try {
             leaveMapper.acceptById(leaveId);
@@ -104,7 +98,6 @@ public class AdminLeaveService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean cancelLeave(Long leaveId) {
         try {
             leaveMapper.cancelById(leaveId);
@@ -114,7 +107,6 @@ public class AdminLeaveService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean deleteLeave(Long leaveId) {
         try {
             leaveMapper.deleteById(leaveId);

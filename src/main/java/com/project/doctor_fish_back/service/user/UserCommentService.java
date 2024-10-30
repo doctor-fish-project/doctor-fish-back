@@ -1,7 +1,5 @@
 package com.project.doctor_fish_back.service.user;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.response.comment.RespGetCommentListDto;
 import com.project.doctor_fish_back.dto.user.request.comment.ReqModifyCommentDto;
@@ -22,7 +20,6 @@ public class UserCommentService {
     @Autowired
     private UserCommentMapper commentMapper;
 
-    @NotFoundAop
     public Boolean writeComment(ReqRegisterCommentDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -35,7 +32,6 @@ public class UserCommentService {
         return true;
     }
 
-    @NotFoundAop
     public RespGetCommentListDto getComments(Long reviewId, ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
@@ -69,10 +65,6 @@ public class UserCommentService {
         }
     }
 
-
-
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyComment(ReqModifyCommentDto dto) {
         try {
             commentMapper.modifyById(dto.toEntity());
@@ -82,8 +74,6 @@ public class UserCommentService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean deleteComment(Long commentId) {
         try {
             commentMapper.deleteById(commentId);

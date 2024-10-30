@@ -1,7 +1,5 @@
 package com.project.doctor_fish_back.service.admin;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.auth.ReqAdminSigninDto;
 import com.project.doctor_fish_back.dto.admin.request.auth.ReqAdminSignupDto;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
@@ -11,7 +9,6 @@ import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserPassword
 import com.project.doctor_fish_back.dto.admin.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.admin.response.user.RespGetUserListDto;
 import com.project.doctor_fish_back.dto.admin.response.user.RespMyInfoDto;
-import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.SigninException;
@@ -82,6 +79,8 @@ public class AdminUserService {
                     .expireDate(jwtProvider.getExpireDate().toLocaleString())
                     .accessToken(jwtProvider.generateAccessToken(user))
                     .build();
+        } catch (SigninException e) {
+            throw new SigninException(e.getMessage());
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
@@ -122,8 +121,6 @@ public class AdminUserService {
         }
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyUser(ReqModifyUserDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -161,7 +158,6 @@ public class AdminUserService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean modifyAdminUsername(ReqModifyAdminUsernameDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -173,8 +169,6 @@ public class AdminUserService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyUserPassword(ReqModifyUserPasswordDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -187,8 +181,6 @@ public class AdminUserService {
     }
 
     // 관리자 유저 삭제
-    @NotFoundAop
-    @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
     public Boolean deleteUser() {
         try {

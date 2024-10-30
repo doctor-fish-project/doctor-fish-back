@@ -92,23 +92,6 @@ public class ValidAspect {
         }
     }
 
-    private void validModifyUser(Object[] args, BeanPropertyBindingResult bindingResult) {
-        for(Object arg : args) {
-            if(arg.getClass() == ReqModifyUserDto.class) {
-                ReqModifyUserDto dto = (ReqModifyUserDto) arg;
-
-                User user = userMapper.findByPhoneNumber(dto.getPhoneNumber());
-
-                if(!user.getPhoneNumber().equals(dto.getPhoneNumber())) {
-                    if(userService.isDuplicatePhoneNumber(dto.getPhoneNumber())) {
-                        FieldError fieldError = new FieldError("phoneNumber", "phoneNumber", "이미 존재하는 전화번호입니다.");
-                        bindingResult.addError(fieldError);
-                    }
-                }
-            }
-        }
-    }
-
     private void validModifyAdminUsername(Object[] args, BeanPropertyBindingResult bindingResult) {
         for(Object arg : args) {
             if(arg.getClass() == ReqModifyAdminUsernameDto.class) {
@@ -166,22 +149,6 @@ public class ValidAspect {
                 if(!dto.getPassword().equals(dto.getCheckPassword())) {
                     FieldError fieldError = new FieldError("checkPassword", "checkPassword", "비밀번호가 일치하지 않습니다.");
                     bindingResult.addError(fieldError);
-                }
-            }
-        }
-    }
-
-    private void validModifyDoctor(Object[] args, BeanPropertyBindingResult bindingResult) {
-        for(Object arg : args) {
-            if(arg.getClass() == ReqModifyDoctorDto.class) {
-                ReqModifyDoctorDto dto = (ReqModifyDoctorDto) arg;
-
-                User user = userMapper.findByPhoneNumber(dto.getPhoneNumber());
-                if(!user.getPhoneNumber().equals(dto.getPhoneNumber())) {
-                    if(userService.isDuplicatePhoneNumber(dto.getPhoneNumber())) {
-                        FieldError fieldError = new FieldError("phoneNumber", "phoneNumber", "이미 존재하는 전화번호입니다.");
-                        bindingResult.addError(fieldError);
-                    }
                 }
             }
         }
