@@ -5,12 +5,19 @@ import com.project.doctor_fish_back.dto.admin.request.announcement.ReqWriteAnnou
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceListDto;
+<<<<<<< HEAD
 import com.project.doctor_fish_back.entity.Announcement;
 import com.project.doctor_fish_back.entity.User;
+=======
+import com.project.doctor_fish_back.dto.search.ReqSearchDto;
+import com.project.doctor_fish_back.entity.*;
+>>>>>>> main
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.ExecutionException;
+import com.project.doctor_fish_back.repository.admin.AdminAlarmInsertMapper;
 import com.project.doctor_fish_back.repository.admin.AdminAnnouncementMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
+import com.project.doctor_fish_back.repository.user.UserAlarmMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,9 +35,13 @@ public class AdminAnnouncementService {
 
     @Autowired
     private AdminUserMapper userMapper;
+
+    @Autowired
+    private AdminAlarmInsertMapper alarmInsertMapper;
     
     // 관리자 페이지 공지사항 작성
     public Boolean writeAnnounce(ReqWriteAnnounceDto dto) throws AuthorityException {
+        Announcement announcement = null;
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -41,18 +52,24 @@ public class AdminAnnouncementService {
             ).collect(Collectors.toSet());
 
             if (!roles.contains("ROLE_USER")) {
-                announcementMapper.save(dto.toEntity(principalUser.getId()));
+                announcement = dto.toEntity(principalUser.getId());
+                announcementMapper.save(announcement);
+
+                alarmInsertMapper.save(AlarmInsert.builder()
+                                .typeId(2L)
+                                .alarmId(announcement.getId())
+                                .messageId(2L)
+                                .build());
                 return true;
             }
-
             if (roles.size() == 1) {
                 throw new AuthorityException("권한이 없습니다.");
             }
 
-            announcementMapper.save(dto.toEntity(principalUser.getId()));
         } catch (AuthorityException e) {
             throw new AuthorityException(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
 
