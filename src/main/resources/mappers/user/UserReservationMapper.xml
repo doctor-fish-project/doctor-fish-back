@@ -238,5 +238,13 @@
             and status = 2
     </select>
 
+    <select id="isTodayReservation" resultType="java.lang.Boolean">
+        select
+            count(*)
+        from
+            reservation_tb
+        where
+            user_id = #{userId} and status = 2 and Date(reservation_date) = Date(now())
+    </select>
 
 </mapper>

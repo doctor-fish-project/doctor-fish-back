@@ -93,6 +93,8 @@
             left outer join user_tb ut on(ct.user_id = ut.id)
         where
             review_id = #{reviewId}
+        order by
+            registerDate desc
         limit #{startIndex}, #{limit}
     </select>
 

@@ -48,4 +48,13 @@
         announcement_tb
     </select>
 
+    <select id="isNewAnnouncement" resultType="java.lang.Boolean">
+        select
+            count(*)
+        from
+            announcement_tb
+        where
+            Date(now()) = Date(register_date)
+    </select>
+
 </mapper>

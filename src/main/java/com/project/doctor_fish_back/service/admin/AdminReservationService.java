@@ -11,8 +11,10 @@ import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.MonthMapper;
 import com.project.doctor_fish_back.repository.UserRolesMapper;
+import com.project.doctor_fish_back.repository.admin.AdminAlarmInsertMapper;
 import com.project.doctor_fish_back.repository.admin.AdminDoctorMapper;
 import com.project.doctor_fish_back.repository.admin.AdminReservationMapper;
+import com.project.doctor_fish_back.repository.user.UserAlarmMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,11 +40,22 @@ public class AdminReservationService {
     @Autowired
     private MonthMapper monthMapper;
 
+    @Autowired
+    private AdminAlarmInsertMapper alarmInsertMapper;
+
     @NotFoundAop
     public Boolean acceptReservation(Long reservationId) {
         try {
             reservationMapper.acceptById(reservationId);
+            Reservation reservation = reservationMapper.findById(reservationId);
+
+            alarmInsertMapper.save(AlarmInsert.builder()
+                            .typeId(1L)
+                            .alarmId(reservationId)
+                            .messageId(1L)
+                            .build());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
         return true;
