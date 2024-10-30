@@ -15,11 +15,11 @@ public class UserAlarmController {
 
     @GetMapping("/alarms")
     public ResponseEntity<?> getAlarms() {
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(userAlarmService.getAlarms());
     }
 
     @PostMapping("/alarms")
-    public ResponseEntity<?> checkAlarms() {
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<?> checkAlarms(@RequestBody List<Long> alarmsId) {
+        return ResponseEntity.ok().body(userAlarmService.checkAlarms(alarmsId));
     }
 }

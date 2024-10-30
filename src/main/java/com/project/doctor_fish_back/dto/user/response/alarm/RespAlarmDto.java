@@ -6,10 +6,9 @@ import lombok.Data;
 @Data
 @Builder
 public class RespAlarmDto {
+    private Long id;
+    private Long typeId;
     private Long alarmId;
-    private Long userId;
-    private Long announceId;
     private Long messageId;
     private String message;
-    private int status;
 }

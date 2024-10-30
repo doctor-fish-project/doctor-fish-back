@@ -5,19 +5,12 @@ import com.project.doctor_fish_back.dto.admin.request.announcement.ReqWriteAnnou
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceListDto;
-<<<<<<< HEAD
-import com.project.doctor_fish_back.entity.Announcement;
-import com.project.doctor_fish_back.entity.User;
-=======
-import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
->>>>>>> main
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.repository.admin.AdminAlarmInsertMapper;
 import com.project.doctor_fish_back.repository.admin.AdminAnnouncementMapper;
 import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
-import com.project.doctor_fish_back.repository.user.UserAlarmMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
