@@ -1,7 +1,5 @@
 package com.project.doctor_fish_back.service.user;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.user.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.user.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.dto.user.request.auth.ReqSigninDto;
@@ -146,8 +144,6 @@ public class UserUserService {
         }
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyUser(ReqModifyUserDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -163,8 +159,6 @@ public class UserUserService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
     public Boolean modifyUserEmail(ReqModifyUserEmailDto dto) {
         try {
@@ -180,8 +174,6 @@ public class UserUserService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyUserPassword(ReqModifyUserPasswordDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -193,8 +185,6 @@ public class UserUserService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     @Transactional(rollbackFor = RuntimeException.class)
     public Boolean deleteUser() {
         try {

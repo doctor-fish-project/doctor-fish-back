@@ -1,12 +1,9 @@
 package com.project.doctor_fish_back.service.admin;
 
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.response.review.RespGetReviewListDto;
 import com.project.doctor_fish_back.dto.admin.response.review.RespReviewDto;
 import com.project.doctor_fish_back.dto.admin.response.review.RespReviewLikeInfoDto;
-import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.Review;
 import com.project.doctor_fish_back.entity.ReviewLike;
 import com.project.doctor_fish_back.exception.ExecutionException;
@@ -72,7 +69,6 @@ public class AdminReviewService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean like(Long reviewId) throws ReviewLikeException {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -99,8 +95,6 @@ public class AdminReviewService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean dislike(Long reviewLikeId) {
         try {
             reviewLikeMapper.deleteById(reviewLikeId);
@@ -110,7 +104,6 @@ public class AdminReviewService {
         return true;
     }
 
-    @NotFoundAop
     public RespReviewLikeInfoDto getLikeCount(Long reviewId) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

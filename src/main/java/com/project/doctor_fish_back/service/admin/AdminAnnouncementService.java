@@ -1,13 +1,10 @@
 package com.project.doctor_fish_back.service.admin;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.announcement.ReqModifyAnnounce;
 import com.project.doctor_fish_back.dto.admin.request.announcement.ReqWriteAnnounceDto;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceDto;
 import com.project.doctor_fish_back.dto.admin.response.announcement.RespGetAnnounceListDto;
-import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.Announcement;
 import com.project.doctor_fish_back.entity.User;
 import com.project.doctor_fish_back.exception.AuthorityException;
@@ -63,8 +60,6 @@ public class AdminAnnouncementService {
     }
     
     // 관리자 페이지 공지사항 수정
-    @NotFoundAop
-    @AuthorityAop
     public boolean modifyAnnounce(Long announceId, ReqModifyAnnounce dto) {
         try {
             announcementMapper.modify(dto.toEntity(announceId));
@@ -76,8 +71,6 @@ public class AdminAnnouncementService {
     }
     
     // 관리자 페이지 공지사항 삭제
-    @NotFoundAop
-    @AuthorityAop
     public Boolean deleteAnnounce(Long announceId) {
         try {
             announcementMapper.deleteById(announceId);
@@ -118,7 +111,6 @@ public class AdminAnnouncementService {
     }
     
     // 관리자 페이지 공지사항 단건 조회
-    @NotFoundAop
     public RespGetAnnounceDto getAnnouncement(Long announceId) {
         try {
             Announcement announcement = announcementMapper.findById(announceId);

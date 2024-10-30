@@ -1,7 +1,5 @@
 package com.project.doctor_fish_back.service.user;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.user.response.reservation.RespGetReservationListDto;
@@ -36,7 +34,6 @@ public class UserReservationService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean cancelReservation(Long reservationId) {
         try {
             reservationMapper.cancelById(reservationId);
@@ -75,8 +72,6 @@ public class UserReservationService {
         }
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public RespGetReservationDto getReservationById(Long reservationId) {
         try {
             Reservation reservation = reservationMapper.findById(reservationId);
@@ -95,8 +90,6 @@ public class UserReservationService {
         }
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyReservation(Long reservationId, ReqModifyReservationDto dto) {
         try {
             reservationMapper.modify(dto.toEntity(reservationId));
@@ -106,8 +99,6 @@ public class UserReservationService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean deleteReservation(Long reservationId) {
         try {
             reservationMapper.deleteById(reservationId);

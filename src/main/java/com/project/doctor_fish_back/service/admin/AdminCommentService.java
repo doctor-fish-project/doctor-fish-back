@@ -1,7 +1,5 @@
 package com.project.doctor_fish_back.service.admin;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqModifyCommentDto;
 import com.project.doctor_fish_back.dto.admin.request.comment.ReqRegisterCommentDto;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
@@ -22,7 +20,6 @@ public class AdminCommentService {
     @Autowired
     private AdminCommentMapper commentMapper;
 
-    @NotFoundAop
     public Boolean writeComment(ReqRegisterCommentDto dto) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -37,7 +34,6 @@ public class AdminCommentService {
         return true;
     }
 
-    @NotFoundAop
     public RespGetCommentListDto getComments(Long reviewId, ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
@@ -54,8 +50,6 @@ public class AdminCommentService {
         }
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyComment(ReqModifyCommentDto dto) {
         try {
             System.out.println(dto.toEntity());
