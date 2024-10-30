@@ -79,6 +79,8 @@ public class AdminUserService {
                     .expireDate(jwtProvider.getExpireDate().toLocaleString())
                     .accessToken(jwtProvider.generateAccessToken(user))
                     .build();
+        } catch (SigninException e) {
+            throw new SigninException(e.getMessage());
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
