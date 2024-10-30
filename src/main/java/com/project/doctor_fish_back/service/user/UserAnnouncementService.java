@@ -1,6 +1,5 @@
 package com.project.doctor_fish_back.service.user;
 
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.user.response.announcement.RespGetAnnounceDto;
 import com.project.doctor_fish_back.dto.user.response.announcement.RespGetAnnounceListDto;
 import com.project.doctor_fish_back.dto.user.request.reservation.ReqPageAndLimitDto;
@@ -34,7 +33,6 @@ public class UserAnnouncementService {
 
     }
 
-    @NotFoundAop
     public RespGetAnnounceDto getAnnouncement(Long announceId) {
         try {
             Announcement announcement = announcementMapper.findById(announceId);

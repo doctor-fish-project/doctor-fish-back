@@ -1,7 +1,5 @@
 package com.project.doctor_fish_back.service.user;
 
-import com.project.doctor_fish_back.aspect.annotation.AuthorityAop;
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespGetReviewListDto;
 import com.project.doctor_fish_back.dto.user.response.review.RespReviewDto;
@@ -43,8 +41,6 @@ public class UserReviewService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean modifyReview(Long reviewId, ReqModifyReviewDto dto) {
         try {
             reviewMapper.modify(dto.toEntity(reviewId));
@@ -54,8 +50,6 @@ public class UserReviewService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean deleteReview(Long reviewId) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -106,7 +100,6 @@ public class UserReviewService {
         }
     }
 
-    @NotFoundAop
     public Boolean like(Long reviewId) throws ReviewLikeException {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -132,8 +125,6 @@ public class UserReviewService {
         return true;
     }
 
-    @NotFoundAop
-    @AuthorityAop
     public Boolean dislike(Long reviewId) {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

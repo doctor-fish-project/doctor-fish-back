@@ -1,11 +1,8 @@
 package com.project.doctor_fish_back.service.admin;
 
-import com.project.doctor_fish_back.aspect.annotation.NotFoundAop;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
-import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationDto;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationListDto;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespMonthReservationsCountByDoctorsDto;
-import com.project.doctor_fish_back.dto.search.ReqSearchDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.ExecutionException;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +34,6 @@ public class AdminReservationService {
     @Autowired
     private MonthMapper monthMapper;
 
-    @NotFoundAop
     public Boolean acceptReservation(Long reservationId) {
         try {
             reservationMapper.acceptById(reservationId);
@@ -48,7 +43,6 @@ public class AdminReservationService {
         return true;
     }
 
-    @NotFoundAop
     public Boolean cancelReservation(Long reservationId) {
         try {
             reservationMapper.cancelById(reservationId);
@@ -182,7 +176,6 @@ public class AdminReservationService {
         }
     }
 
-    @NotFoundAop
     public Boolean deleteReservationFromAdmin (Long reservationId) throws AuthorityException {
         try {
             Reservation reservation = reservationMapper.findById(reservationId);
