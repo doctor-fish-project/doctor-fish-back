@@ -11,4 +11,35 @@
         values(default, #{userId}, #{alarmInsertId})
     </insert>
 
+    <select id="getAlarms" resultType="com.project.doctor_fish_back.entity.AlarmInsert">
+        select
+            ait.id as id,
+            ait.type_id as typeId,
+            ait.alarm_id as alarmId,
+            ait.message_id as messageId,
+            mt.message as message
+        from
+            alarm_insert_tb ait
+            left outer join alarm_check_tb act on(ait.id = act.alarm_insert_id)
+            left outer join message_tb mt on(ait.message_id = mt.id)
+        where
+            act.user_id is null and ait.type_id = 2
+
+        union all
+
+        select
+            ait.id as id,
+            ait.type_id as typeId,
+            ait.alarm_id as alarmId,
+            ait.message_id as messageId,
+            mt.message as message
+        from
+            alarm_insert_tb ait
+            left outer join alarm_check_tb act on(ait.id = act.alarm_insert_id)
+            left outer join reservation_tb rt on(rt.id = ait.alarm_id)
+            left outer join message_tb mt on(ait.message_id = mt.id)
+        where
+            act.user_id is null and ait.type_id = 1 and rt.user_id = #{userId}
+    </select>
+
 </mapper>

@@ -11,7 +11,6 @@ import com.project.doctor_fish_back.repository.UserRolesMapper;
 import com.project.doctor_fish_back.repository.admin.AdminAlarmInsertMapper;
 import com.project.doctor_fish_back.repository.admin.AdminDoctorMapper;
 import com.project.doctor_fish_back.repository.admin.AdminReservationMapper;
-import com.project.doctor_fish_back.repository.user.UserAlarmMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,13 +35,10 @@ public class AdminReservationService {
     @Autowired
     private MonthMapper monthMapper;
 
-<<<<<<< HEAD
-=======
+
     @Autowired
     private AdminAlarmInsertMapper alarmInsertMapper;
 
-    @NotFoundAop
->>>>>>> main
     public Boolean acceptReservation(Long reservationId) {
         try {
             reservationMapper.acceptById(reservationId);

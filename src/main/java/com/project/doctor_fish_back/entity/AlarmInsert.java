@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.entity;
 
+import com.project.doctor_fish_back.dto.user.response.alarm.RespAlarmDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,16 @@ public class AlarmInsert {
     private Long typeId;
     private Long alarmId;
     private Long messageId;
+
+    private String message;
+
+    public RespAlarmDto toDto() {
+        return RespAlarmDto.builder()
+                .id(id)
+                .typeId(typeId)
+                .alarmId(alarmId)
+                .messageId(messageId)
+                .message(message)
+                .build();
+    }
 }
