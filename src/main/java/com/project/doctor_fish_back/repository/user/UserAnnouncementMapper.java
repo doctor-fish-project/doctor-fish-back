@@ -14,4 +14,7 @@ public interface UserAnnouncementMapper {
     // 유저 페이지 공지사항 조회
     List<Announcement> getAnnouncements(@Param("startIndex") Long startIndex, @Param("limit") Long limit);
     Long getCountAnnouncements();
+
+    // 유저 페이지 새로운 공지사항 유무
+    boolean isNewAnnouncement();
 }

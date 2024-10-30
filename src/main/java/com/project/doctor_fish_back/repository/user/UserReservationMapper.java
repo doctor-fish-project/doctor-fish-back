@@ -29,4 +29,7 @@ public interface UserReservationMapper {
     List<Reservation> getReservationsForReview(Long userId);
     Long getCountForReview(Long userId);
 
+    // 유저 페이지 오늘 예약 확인된 예약
+    boolean isTodayReservation(Long userId);
+
 }
