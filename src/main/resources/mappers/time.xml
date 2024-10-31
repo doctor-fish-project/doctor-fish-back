@@ -13,6 +13,7 @@
         from
             time_tb
     </select>
+
     <select id="getReservedTimes" resultType="com.project.doctor_fish_back.entity.Time">
         select
             id,
@@ -46,5 +47,42 @@
                                                             dt.id = #{doctorId}
                                                             and lt.status = 2
                                                             and lt.leave_date like concat(#{reservationDate}, "%"));
+    </select>
+    <select id="getAvailableTimes" resultType="com.project.doctor_fish_back.entity.Time">
+        select
+            id,
+            time
+        from
+            time_tb
+        where
+            case
+                when
+                    (select count(*) from reservation_tb where date(reservation_date) = date(#{leaveDate})
+                        and 13 > hour(reservation_date)
+                        and doctor_id = #{doctorId} and status != 3) > 0
+                    and (select count(*) from reservation_tb rt where date(rt.reservation_date) = date(#{leaveDate})
+                        and hour(reservation_date) > 13
+                        and doctor_id = #{doctorId} and status != 3) = 0
+                then
+                    not id between 1 and 4
+                when
+                    (select count(*) from reservation_tb where date(reservation_date) = date(#{leaveDate})
+                        and 13 > hour(reservation_date)
+                        and doctor_id = #{doctorId} and status != 3) = 0
+                    and (select count(*) from reservation_tb where date(reservation_date) = date(#{leaveDate})
+                        and hour(reservation_date) > 13
+                        and doctor_id = #{doctorId} and status != 3) > 0
+                then
+                    not id between 5 and 9
+                when (select count(*) from reservation_tb where date(reservation_date) = date(#{leaveDate})
+                        and 13 > hour(reservation_date)
+                        and doctor_id = #{doctorId} and status != 3) > 0
+                    and (select count(*) from reservation_tb where date(reservation_date) = date(#{leaveDate})
+                        and hour(reservation_date) > 13
+                        and doctor_id = #{doctorId} and status != 3) > 0
+                then
+                    not id between 1 and 9
+            else 1 = 1
+        end;
     </select>
 </mapper>

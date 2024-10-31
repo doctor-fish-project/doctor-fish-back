@@ -10,6 +10,8 @@ import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.ReviewLikeException;
 import com.project.doctor_fish_back.repository.admin.AdminReviewLikeMapper;
 import com.project.doctor_fish_back.repository.admin.AdminReviewMapper;
+import com.project.doctor_fish_back.repository.user.UserCommentMapper;
+import com.project.doctor_fish_back.repository.user.UserReviewLikeMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +24,12 @@ public class AdminReviewService {
 
     @Autowired
     private AdminReviewMapper reviewMapper;
+
+    @Autowired
+    private UserCommentMapper userCommentMapper;
+
+    @Autowired
+    private UserReviewLikeMapper userReviewLikeMapper;
 
     @Autowired
     private AdminReviewLikeMapper reviewLikeMapper;
@@ -62,6 +70,8 @@ public class AdminReviewService {
 
     public Boolean deleteReview(Long reviewId) {
         try {
+            userCommentMapper.deleteCommentsByReviewId(reviewId);
+            userReviewLikeMapper.deleteReviewsByReviewId(reviewId);
             reviewMapper.deleteById(reviewId);
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
