@@ -19,6 +19,14 @@
             review_id = #{reviewId} and user_id = #{userId}
     </delete>
 
+    <delete id="deleteReviewsByReviewId">
+        delete
+        from
+            review_like_tb
+        where
+            review_id = #{reviewId}
+    </delete>
+
     <select id="findByReviewIdAndUserId" resultType="com.project.doctor_fish_back.entity.ReviewLike">
         select
             id,

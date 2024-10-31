@@ -9,6 +9,7 @@ import com.project.doctor_fish_back.entity.Review;
 import com.project.doctor_fish_back.entity.ReviewLike;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.ReviewLikeException;
+import com.project.doctor_fish_back.repository.user.UserCommentMapper;
 import com.project.doctor_fish_back.repository.user.UserReservationMapper;
 import com.project.doctor_fish_back.repository.user.UserReviewLikeMapper;
 import com.project.doctor_fish_back.repository.user.UserReviewMapper;
@@ -28,6 +29,8 @@ public class UserReviewService {
     private UserReviewLikeMapper reviewLikeMapper;
     @Autowired
     private UserReservationMapper reservationMapper;
+    @Autowired
+    private UserCommentMapper userCommentMapper;
 
     public Boolean writeReview(ReqWriteReviewDto dto) {
         try {
@@ -55,6 +58,8 @@ public class UserReviewService {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Review review = reviewMapper.findById(principalUser.getId(), reviewId);
             reservationMapper.modifyReviewStatusById(review.getReservationId());
+            reviewLikeMapper.deleteReviewsByReviewId(reviewId);
+            userCommentMapper.deleteCommentsByReviewId(reviewId);
             reviewMapper.deleteById(reviewId);
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");

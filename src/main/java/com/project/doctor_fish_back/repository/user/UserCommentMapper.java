@@ -13,6 +13,9 @@ public interface UserCommentMapper {
     int modifyById(Comment comment);
     int deleteById(Long id);
 
+    // 댓글 삭제 시 해당 리뷰의 댓글 삭제
+    int deleteCommentsByReviewId(Long reviewId);
+
     // 유저 페이지 리뷰 단건 조회
     Comment findById(Long id);
 

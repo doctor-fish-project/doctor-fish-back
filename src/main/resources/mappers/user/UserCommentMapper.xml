@@ -52,6 +52,14 @@
             id = #{id}
     </delete>
 
+    <delete id="deleteCommentsByReviewId">
+        delete
+        from
+            comment_tb
+        where
+            review_id = #{reviewId}
+    </delete>
+
     <select id="getCommentCountByReviewId" resultType="java.lang.Long">
         select
             count(*)

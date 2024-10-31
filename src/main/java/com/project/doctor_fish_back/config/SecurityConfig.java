@@ -39,8 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 )
                 .permitAll()
                 .antMatchers(
-                        "/admin/auth/signin",
-                        "admin/**"
+                        "/admin/auth/signin"
                 )
                 .permitAll()
                 .antMatchers(

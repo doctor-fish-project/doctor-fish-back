@@ -5,6 +5,7 @@ import com.project.doctor_fish_back.service.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,8 +15,9 @@ public class TimeController {
     private TimeService timeService;
 
     @GetMapping("/times")
-    public ResponseEntity<?> getTimes() {
-        return ResponseEntity.ok().body(timeService.getTimeList());    }
+    public ResponseEntity<?> getTimes(String leaveDate) {
+        System.out.println(leaveDate);
+        return ResponseEntity.ok().body(timeService.getTimeList(leaveDate));    }
 
     @GetMapping("/times/reserved")
     public ResponseEntity<?> getReservedTimes(ReqReservedTimeDto dto) {

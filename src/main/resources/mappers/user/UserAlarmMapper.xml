@@ -40,6 +40,21 @@
             left outer join message_tb mt on(ait.message_id = mt.id)
         where
             act.user_id is null and ait.type_id = 1 and rt.user_id = #{userId}
+
+<!--        select-->
+<!--            ait.id as id,-->
+<!--            ait.type_id as typeId,-->
+<!--            ait.alarm_id as alarmId,-->
+<!--            ait.message_id as messageId,-->
+<!--            mt.message as message-->
+<!--        from-->
+<!--            alarm_insert_tb ait-->
+<!--            left outer join reservation_tb rt on(ait.type_id = 1 and ait.alarm_id = rt.id)-->
+<!--            left outer join alarm_check_tb act on(ait.id = act.alarm_insert_id and act.user_id = 6)-->
+<!--            left outer join message_tb mt on(ait.message_id = mt.id)-->
+<!--        where-->
+<!--            act.user_id is null-->
+<!--            and ((ait.type_id = 1 and rt.user_id = 6) or (ait.type_id = 2 and rt.user_id is null))-->
     </select>
 
 </mapper>
