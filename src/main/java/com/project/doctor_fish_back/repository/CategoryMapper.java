@@ -7,5 +7,5 @@ import java.util.List;
 
 @Mapper
 public interface CategoryMapper {
-    List<Category> getCategory(Long roleId);
+    List<Category> categoryList(Long roleId);
 }

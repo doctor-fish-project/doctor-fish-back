@@ -11,5 +11,5 @@ public interface RoleMapper {
 
     Role findByPosition(String position);
 
-    List<Role> getRoles();
+    List<Role> roleList();
 }

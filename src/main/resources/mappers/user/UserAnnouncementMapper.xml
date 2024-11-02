@@ -23,7 +23,7 @@
             at.id = #{id}
     </select>
 
-    <select id="getAnnouncements" resultType="com.project.doctor_fish_back.entity.Announcement">
+    <select id="announcementList" resultType="com.project.doctor_fish_back.entity.Announcement">
         select
             at.id,
             at.user_id as userId,
@@ -41,20 +41,11 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getCountAnnouncements" resultType="java.lang.Long">
+    <select id="announcementCount" resultType="java.lang.Long">
         select
         count(*)
         from
         announcement_tb
-    </select>
-
-    <select id="isNewAnnouncement" resultType="java.lang.Boolean">
-        select
-            count(*)
-        from
-            announcement_tb
-        where
-            Date(now()) = Date(register_date)
     </select>
 
 </mapper>

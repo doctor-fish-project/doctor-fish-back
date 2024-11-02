@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.service.admin;
 
 import com.project.doctor_fish_back.dto.admin.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.dto.admin.request.leave.ReqRegisterLeaveDto;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.admin.response.leave.RespGetLeaveDto;
 import com.project.doctor_fish_back.dto.admin.response.leave.RespGetLeaveListDto;
 import com.project.doctor_fish_back.entity.Leave;
@@ -29,26 +30,29 @@ public class AdminLeaveService {
         return true;
     }
 
-    public RespGetLeaveListDto getLeavesByUserId() {
+    public RespGetLeaveListDto getLeavesByUserId(ReqPageAndLimitDto dto) {
         try {
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Leave> leaves = leaveMapper.getLeavesByUserId(principalUser.getId());
-            Long leaveCount = leaveMapper.getCountLeaveByUserId(principalUser.getId());
+            List<Leave> leaves = leaveMapper.leaveListByUserId(principalUser.getId(), startIndex, dto.getLimit());
+            Long leaveCount = leaveMapper.leavesCountByUserId(principalUser.getId());
 
             return RespGetLeaveListDto.builder()
                     .leaves(leaves)
                     .leaveCount(leaveCount)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
 
-    public RespGetLeaveListDto getLeaves() {
+    public RespGetLeaveListDto getLeaves(ReqPageAndLimitDto dto) {
         try {
-            List<Leave> leaves = leaveMapper.getLeaves();
-            Long leaveCount = leaveMapper.getCountLeaves();
+            Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+            List<Leave> leaves = leaveMapper.leaveList(startIndex, dto.getLimit());
+            Long leaveCount = leaveMapper.leavesCount();
 
             return RespGetLeaveListDto.builder()
                     .leaves(leaves)
@@ -61,7 +65,7 @@ public class AdminLeaveService {
 
     public RespGetLeaveDto getLeaveToDoctorAndInfo(Long leaveId) {
         try {
-            Leave leave = leaveMapper.findLeaveById(leaveId);
+            Leave leave = leaveMapper.findById(leaveId);
 
             return RespGetLeaveDto.builder()
                     .id(leave.getId())

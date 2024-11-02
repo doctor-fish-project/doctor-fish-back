@@ -7,5 +7,5 @@ import java.util.List;
 
 @Mapper
 public interface TableHeaderMapper {
-    List<TableHeader> getTableHeaders(String pathName);
+    List<TableHeader> tableheaderList(String pathName);
 }

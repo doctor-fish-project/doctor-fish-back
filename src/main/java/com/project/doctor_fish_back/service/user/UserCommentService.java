@@ -35,8 +35,8 @@ public class UserCommentService {
     public RespGetCommentListDto getComments(Long reviewId, ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Comment> comments = commentMapper.findAllByReviewId(reviewId, startIndex, dto.getLimit());
-            Long commentCount = commentMapper.getCommentCountByReviewId(reviewId);
+            List<Comment> comments = commentMapper.commentListByReviewId(reviewId, startIndex, dto.getLimit());
+            Long commentCount = commentMapper.commentCountByReviewId(reviewId);
 
             return RespGetCommentListDto.builder()
                     .comments(comments)
@@ -52,8 +52,8 @@ public class UserCommentService {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Comment> comments = commentMapper.findCommentsByUserId(principalUser.getId(), startIndex, dto.getLimit());
-            Long commentCount = commentMapper.getCountCommentsByUserId(principalUser.getId());
+            List<Comment> comments = commentMapper.commentListByUserId(principalUser.getId(), startIndex, dto.getLimit());
+            Long commentCount = commentMapper.commentCountByUserId(principalUser.getId());
 
             return RespGetCommentListDto.builder()
                     .comments(comments)

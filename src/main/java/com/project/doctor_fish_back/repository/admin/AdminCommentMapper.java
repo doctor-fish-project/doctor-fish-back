@@ -17,8 +17,8 @@ public interface AdminCommentMapper {
     Comment findById(Long id);
 
     // 관리자 페이지 리뷰별 댓글 조회
-    List<Comment> getCommentsByReviewId(@Param("reviewId") Long reviewId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
+    List<Comment> commentListByReviewId(@Param("reviewId") Long reviewId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
 
     // 관리자 페이지 리뷰별 댓글 수 조회
-    Long getCountCommentsByReviewId(Long reviewId);
+    Long commentsCountByReviewId(Long reviewId);
 }

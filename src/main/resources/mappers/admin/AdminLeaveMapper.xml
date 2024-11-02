@@ -45,56 +45,7 @@
             id = #{id}
     </delete>
 
-    <select id="getLeavesByUserId" resultType="com.project.doctor_fish_back.entity.Leave">
-        select
-            id,
-            user_id as userId,
-            reason,
-            status,
-            leave_date as leaveDate,
-            end_date as endDate,
-            register_date as registerDate,
-            update_date as updateDate
-        from
-            leave_tb
-        where
-            user_id = #{userId}
-    </select>
-
-    <select id="getCountLeaveByUserId" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            leave_tb
-        where
-            user_id = #{userId}
-    </select>
-
-    <select id="getLeaves" resultType="com.project.doctor_fish_back.entity.Leave">
-        select
-            lt.id,
-            lt.user_id as userId,
-            lt.status,
-            lt.reason,
-            lt.leave_date as leaveDate,
-            lt.end_date as endDate,
-            lt.register_date as registerDate,
-            lt.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg
-        from
-            leave_tb lt
-            left outer join user_tb ut on(lt.user_id = ut.id)
-    </select>
-
-    <select id="getCountLeaves" resultType="java.lang.Long">
-        select
-            count(*)
-        from
-            leave_tb
-    </select>
-
-    <select id="findLeaveById" resultType="com.project.doctor_fish_back.entity.Leave">
+    <select id="findById" resultType="com.project.doctor_fish_back.entity.Leave">
         select
             lt.id,
             lt.user_id as userId,
@@ -114,5 +65,62 @@
         where
             lt.id = #{id}
     </select>
+
+    <select id="leaveListByUserId" resultType="com.project.doctor_fish_back.entity.Leave">
+        select
+            id,
+            user_id as userId,
+            reason,
+            status,
+            leave_date as leaveDate,
+            end_date as endDate,
+            register_date as registerDate,
+            update_date as updateDate
+        from
+            leave_tb
+        where
+            user_id = #{userId}
+        order by
+            registerDate desc
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="leavesCountByUserId" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            leave_tb
+        where
+            user_id = #{userId}
+    </select>
+
+    <select id="leaveList" resultType="com.project.doctor_fish_back.entity.Leave">
+        select
+            lt.id,
+            lt.user_id as userId,
+            lt.status,
+            lt.reason,
+            lt.leave_date as leaveDate,
+            lt.end_date as endDate,
+            lt.register_date as registerDate,
+            lt.update_date as updateDate,
+            ut.name as userName,
+            ut.img as userImg
+        from
+            leave_tb lt
+            left outer join user_tb ut on(lt.user_id = ut.id)
+        order by
+            registerDate desc
+        limit #{startIndex}, #{limit}
+    </select>
+
+    <select id="leavesCount" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            leave_tb
+    </select>
+
+
 
 </mapper>

@@ -7,8 +7,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface AdminReviewLikeMapper {
     int save(ReviewLike reviewLike);
-    int deleteById(Long id);
+    int deleteByReviewIdAndUserId(@Param("reviewId") Long reviewId,
+                                  @Param("userId")  Long userId);
 
-    Long getLikeCountByReviewId(Long reviewId);
+    Long likeCountByReviewId(Long reviewId);
     ReviewLike findByReviewIdAndUserId(@Param("reviewId") Long reviewId, @Param("userId")  Long userId);
 }

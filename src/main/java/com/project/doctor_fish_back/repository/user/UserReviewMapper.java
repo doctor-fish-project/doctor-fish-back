@@ -14,14 +14,19 @@ public interface UserReviewMapper {
     int deleteById(Long id);
 
     // 유저 페이지 사용자의 리뷰 단건 조회
-    Review findById(@Param("userId") Long userId, @Param("reviewId") Long reviewId);
+    Review findById(@Param("userId") Long userId,
+                    @Param("reviewId") Long reviewId);
 
     // 유저 페이지 사용자의 리뷰 조회
-    List<Review> getReviewsByUserId(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
-    Long getReviewCountByUserId(Long userId);
+    List<Review> reviewListByUserId(@Param("userId") Long userId,
+                                    @Param("startIndex") Long startIndex,
+                                    @Param("limit") Long limit);
+    Long reviewCountByUserId(Long userId);
 
     // 유저 페이지 리뷰 페이지 전체 조회
-    List<Review> getReviews(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
-    Long getCountReviews();
+    List<Review> reviewList(@Param("userId") Long userId,
+                            @Param("startIndex") Long startIndex,
+                            @Param("limit") Long limit);
+    Long reviewCount();
 
 }

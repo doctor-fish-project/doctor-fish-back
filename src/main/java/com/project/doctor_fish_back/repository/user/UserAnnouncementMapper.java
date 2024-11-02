@@ -12,9 +12,7 @@ public interface UserAnnouncementMapper {
     Announcement findById(Long id);
 
     // 유저 페이지 공지사항 조회
-    List<Announcement> getAnnouncements(@Param("startIndex") Long startIndex, @Param("limit") Long limit);
-    Long getCountAnnouncements();
-
-    // 유저 페이지 새로운 공지사항 유무
-    boolean isNewAnnouncement();
+    List<Announcement> announcementList(@Param("startIndex") Long startIndex,
+                                        @Param("limit") Long limit);
+    Long announcementCount();
 }

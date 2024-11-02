@@ -5,6 +5,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.doctor_fish_back.repository.admin.AdminReviewMapper">
+
     <delete id="deleteById">
         delete
         from
@@ -13,24 +14,7 @@
             id = #{id}
     </delete>
 
-    <select id="getReviewAll" resultType="com.project.doctor_fish_back.entity.Review">
-        select
-            rt.id,
-            rt.user_id as userId,
-            rt.img,
-            rt.content,
-            rt.register_date as registerDate,
-            rt.update_date as updateDate,
-            ut.name as userName,
-            ut.img as userImg
-        from
-            review_tb rt
-            left outer join user_tb ut on(rt.user_id = ut.id)
-        order by
-            rt.register_date desc
-    </select>
-
-    <select id="getReviewAllByLimit" resultType="com.project.doctor_fish_back.entity.Review">
+    <select id="reviewList" resultType="com.project.doctor_fish_back.entity.Review">
         select
             rt.id,
             rt.user_id as userId,
@@ -60,7 +44,7 @@
             user_id = #{userId}
     </select>
 
-    <select id="getCountReviews" resultType="java.lang.Long">
+    <select id="reviewCount" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -79,12 +63,14 @@
             rt.register_date as registerDate,
             rt.update_date as updateDate,
             ut.name as userName,
-            ut.img as userImg
+            ut.img as userImg,
+            (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
+            (select count(*) from review_like_tb where user_id = #{userId} and review_id = rt.id) as isLike
         from
             review_tb rt
             left outer join user_tb ut on(rt.user_id = ut.id)
         where
-            rt.id = #{id}
+            rt.id = #{reviewId}
     </select>
 
 </mapper>

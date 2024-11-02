@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.controller.admin;
 
 import com.project.doctor_fish_back.dto.admin.request.leave.ReqModifyLeaveDto;
 import com.project.doctor_fish_back.dto.admin.request.leave.ReqRegisterLeaveDto;
+import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.service.admin.AdminLeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,14 @@ public class AdminLeaveController {
 
     // 관리자 연차 전체 조회
     @GetMapping("/leave/list")
-    public ResponseEntity<?> getAllLeavesByUserId() {
-        return ResponseEntity.ok().body(leaveService.getLeavesByUserId());
+    public ResponseEntity<?> getAllLeavesByUserId(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(leaveService.getLeavesByUserId(dto));
     }
 
     // 연차 전체 조회
     @GetMapping("/leave/list/info")
-    public ResponseEntity<?> getAllLeaves() {
-        return ResponseEntity.ok().body(leaveService.getLeaves());
+    public ResponseEntity<?> getAllLeaves(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(leaveService.getLeaves(dto));
     }
 
     // 연차 단건 조회

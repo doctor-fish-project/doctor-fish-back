@@ -37,8 +37,8 @@ public class AdminCommentService {
     public RespGetCommentListDto getComments(Long reviewId, ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Comment> comments = commentMapper.getCommentsByReviewId(reviewId, startIndex, dto.getLimit());
-            Long commentCount = commentMapper.getCountCommentsByReviewId(reviewId);
+            List<Comment> comments = commentMapper.commentListByReviewId(reviewId, startIndex, dto.getLimit());
+            Long commentCount = commentMapper.commentsCountByReviewId(reviewId);
 
             return RespGetCommentListDto.builder()
                     .comments(comments)

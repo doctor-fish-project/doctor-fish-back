@@ -18,7 +18,7 @@ public class AdminRoleService {
 
     public List<RespRolesDto> getRoles() {
         try {
-            List<Role> roles = RoleMapper.getRoles();
+            List<Role> roles = RoleMapper.roleList();
             List<RespRolesDto> dtos = new ArrayList<>();
 
             for(Role role : roles) {

@@ -20,7 +20,9 @@ public interface AdminUserMapper {
     User findByPhoneNumber(String phoneNumber);
 
     // 관리자 페이지 회원 전체 조회
-    List<User> getUsers(@Param("startIndex") Long startIndex, @Param("limit") Long limit, @Param("searchText") String searchText);
-    Long getCountUsers(String searchText);
+    List<User> userList(@Param("startIndex") Long startIndex,
+                        @Param("limit") Long limit,
+                        @Param("searchText") String searchText);
+    Long userCount(String searchText);
 
 }

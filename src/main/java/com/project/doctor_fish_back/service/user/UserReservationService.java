@@ -46,7 +46,7 @@ public class UserReservationService {
     public RespGetReservationListDto getReservationsToday() {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            List<Reservation> reservations = reservationMapper.getReservationsToday(principalUser.getId());
+            List<Reservation> reservations = reservationMapper.todayReservationList(principalUser.getId());
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
@@ -61,8 +61,8 @@ public class UserReservationService {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Reservation> reservations = reservationMapper.getReservations(principalUser.getId(), startIndex, dto.getLimit());
-            Long totalCount = reservationMapper.getCountReservations(principalUser.getId());
+            List<Reservation> reservations = reservationMapper.todayReservationList(principalUser.getId(), startIndex, dto.getLimit());
+            Long totalCount = reservationMapper.reservationCount(principalUser.getId());
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
                     .totalCount(totalCount)
@@ -112,8 +112,8 @@ public class UserReservationService {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Reservation> reservations = reservationMapper.getReservationsForReview(principalUser.getId());
-            Long totalCount = reservationMapper.getCountForReview(principalUser.getId());
+            List<Reservation> reservations = reservationMapper.reservationListForReview(principalUser.getId());
+            Long totalCount = reservationMapper.reservationCountForReview(principalUser.getId());
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)

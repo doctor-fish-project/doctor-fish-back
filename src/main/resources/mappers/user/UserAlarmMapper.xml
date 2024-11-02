@@ -11,7 +11,7 @@
         values(default, #{userId}, #{alarmInsertId})
     </insert>
 
-    <select id="getAlarms" resultType="com.project.doctor_fish_back.entity.AlarmInsert">
+    <select id="alarmList" resultType="com.project.doctor_fish_back.entity.AlarmInsert">
         select
             ait.id as id,
             ait.type_id as typeId,

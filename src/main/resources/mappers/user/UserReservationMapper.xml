@@ -111,7 +111,7 @@
             rt.id = #{id}
     </select>
 
-    <select id="getReservationsToday" resultMap="reservationResultMap">
+    <select id="todayReservationList" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -145,7 +145,7 @@
             rt.reservation_date
     </select>
 
-    <select id="getReservations" resultMap="reservationResultMap">
+    <select id="reservationList" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -180,7 +180,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getCountReservations" resultType="java.lang.Long">
+    <select id="reservationCount" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -189,7 +189,7 @@
             user_id = #{userId}
     </select>
 
-    <select id="getReservationsForReview" resultMap="reservationResultMap">
+    <select id="reservationListForReview" resultMap="reservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -226,7 +226,7 @@
             rt.reservation_date desc
     </select>
 
-    <select id="getCountForReview" resultType="java.lang.Long">
+    <select id="reservationCountForReview" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -236,15 +236,6 @@
             and <![CDATA[ reservation_date < now() ]]>
             and review_status = 0
             and status = 2
-    </select>
-
-    <select id="isTodayReservation" resultType="java.lang.Boolean">
-        select
-            count(*)
-        from
-            reservation_tb
-        where
-            user_id = #{userId} and status = 2 and Date(reservation_date) = Date(now())
     </select>
 
 </mapper>

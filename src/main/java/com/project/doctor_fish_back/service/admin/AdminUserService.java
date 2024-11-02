@@ -109,8 +109,8 @@ public class AdminUserService {
     public RespGetUserListDto getUserList(ReqPageAndLimitDto dto, String searchText) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<User> users = userMapper.getUsers(startIndex, dto.getLimit(), searchText);
-            Long userCount = userMapper.getCountUsers(searchText);
+            List<User> users = userMapper.userList(startIndex, dto.getLimit(), searchText);
+            Long userCount = userMapper.userCount(searchText);
 
             return RespGetUserListDto.builder()
                     .users(users)
@@ -255,7 +255,7 @@ public class AdminUserService {
 
             user.setUserRoles(Set.of(userRoles));
 
-            Depart depart = departMapper.findByDepartId(dto.getDepartId());
+            Depart depart = departMapper.findById(dto.getDepartId());
 
 //            if(depart == null) {
 //                departMapper.save(Depart.builder().name(dto.getDepartName()).build());

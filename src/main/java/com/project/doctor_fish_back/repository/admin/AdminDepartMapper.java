@@ -9,7 +9,7 @@ import java.util.List;
 public interface AdminDepartMapper {
     int save(Depart depart);
 
-    Depart findByDepartId(Long departId);
+    Depart findById(Long departId);
 
-    List<Depart> getDeparts();
+    List<Depart> departList();
 }

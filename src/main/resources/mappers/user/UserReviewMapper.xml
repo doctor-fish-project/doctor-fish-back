@@ -49,7 +49,7 @@
             rt.id = #{reviewId}
     </select>
 
-    <select id="getReviewsByUserId" resultType="com.project.doctor_fish_back.entity.Review">
+    <select id="reviewListByUserId" resultType="com.project.doctor_fish_back.entity.Review">
         select
             rt.id,
             rt.user_id as userId,
@@ -69,7 +69,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getReviewCountByUserId" resultType="java.lang.Long">
+    <select id="reviewCountByUserId" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -78,7 +78,7 @@
             user_id = #{userId}
     </select>
 
-    <select id="getReviews" resultType="com.project.doctor_fish_back.entity.Review">
+    <select id="reviewList" resultType="com.project.doctor_fish_back.entity.Review">
         select
             rt.id,
             rt.user_id as userId,
@@ -98,7 +98,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getCountReviews" resultType="java.lang.Long">
+    <select id="reviewCount" resultType="java.lang.Long">
         select
             count(*)
         from

@@ -6,7 +6,7 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.TableHeaderMapper">
 
-    <select id="getTableHeaders" resultType="com.project.doctor_fish_back.entity.TableHeader">
+    <select id="tableheaderList" resultType="com.project.doctor_fish_back.entity.TableHeader">
         select
             tht.id,
             tht.name

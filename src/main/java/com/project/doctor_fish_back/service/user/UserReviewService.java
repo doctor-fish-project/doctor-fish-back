@@ -71,8 +71,8 @@ public class UserReviewService {
         try {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Review> reviews = reviewMapper.getReviewsByUserId(principalUser.getId(), startIndex, dto.getLimit());
-            Long reviewCount = reviewMapper.getReviewCountByUserId(principalUser.getId());
+            List<Review> reviews = reviewMapper.reviewListByUserId(principalUser.getId(), startIndex, dto.getLimit());
+            Long reviewCount = reviewMapper.reviewCountByUserId(principalUser.getId());
 
             return RespGetReviewListDto.builder()
                     .reviews(reviews)
@@ -92,8 +92,8 @@ public class UserReviewService {
                 userId = ((PrincipalUser) principal).getId();
             }
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Review> reviews = reviewMapper.getReviews(userId, startIndex, dto.getLimit());
-            Long reviewCount = reviewMapper.getCountReviews();
+            List<Review> reviews = reviewMapper.reviewList(userId, startIndex, dto.getLimit());
+            Long reviewCount = reviewMapper.reviewCount();
 
             return RespGetReviewListDto.builder()
                     .reviews(reviews)

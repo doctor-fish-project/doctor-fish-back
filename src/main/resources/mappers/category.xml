@@ -6,7 +6,7 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.CategoryMapper">
 
-    <select id="getCategory" resultType="com.project.doctor_fish_back.entity.Category">
+    <select id="categoryList" resultType="com.project.doctor_fish_back.entity.Category">
         select
             ct.id,
             ct.name,

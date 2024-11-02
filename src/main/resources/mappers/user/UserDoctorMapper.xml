@@ -31,7 +31,7 @@
         <result property="name" column="det_name" />
     </resultMap>
 
-    <select id="getDoctorById" resultMap="doctorResultMap">
+    <select id="findById" resultMap="doctorResultMap">
         select
             dot.id as dot_id,
             dot.user_id,
@@ -55,7 +55,7 @@
             dot.id = #{id}
     </select>
 
-    <select id="getDoctors" resultMap="doctorResultMap">
+    <select id="doctorList" resultMap="doctorResultMap">
         select
             dot.id as dot_id,
             dot.user_id,
@@ -77,7 +77,7 @@
             left outer join depart_tb det on(dot.depart_id = det.id)
     </select>
 
-    <select id="getCountDoctors" resultType="java.lang.Long">
+    <select id="doctorCount" resultType="java.lang.Long">
         select
             count(*)
         from

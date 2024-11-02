@@ -10,9 +10,12 @@ import java.util.List;
 public interface AdminReviewMapper {
     int deleteById(Long id);
 
-    // 관리자 페이지 리뷰 전체 조회
-    List<Review> getReviewAllByLimit(Long startIndex, Long limit, @Param("searchText") String searchText);
-    Long getCountReviews(String searchText);
+    Review findById(@Param("reviewId") Long reviewId,
+                    @Param("userId") Long userId);
 
-    Review findById(Long id);
+    // 관리자 페이지 리뷰 전체 조회
+    List<Review> reviewList(@Param("startIndex") Long startIndex,
+                            @Param("limit") Long limit,
+                            @Param("searchText") String searchText);
+    Long reviewCount(String searchText);
 }
