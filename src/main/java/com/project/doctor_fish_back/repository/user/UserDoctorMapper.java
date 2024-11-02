@@ -8,10 +8,10 @@ import java.util.List;
 @Mapper
 public interface UserDoctorMapper {
     // 의사 단건 조회
-    Doctor getDoctorById(Long id);
+    Doctor findById(Long id);
 
     // 유저 페이지 의사 전체 조회
-    List<Doctor> getDoctors();
-    Long getCountDoctors();
+    List<Doctor> doctorList();
+    Long doctorCount();
 
 }

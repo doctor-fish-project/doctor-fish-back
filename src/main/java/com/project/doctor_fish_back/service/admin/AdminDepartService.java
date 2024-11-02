@@ -19,7 +19,7 @@ public class AdminDepartService {
 
     public List<RespDepartListDto> getDeparts() {
         try {
-            List<Depart> departs = adminDepartMapper.getDeparts();
+            List<Depart> departs = adminDepartMapper.departList();
             List<RespDepartListDto> dtos = new ArrayList<>();
 
             for(Depart depart : departs) {

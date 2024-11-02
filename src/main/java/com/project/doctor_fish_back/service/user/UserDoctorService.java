@@ -18,8 +18,8 @@ public class UserDoctorService {
 
     public RespGetDoctorListDto getDoctors() {
         try {
-            List<Doctor> doctors = doctorMapper.getDoctors();
-            Long doctorCount = doctorMapper.getCountDoctors();
+            List<Doctor> doctors = doctorMapper.doctorList();
+            Long doctorCount = doctorMapper.doctorCount();
 
             return RespGetDoctorListDto.builder()
                     .doctors(doctors)
@@ -31,7 +31,7 @@ public class UserDoctorService {
     }
 
     public RespGetDoctorDto getDoctorById(Long doctorId) {
-        Doctor doctor = doctorMapper.getDoctorById(doctorId);
+        Doctor doctor = doctorMapper.findById(doctorId);
 
         return RespGetDoctorDto.builder()
                 .doctorId(doctor.getId())

@@ -6,7 +6,7 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.MonthMapper">
 
-    <select id="getAll" resultType="com.project.doctor_fish_back.entity.Month">
+    <select id="monthList" resultType="com.project.doctor_fish_back.entity.Month">
         select
             id,
             month

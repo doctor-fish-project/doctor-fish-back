@@ -11,7 +11,7 @@
         values(default, #{name})
     </insert>
 
-    <select id="findByDepartId" resultType="com.project.doctor_fish_back.entity.Depart">
+    <select id="findById" resultType="com.project.doctor_fish_back.entity.Depart">
         select
             id,
             name
@@ -21,7 +21,7 @@
             id = #{departId}
     </select>
 
-    <select id="getDeparts" resultType="com.project.doctor_fish_back.entity.Depart">
+    <select id="departList" resultType="com.project.doctor_fish_back.entity.Depart">
         select
             id,
             name

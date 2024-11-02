@@ -19,17 +19,15 @@ public interface UserReservationMapper {
     Reservation findById(Long id);
 
     // 유저 페이지 오늘 예약 조회
-    List<Reservation> getReservationsToday(@Param("userId") Long userId);
+    List<Reservation> todayReservationList(@Param("userId") Long userId);
 
     // 유저 페이지 예약 전체 조회
-    List<Reservation> getReservations(@Param("userId") Long userId, @Param("startIndex") Long startIndex, @Param("limit") Long limit);
-    Long getCountReservations(Long userId);
+    List<Reservation> todayReservationList(@Param("userId") Long userId,
+                                           @Param("startIndex") Long startIndex,
+                                           @Param("limit") Long limit);
+    Long reservationCount(Long userId);
 
     // 유저 페이지 리뷰 작성가능한 예약 전체 조회
-    List<Reservation> getReservationsForReview(Long userId);
-    Long getCountForReview(Long userId);
-
-    // 유저 페이지 오늘 예약 확인된 예약
-    boolean isTodayReservation(Long userId);
-
+    List<Reservation> reservationListForReview(Long userId);
+    Long reservationCountForReview(Long userId);
 }

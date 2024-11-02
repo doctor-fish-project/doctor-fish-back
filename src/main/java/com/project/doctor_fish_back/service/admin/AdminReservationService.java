@@ -72,8 +72,8 @@ public class AdminReservationService {
 
         if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
             Doctor doctor = adminDoctorMapper.findByUserId(userId);
-            List<Map<String, Object>> reservations = reservationMapper.getMonthCountsByDoctorId(doctor.getId());
-            List<Month> months = monthMapper.getAll();
+            List<Map<String, Object>> reservations = reservationMapper.reservationsMonthCountByDoctorId(doctor.getId());
+            List<Month> months = monthMapper.monthList();
 
             return RespMonthReservationsCountByDoctorsDto.builder()
                     .reservations(reservations)
@@ -81,8 +81,8 @@ public class AdminReservationService {
                     .build();
         }
 
-        List<Map<String, Object>> reservations = reservationMapper.getMonthCountsByDoctors();
-        List<Month> months = monthMapper.getAll();
+        List<Map<String, Object>> reservations = reservationMapper.reservationsMonthCountByDoctorIds();
+        List<Month> months = monthMapper.monthList();
 
         return RespMonthReservationsCountByDoctorsDto.builder()
                 .reservations(reservations)
@@ -101,12 +101,12 @@ public class AdminReservationService {
             if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
                 Doctor doctor = adminDoctorMapper.findByUserId(userId);
                 return RespGetReservationListDto.builder()
-                        .reservations(reservationMapper.getDashBoardReservationsByDoctorId(doctor.getId(), limit))
+                        .reservations(reservationMapper.reservationListByLimitAndDoctorId(doctor.getId(), limit))
                         .build();
             }
 
             return RespGetReservationListDto.builder()
-                    .reservations(reservationMapper.getAllByLimit(limit))
+                    .reservations(reservationMapper.reservationListByLimit(limit))
                     .build();
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
@@ -124,12 +124,12 @@ public class AdminReservationService {
             if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
                 Doctor doctor = adminDoctorMapper.findByUserId(userId);
                 return RespGetReservationListDto.builder()
-                        .reservations(reservationMapper.getDashBoardTodayReservationsByDoctorId(doctor.getId(), limit))
+                        .reservations(reservationMapper.todayReservationListByLimitAndDoctorId(doctor.getId(), limit))
                         .build();
             }
 
             return RespGetReservationListDto.builder()
-                    .reservations(reservationMapper.getTodayByLimit(limit))
+                    .reservations(reservationMapper.todayReservationListByLimit(limit))
                     .build();
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
@@ -146,13 +146,13 @@ public class AdminReservationService {
             if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
                 Doctor doctor = adminDoctorMapper.findByUserId(userId);
                 return RespGetReservationListDto.builder()
-                        .reservations(reservationMapper.getReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit(), searchText))
-                        .totalCount(reservationMapper.getCountReservationsByDoctorId(doctor.getId(), searchText))
+                        .reservations(reservationMapper.reservationListByDoctorId(doctor.getId(), startIndex, dto.getLimit(), searchText))
+                        .totalCount(reservationMapper.reservationsCountByDoctorId(doctor.getId(), searchText))
                         .build();
             }
 
-            List<Reservation> reservations = reservationMapper.getReservations(startIndex, dto.getLimit(), searchText);
-            Long totalCount = reservationMapper.getCountReservations(searchText);
+            List<Reservation> reservations = reservationMapper.reservationList(startIndex, dto.getLimit(), searchText);
+            Long totalCount = reservationMapper.reservationsCount(searchText);
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
@@ -173,12 +173,12 @@ public class AdminReservationService {
             if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
                 Doctor doctor = adminDoctorMapper.findByUserId(userId);
                 return RespGetReservationListDto.builder()
-                        .reservations(reservationMapper.getTodayReservationsByDoctorId(doctor.getId(), startIndex, dto.getLimit(), searchText))
-                        .totalCount(reservationMapper.getCountTodayReservationsByDoctorId(doctor.getId(), searchText))
+                        .reservations(reservationMapper.todayReservationListByDoctorId(doctor.getId(), startIndex, dto.getLimit(), searchText))
+                        .totalCount(reservationMapper.todayReservationsCountByDoctorId(doctor.getId(), searchText))
                         .build();
             }
-            List<Reservation> reservations = reservationMapper.getTodayReservations(startIndex, dto.getLimit(), searchText);
-            Long totalCount = reservationMapper.getCountTodayReservations(searchText);
+            List<Reservation> reservations = reservationMapper.todayReservationList(startIndex, dto.getLimit(), searchText);
+            Long totalCount = reservationMapper.todayReservationsCount(searchText);
 
             return RespGetReservationListDto.builder()
                     .reservations(reservations)

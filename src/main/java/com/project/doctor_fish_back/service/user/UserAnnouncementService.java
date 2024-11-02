@@ -20,8 +20,8 @@ public class UserAnnouncementService {
     public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Announcement> announcements = announcementMapper.getAnnouncements(startIndex, dto.getLimit());
-            Long totalCount = announcementMapper.getCountAnnouncements();
+            List<Announcement> announcements = announcementMapper.announcementList(startIndex, dto.getLimit());
+            Long totalCount = announcementMapper.announcementCount();
 
             return RespGetAnnounceListDto.builder()
                     .announcements(announcements)

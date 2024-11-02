@@ -11,6 +11,6 @@ import java.util.List;
 public interface UserAlarmMapper {
     int save(AlarmCheck alarmCheck);
 
-    List<AlarmInsert> getAlarms(Long userId);
+    List<AlarmInsert> alarmList(Long userId);
 
 }

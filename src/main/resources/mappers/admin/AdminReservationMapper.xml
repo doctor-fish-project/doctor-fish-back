@@ -118,7 +118,7 @@
             rt.id = #{id}
     </select>
 
-    <select id="getReservations" resultMap="adminReservationResultMap">
+    <select id="reservationList" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -144,7 +144,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getReservationsByDoctorId" resultMap="adminReservationResultMap">
+    <select id="reservationListByDoctorId" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -171,7 +171,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getTodayReservations" resultMap="adminReservationResultMap">
+    <select id="todayReservationList" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -198,7 +198,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getTodayReservationsByDoctorId" resultMap="adminReservationResultMap">
+    <select id="todayReservationListByDoctorId" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -225,7 +225,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getCountReservations" resultType="java.lang.Long">
+    <select id="reservationsCount" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -235,7 +235,7 @@
             ut.name like concat("%", #{searchText}, "%")
     </select>
 
-    <select id="getCountTodayReservations" resultType="java.lang.Long">
+    <select id="todayReservationsCount" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -246,7 +246,7 @@
             and ut.name like concat("%", #{searchText}, "%")
     </select>
 
-    <select id="getCountReservationsByDoctorId" resultType="java.lang.Long">
+    <select id="reservationsCountByDoctorId" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -257,7 +257,7 @@
             and ut.name like concat("%", #{searchText}, "%")
     </select>
 
-    <select id="getCountTodayReservationsByDoctorId" resultType="java.lang.Long">
+    <select id="todayReservationsCountByDoctorId" resultType="java.lang.Long">
         select
             count(*)
         from
@@ -268,7 +268,7 @@
             and ut.name like concat("%", #{searchText}, "%")
     </select>
 
-    <select id="getAllByLimit" resultMap="adminReservationResultMap">
+    <select id="reservationListByLimit" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -292,7 +292,7 @@
         limit 0, #{limit}
     </select>
 
-    <select id="getTodayByLimit" resultMap="adminReservationResultMap">
+    <select id="todayReservationListByLimit" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -318,7 +318,7 @@
         limit 0, #{limit}
     </select>
 
-    <select id="getDashBoardReservationsByDoctorId" resultMap="adminReservationResultMap">
+    <select id="reservationListByLimitAndDoctorId" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -344,7 +344,7 @@
         limit 0, #{limit}
     </select>
 
-    <select id="getDashBoardTodayReservationsByDoctorId" resultMap="adminReservationResultMap">
+    <select id="todayReservationListByLimitAndDoctorId" resultMap="adminReservationResultMap">
         select
             rt.id as rt_id,
             rt.user_id as rt_user_id,
@@ -370,7 +370,7 @@
         limit 0, #{limit}
     </select>
 
-    <select id="getMonthCountsByDoctors" resultMap="monthCountsByDoctors">
+    <select id="reservationsMonthCountByDoctorIds" resultMap="monthCountsByDoctors">
         select
             dt.id as doctor_id,
             ut.name,
@@ -395,7 +395,7 @@
             month
     </select>
 
-    <select id="getMonthCountsByDoctorId" resultMap="monthCountsByDoctors">
+    <select id="reservationsMonthCountByDoctorId" resultMap="monthCountsByDoctors">
         select
             dt.id as doctor_id,
             ut.name,

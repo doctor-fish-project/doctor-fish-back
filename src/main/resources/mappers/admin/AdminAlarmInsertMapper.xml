@@ -10,4 +10,5 @@
         insert into alarm_insert_tb
         values(default, #{typeId}, #{alarmId}, #{messageId})
     </insert>
+
 </mapper>

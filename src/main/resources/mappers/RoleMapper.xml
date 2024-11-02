@@ -22,7 +22,7 @@
             position = #{position}
     </select>
 
-    <select id="getRoles" resultType="com.project.doctor_fish_back.entity.Role">
+    <select id="roleList" resultType="com.project.doctor_fish_back.entity.Role">
         select
             id,
             name,

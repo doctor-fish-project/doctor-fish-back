@@ -29,9 +29,9 @@ public class TimeService {
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Doctor doctor = adminDoctorMapper.findByUserId(principalUser.getId());
             if(doctor == null) {
-                return timeMapper.getTimes();
+                return timeMapper.timeList();
             }
-            return timeMapper.getAvailableTimes(doctor.getId(), leaveDate);
+            return timeMapper.availableTimeList(doctor.getId(), leaveDate);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
@@ -43,7 +43,7 @@ public class TimeService {
             Map<String, Object> params = new HashMap<>();
             params.put("doctorId", dto.getDoctorId());
             params.put("reservationDate", dto.getReservationDate().substring(0, dto.getReservationDate().indexOf("T")));
-            return timeMapper.getReservedTimes(params);
+            return timeMapper.reservedTimeList(params);
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }

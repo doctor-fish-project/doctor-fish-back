@@ -18,6 +18,7 @@
         where
             user_id = #{userId}
     </delete>
+
     <select id="findRoleIdByUserId" resultType="java.lang.Integer">
         select
             role_id

@@ -15,6 +15,7 @@ import com.project.doctor_fish_back.repository.user.UserReviewLikeMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +37,8 @@ public class AdminReviewService {
 
     public RespReviewDto getReview(Long reviewId) {
         try {
-            Review review = reviewMapper.findById(reviewId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Review review = reviewMapper.findById(reviewId, principalUser.getId());
             return RespReviewDto.builder()
                     .id(review.getId())
                     .userId(review.getUserId())
@@ -44,10 +46,13 @@ public class AdminReviewService {
                     .content(review.getContent())
                     .registerDate(review.getRegisterDate())
                     .updateDate(review.getUpdateDate())
+                    .likeCount(review.getLikeCount())
+                    .isLike(review.getIsLike())
                     .userName(review.getUserName())
                     .userImg(review.getUserImg())
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
     }
@@ -55,8 +60,8 @@ public class AdminReviewService {
     public RespGetReviewListDto getReviewAllByLimit(ReqPageAndLimitDto dto, String searchText) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Review> reviews = reviewMapper.getReviewAllByLimit(startIndex, dto.getLimit(), searchText);
-            Long reviewCount = reviewMapper.getCountReviews(searchText);
+            List<Review> reviews = reviewMapper.reviewList(startIndex, dto.getLimit(), searchText);
+            Long reviewCount = reviewMapper.reviewCount(searchText);
 
             return RespGetReviewListDto.builder()
                     .reviews(reviews)
@@ -97,18 +102,22 @@ public class AdminReviewService {
 
             reviewLikeMapper.save(rl);
         } catch (ReviewLikeException e) {
+            e.printStackTrace();
             throw new ReviewLikeException(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
 
         return true;
     }
 
-    public Boolean dislike(Long reviewLikeId) {
+    public Boolean dislike(Long reviewId) {
         try {
-            reviewLikeMapper.deleteById(reviewLikeId);
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            reviewLikeMapper.deleteByReviewIdAndUserId(reviewId, principalUser.getId());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
         return true;
@@ -120,7 +129,7 @@ public class AdminReviewService {
             Long userId = principalUser.getId();
 
             ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
-            Long likeCount = reviewLikeMapper.getLikeCountByReviewId(reviewId);
+            Long likeCount = reviewLikeMapper.likeCountByReviewId(reviewId);
 
             return RespReviewLikeInfoDto.builder()
                     .reviewLikeId(reviewLike == null ? 0 : reviewLike.getId())

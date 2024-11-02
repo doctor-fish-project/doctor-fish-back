@@ -93,7 +93,7 @@ public class AdminAnnouncementService {
     public RespGetAnnounceListDto getDashBoardAnnouncements() {
         try {
             Long limit = 6L;
-            List<Announcement> announcements = announcementMapper.getAnnouncementsByLimit(limit);
+            List<Announcement> announcements = announcementMapper.announcementListByLimit(limit);
 
             return RespGetAnnounceListDto.builder()
                     .announcements(announcements)
@@ -107,8 +107,8 @@ public class AdminAnnouncementService {
     public RespGetAnnounceListDto getAllAnnouncements(ReqPageAndLimitDto dto, String searchText) {
         try {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
-            List<Announcement> announcements = announcementMapper.getAnnouncements(startIndex, dto.getLimit(), searchText);
-            Long totalCount = announcementMapper.getCountAnnouncements(searchText);
+            List<Announcement> announcements = announcementMapper.announcementList(startIndex, dto.getLimit(), searchText);
+            Long totalCount = announcementMapper.announcementCount(searchText);
 
             return RespGetAnnounceListDto.builder()
                     .announcements(announcements)

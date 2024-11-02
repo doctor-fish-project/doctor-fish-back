@@ -27,7 +27,7 @@ public class CategoryService {
             PrincipalUser user = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Long roleId = (long) userRolesMapper.findRoleIdByUserId(user.getId());
 
-            return categoryMapper.getCategory(roleId).stream().map(Category::toDto).collect(Collectors.toList());
+            return categoryMapper.categoryList(roleId).stream().map(Category::toDto).collect(Collectors.toList());
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }

@@ -11,15 +11,15 @@
         values(default, #{reviewId}, #{userId})
     </insert>
 
-    <delete id="deleteById">
+    <delete id="deleteByReviewIdAndUserId">
         delete
-        from
+            from
             review_like_tb
         where
-            id = #{id}
+            review_id = #{reviewId} and user_id = #{userId}
     </delete>
 
-    <select id="getLikeCountByReviewId" resultType="java.lang.Long">
+    <select id="likeCountByReviewId" resultType="java.lang.Long">
         select
             count(*)
         from

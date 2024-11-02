@@ -45,7 +45,7 @@
             ct.id = #{id}
     </select>
 
-    <select id="getCommentsByReviewId" resultType="com.project.doctor_fish_back.entity.Comment">
+    <select id="commentListByReviewId" resultType="com.project.doctor_fish_back.entity.Comment">
         select
             ct.id,
             ct.review_id as reviewId,
@@ -63,7 +63,7 @@
         limit #{startIndex}, #{limit}
     </select>
 
-    <select id="getCountCommentsByReviewId" resultType="java.lang.Long">
+    <select id="commentsCountByReviewId" resultType="java.lang.Long">
         select
             count(*)
         from

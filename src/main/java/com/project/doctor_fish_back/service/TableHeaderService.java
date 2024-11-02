@@ -16,7 +16,7 @@ public class TableHeaderService {
 
     public List<TableHeader> getTableHeaders(String pathName) {
         try {
-            return tableHeaderMapper.getTableHeaders(pathName);
+            return tableHeaderMapper.tableheaderList(pathName);
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }

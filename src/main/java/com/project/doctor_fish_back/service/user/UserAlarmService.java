@@ -26,7 +26,7 @@ public class UserAlarmService {
     public List<RespAlarmDto> getAlarms() {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        List<AlarmInsert> alarmInserts = alarmMapper.getAlarms(principalUser.getId());
+        List<AlarmInsert> alarmInserts = alarmMapper.alarmList(principalUser.getId());
 
 
         return alarmInserts.stream().map(AlarmInsert::toDto).collect(Collectors.toList());

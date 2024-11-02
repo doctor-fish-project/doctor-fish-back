@@ -9,9 +9,10 @@ import java.util.Map;
 
 @Mapper
 public interface TimeMapper {
-    List<Time> getTimes();
+    List<Time> timeList();
 
-    List<Time> getReservedTimes(Map<String, Object> params);
+    List<Time> reservedTimeList(Map<String, Object> params);
 
-    List<Time> getAvailableTimes(@Param("doctorId") Long doctorId, @Param("leaveDate") String leaveDate);
+    List<Time> availableTimeList(@Param("doctorId") Long doctorId,
+                                 @Param("leaveDate") String leaveDate);
 }

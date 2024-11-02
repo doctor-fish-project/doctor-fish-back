@@ -6,7 +6,7 @@
 
 <mapper namespace="com.project.doctor_fish_back.repository.TimeMapper">
 
-    <select id="getTimes" resultType="com.project.doctor_fish_back.entity.Time">
+    <select id="timeList" resultType="com.project.doctor_fish_back.entity.Time">
         select
             id,
             time
@@ -14,7 +14,7 @@
             time_tb
     </select>
 
-    <select id="getReservedTimes" resultType="com.project.doctor_fish_back.entity.Time">
+    <select id="reservedTimeList" resultType="com.project.doctor_fish_back.entity.Time">
         select
             id,
             time
@@ -48,7 +48,7 @@
                                                             and lt.status = 2
                                                             and lt.leave_date like concat(#{reservationDate}, "%"));
     </select>
-    <select id="getAvailableTimes" resultType="com.project.doctor_fish_back.entity.Time">
+    <select id="availableTimeList" resultType="com.project.doctor_fish_back.entity.Time">
         select
             id,
             time
