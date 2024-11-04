@@ -30,9 +30,9 @@ public class AdminReservationController {
     }
 
     // 대쉬보드 월 별 의사 별 예약 전체 조회
-    @GetMapping("/reservation/dashboard/monthcounts")
+    @GetMapping("/reservation/dashboard/month/doctor/count")
     public ResponseEntity<?> getAllReservationsMonth(@RequestParam Integer year) {
-        return ResponseEntity.ok().body(reservationService.getReservationCountMonth(year));
+        return ResponseEntity.ok().body(reservationService.getReservationCountMonthAndDoctor(year));
     }
 
     // 대쉬보드 전체 예약 조회
@@ -49,8 +49,14 @@ public class AdminReservationController {
 
     // 대쉬보드 주간 예약 수 조회
     @GetMapping("/reservation/dashboard/week/count")
-    public ResponseEntity<?> getDashBoardTodayReservationCount(@RequestParam Integer year) {
-        return ResponseEntity.ok().body(reservationService.getDashBoardWeekReservationCount(year));
+    public ResponseEntity<?> getDashBoardWeekReservationCount() {
+        return ResponseEntity.ok().body(reservationService.getDashBoardWeekReservationCount());
+    }
+
+    // 대쉬보드 월별 예약 수 조회
+    @GetMapping("/reservation/dashboard/month/count")
+    public ResponseEntity<?> getDashBoardMonthReservationCount(@RequestParam Integer year) {
+        return ResponseEntity.ok().body(reservationService.getReservationCountMonth(year));
     }
 
     // 관리자 페이지 전체 예약 조회

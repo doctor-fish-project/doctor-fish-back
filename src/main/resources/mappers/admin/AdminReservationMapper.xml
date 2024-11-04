@@ -61,6 +61,17 @@
         </collection>
     </resultMap>
 
+    <resultMap id="weekReservationCountMap" type="java.util.HashMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="count" column="count"/>
+    </resultMap>
+
+    <resultMap id="monthReservationCountMap" type="java.util.HashMap">
+        <result property="id" column="id"/>
+        <result property="count" column="count"/>
+    </resultMap>
+
     <update id="acceptById">
         update reservation_tb
         set
@@ -414,7 +425,7 @@
                             from
                                 reservation_tb
                             where
-                                year(reservation_date) = cast(#{year} as unsigned)
+                                year(reservation_date) = #{year}
                             group by
                                 doctor_id,
                                 substr(reservation_date, 6, 2)
@@ -427,54 +438,63 @@
             month
     </select>
 
-    <select id="weekReservationCount" resultType="java.lang.Integer">
-            select
-                count(day) as count
-            from
-                week_tb wt
-                left outer join reservation_tb rt on(wt.id = (dayofweek(reservation_date) - 1))
-            where
-                date(rt.reservation_date) = date(now()) and dayofweek(rt.reservation_date) in (select id from week_tb)
-            group by
-                wt.id
+    <select id="weekReservationCount" resultMap="weekReservationCountMap">
+        with temp_week_tb as (
+            select 1 as id, date_sub(curdate(), interval weekday(curdate()) day) as day union all
+            select 2, date_sub(curdate(), interval weekday(curdate()) - 1 day) union all
+            select 3, curdate() as day union all
+            select 4, date_add(curdate(), interval 1 DAY) union all
+            select 5, date_add(curdate(), interval 2 DAY)
+        )
+        select
+            twt.id as id,
+            twt.day as name,
+            count(rt.id) as count
+        from
+            temp_week_tb twt
+            left outer join reservation_tb rt on date(rt.reservation_date) = twt.day
+        where
+            weekday(curdate()) &lt; 5
+        group by
+            twt.id
+        order by
+            twt.id;
     </select>
 
-    <select id="monthReservationCount" resultType="java.lang.Integer">
+    <select id="yearList" resultType="com.project.doctor_fish_back.dto.admin.response.reservation.RespYearDto">
+        with recursive year_list as (
+            select year(curdate()) as year
+            union all
+            select year - 1
+            from year_list
+            where year > year("2022-01-01")
+        )
         select
-            mt.id as month,
+            row_number() over (order by year) as id,
+            year
+        from
+            year_list
+        order by
+            year desc;
+    </select>
+
+    <select id="monthReservationCount" resultMap="monthReservationCountMap">
+        select
+            mt.id as id,
             ifnull(count, 0) as count
         from
-            doctor_tb dt
-            join month_tb mt
+            month_tb mt
             left outer join (select
                                 substr(reservation_date, 6, 2) as id,
                                 count(*) as count
                             from
                                 reservation_tb
+                            where
+                                year(reservation_date) = #{year}
                             group by
-                                doctor_id,
-                                substr(reservation_date, 6, 2)
-                                order by doctor_id) rt on(rt.id = mt.id and dt.id = rt.doctor_id)
+                                substr(reservation_date, 6, 2)) rt on(rt.id = mt.id)
         order by
-            doctor_id,
             month
-    </select>
-
-    <select id="yearList" resultType="com.project.doctor_fish_back.dto.admin.response.reservation.RespYearDto">
-        WITH RECURSIVE YearList AS (
-            SELECT YEAR(CURDATE()) AS year
-            UNION ALL
-            SELECT year - 1
-            FROM YearList
-            WHERE year > year("2022-01-01")  -- '1990'을 입력한 년도로 교체하세요.
-        )
-        SELECT
-            ROW_NUMBER() OVER (ORDER BY year) AS id,
-            year
-        FROM
-            YearList
-        ORDER BY
-            year desc;
     </select>
 
 </mapper>
