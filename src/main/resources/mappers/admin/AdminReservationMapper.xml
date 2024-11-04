@@ -370,7 +370,7 @@
         limit 0, #{limit}
     </select>
 
-    <select id="reservationsMonthCountByDoctorIds" resultMap="monthCountsByDoctors">
+    <select id="monthReservationsCountByDoctorIds" resultMap="monthCountsByDoctors">
         select
             dt.id as doctor_id,
             ut.name,
@@ -385,17 +385,20 @@
                                 count(*) as count
                             from
                                 reservation_tb
+                            where
+                                year(reservation_date) = #{year}
                             group by
                                 doctor_id,
                                 substr(reservation_date, 6, 2)
-                            order by doctor_id) rt on(rt.id = mt.id and dt.id = rt.doctor_id)
+                            order by
+                                doctor_id) rt on(rt.id = mt.id and dt.id = rt.doctor_id)
             left outer join user_tb ut on(ut.id = dt.user_id)
         order by
             doctor_id,
             month
     </select>
 
-    <select id="reservationsMonthCountByDoctorId" resultMap="monthCountsByDoctors">
+    <select id="monthReservationsCountByDoctorId" resultMap="monthCountsByDoctors">
         select
             dt.id as doctor_id,
             ut.name,
@@ -410,6 +413,8 @@
                                 count(*) as count
                             from
                                 reservation_tb
+                            where
+                                year(reservation_date) = cast(#{year} as unsigned)
                             group by
                                 doctor_id,
                                 substr(reservation_date, 6, 2)
@@ -422,6 +427,54 @@
             month
     </select>
 
+    <select id="weekReservationCount" resultType="java.lang.Integer">
+            select
+                count(day) as count
+            from
+                week_tb wt
+                left outer join reservation_tb rt on(wt.id = (dayofweek(reservation_date) - 1))
+            where
+                date(rt.reservation_date) = date(now()) and dayofweek(rt.reservation_date) in (select id from week_tb)
+            group by
+                wt.id
+    </select>
 
+    <select id="monthReservationCount" resultType="java.lang.Integer">
+        select
+            mt.id as month,
+            ifnull(count, 0) as count
+        from
+            doctor_tb dt
+            join month_tb mt
+            left outer join (select
+                                substr(reservation_date, 6, 2) as id,
+                                count(*) as count
+                            from
+                                reservation_tb
+                            group by
+                                doctor_id,
+                                substr(reservation_date, 6, 2)
+                                order by doctor_id) rt on(rt.id = mt.id and dt.id = rt.doctor_id)
+        order by
+            doctor_id,
+            month
+    </select>
+
+    <select id="yearList" resultType="com.project.doctor_fish_back.dto.admin.response.reservation.RespYearDto">
+        WITH RECURSIVE YearList AS (
+            SELECT YEAR(CURDATE()) AS year
+            UNION ALL
+            SELECT year - 1
+            FROM YearList
+            WHERE year > year("2022-01-01")  -- '1990'을 입력한 년도로 교체하세요.
+        )
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY year) AS id,
+            year
+        FROM
+            YearList
+        ORDER BY
+            year desc;
+    </select>
 
 </mapper>

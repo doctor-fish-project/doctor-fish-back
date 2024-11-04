@@ -3,6 +3,8 @@ package com.project.doctor_fish_back.service.admin;
 import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimitDto;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespGetReservationListDto;
 import com.project.doctor_fish_back.dto.admin.response.reservation.RespMonthReservationsCountByDoctorsDto;
+import com.project.doctor_fish_back.dto.admin.response.reservation.RespWeekReservationsCountDto;
+import com.project.doctor_fish_back.dto.admin.response.reservation.RespYearDto;
 import com.project.doctor_fish_back.entity.*;
 import com.project.doctor_fish_back.exception.AuthorityException;
 import com.project.doctor_fish_back.exception.ExecutionException;
@@ -11,6 +13,7 @@ import com.project.doctor_fish_back.repository.UserRolesMapper;
 import com.project.doctor_fish_back.repository.admin.AdminAlarmInsertMapper;
 import com.project.doctor_fish_back.repository.admin.AdminDoctorMapper;
 import com.project.doctor_fish_back.repository.admin.AdminReservationMapper;
+import com.project.doctor_fish_back.repository.admin.AdminWeekMapper;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +37,9 @@ public class AdminReservationService {
 
     @Autowired
     private MonthMapper monthMapper;
+
+    @Autowired
+    private AdminWeekMapper adminWeekMapper;
 
 
     @Autowired
@@ -66,13 +72,13 @@ public class AdminReservationService {
     }
 
     // 대쉬보드 월 별 예약 수
-    public RespMonthReservationsCountByDoctorsDto getReservationCountMonth() {
+    public RespMonthReservationsCountByDoctorsDto getReservationCountMonth(Integer year) {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = principalUser.getId();
 
         if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
             Doctor doctor = adminDoctorMapper.findByUserId(userId);
-            List<Map<String, Object>> reservations = reservationMapper.reservationsMonthCountByDoctorId(doctor.getId());
+            List<Map<String, Object>> reservations = reservationMapper.monthReservationsCountByDoctorId(doctor.getId());
             List<Month> months = monthMapper.monthList();
 
             return RespMonthReservationsCountByDoctorsDto.builder()
@@ -81,7 +87,7 @@ public class AdminReservationService {
                     .build();
         }
 
-        List<Map<String, Object>> reservations = reservationMapper.reservationsMonthCountByDoctorIds();
+        List<Map<String, Object>> reservations = reservationMapper.monthReservationsCountByDoctorIds(year);
         List<Month> months = monthMapper.monthList();
 
         return RespMonthReservationsCountByDoctorsDto.builder()
@@ -134,6 +140,17 @@ public class AdminReservationService {
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
+    }
+
+    // 대쉬보드 주간 예약 수
+    public RespWeekReservationsCountDto getDashBoardWeekReservationCount(Integer year) {
+        List<Week> weeks = adminWeekMapper.weekList();
+        List<Integer> reservations = reservationMapper.weekReservationCount(year);
+
+        return RespWeekReservationsCountDto.builder()
+                .reservations(reservations)
+                .weeks(weeks)
+                .build();
     }
     
     // 관리자 페이지 전체 예약
@@ -204,6 +221,10 @@ public class AdminReservationService {
             throw new ExecutionException("실행 도중 오류 발생");
         }
         return true;
+    }
+
+    public List<RespYearDto> getYears() {
+        return reservationMapper.yearList();
     }
 
 }

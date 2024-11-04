@@ -6,7 +6,10 @@ import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimi
 import com.project.doctor_fish_back.service.admin.AdminLeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/admin")
