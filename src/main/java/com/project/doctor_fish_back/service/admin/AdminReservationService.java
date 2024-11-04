@@ -71,14 +71,14 @@ public class AdminReservationService {
         return true;
     }
 
-    // 대쉬보드 월 별 예약 수
-    public RespMonthReservationsCountByDoctorsDto getReservationCountMonth(Integer year) {
+    // 대쉬보드 월 별 의사 별 예약 수
+    public RespMonthReservationsCountByDoctorsDto getReservationCountMonthAndDoctor(Integer year) {
         PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = principalUser.getId();
 
         if (userRolesMapper.findRoleIdByUserId(userId) == 3) {
             Doctor doctor = adminDoctorMapper.findByUserId(userId);
-            List<Map<String, Object>> reservations = reservationMapper.monthReservationsCountByDoctorId(doctor.getId());
+            List<Map<String, Object>> reservations = reservationMapper.monthReservationsCountByDoctorId(doctor.getId(), year);
             List<Month> months = monthMapper.monthList();
 
             return RespMonthReservationsCountByDoctorsDto.builder()
@@ -143,13 +143,23 @@ public class AdminReservationService {
     }
 
     // 대쉬보드 주간 예약 수
-    public RespWeekReservationsCountDto getDashBoardWeekReservationCount(Integer year) {
+    public RespWeekReservationsCountDto getDashBoardWeekReservationCount() {
         List<Week> weeks = adminWeekMapper.weekList();
-        List<Integer> reservations = reservationMapper.weekReservationCount(year);
-
+        List<Map<String, Object>> reservations = reservationMapper.weekReservationCount();
         return RespWeekReservationsCountDto.builder()
                 .reservations(reservations)
                 .weeks(weeks)
+                .build();
+    }
+
+    // 대쉬보드 월 별 예약 수
+    public RespMonthReservationsCountByDoctorsDto getReservationCountMonth(Integer year) {
+        List<Map<String, Object>> reservations = reservationMapper.monthReservationCount(year);
+        List<Month> months = monthMapper.monthList();
+
+        return RespMonthReservationsCountByDoctorsDto.builder()
+                .reservations(reservations)
+                .months(months)
                 .build();
     }
     

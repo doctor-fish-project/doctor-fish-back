@@ -5,10 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
 public class RespWeekReservationsCountDto {
-    private List<Integer> reservations;
+    private List<Map<String, Object>> reservations;
     private List<Week> weeks;
 }

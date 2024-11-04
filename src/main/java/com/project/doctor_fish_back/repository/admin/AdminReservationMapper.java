@@ -56,10 +56,13 @@ public interface AdminReservationMapper {
     List<Map<String, Object>> monthReservationsCountByDoctorIds(Integer year);
 
     // 관리자 페이지 대쉬보드 의사별 예약 수 조회
-    List<Map<String, Object>> monthReservationsCountByDoctorId(Long doctorId);
+    List<Map<String, Object>> monthReservationsCountByDoctorId(@Param("doctorId") Long doctorId, @Param("year") Integer year);
 
-    // 관리자 페이지 대쉬보드 오늘 예약 수 조회
-    List<Integer> weekReservationCount(Integer year);
+    // 관리자 페이지 대쉬보드 주간 예약 수 조회
+    List<Map<String, Object>> weekReservationCount();
+
+    // 관리자 페이지 대쉬보드 월간 예약 수 조회
+    List<Map<String, Object>> monthReservationCount(Integer year);
 
     // 관리자 페이지 예약 연도 조회
     List<RespYearDto> yearList();
