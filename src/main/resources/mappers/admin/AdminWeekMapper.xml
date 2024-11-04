@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.doctor_fish_back.repository.admin.AdminWeekMapper">
+
+    <select id="weekList" resultType="com.project.doctor_fish_back.entity.Week">
+        select
+            id,
+            day
+        from
+            week_tb
+    </select>
+
+</mapper>

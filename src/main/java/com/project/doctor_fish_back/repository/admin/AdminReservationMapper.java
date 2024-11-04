@@ -1,5 +1,6 @@
 package com.project.doctor_fish_back.repository.admin;
 
+import com.project.doctor_fish_back.dto.admin.response.reservation.RespYearDto;
 import com.project.doctor_fish_back.entity.Reservation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -51,10 +52,16 @@ public interface AdminReservationMapper {
     List<Reservation> todayReservationListByLimitAndDoctorId(@Param("doctorId") Long doctorId,
                                                              @Param("limit")Long limit);
     
-    // 관리자 페이지 대쉬보드 의사별 전체 예약 수 조회
-    List<Map<String, Object>> reservationsMonthCountByDoctorIds();
+    // 관리자 페이지 대쉬보드 의사별 전체 예약 수 조회A
+    List<Map<String, Object>> monthReservationsCountByDoctorIds(Integer year);
 
     // 관리자 페이지 대쉬보드 의사별 예약 수 조회
-    List<Map<String, Object>> reservationsMonthCountByDoctorId(Long doctorId);
+    List<Map<String, Object>> monthReservationsCountByDoctorId(Long doctorId);
+
+    // 관리자 페이지 대쉬보드 오늘 예약 수 조회
+    List<Integer> weekReservationCount(Integer year);
+
+    // 관리자 페이지 예약 연도 조회
+    List<RespYearDto> yearList();
 
 }

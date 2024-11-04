@@ -1,10 +1,12 @@
 package com.project.doctor_fish_back.repository.user;
 
+import com.project.doctor_fish_back.dto.admin.response.reservation.RespYearDto;
 import com.project.doctor_fish_back.entity.Reservation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserReservationMapper {

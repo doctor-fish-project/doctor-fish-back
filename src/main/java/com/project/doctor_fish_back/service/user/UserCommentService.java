@@ -26,6 +26,7 @@ public class UserCommentService {
             Comment comment = dto.toEntity(principalUser.getId());
             commentMapper.save(comment);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
 
