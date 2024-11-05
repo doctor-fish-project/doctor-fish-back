@@ -58,4 +58,10 @@ public class UserReservationController {
         return ResponseEntity.ok().body(reservationService.deleteReservation(reservationId));
     }
 
+    // 리뷰 작성 가능한 예약 전체 조회
+    @GetMapping("/reservation/end")
+    public ResponseEntity<?> getEndReservation() {
+        return ResponseEntity.ok().body(reservationService.getEndReservation());
+    }
+
 }
