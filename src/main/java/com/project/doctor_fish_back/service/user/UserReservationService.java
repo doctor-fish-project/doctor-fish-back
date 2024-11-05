@@ -62,7 +62,7 @@ public class UserReservationService {
             Long startIndex = (dto.getPage() - 1) * dto.getLimit();
             PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            List<Reservation> reservations = reservationMapper.todayReservationList(principalUser.getId(), startIndex, dto.getLimit());
+            List<Reservation> reservations = reservationMapper.reservationList(principalUser.getId(), startIndex, dto.getLimit());
             Long totalCount = reservationMapper.reservationCount(principalUser.getId());
             return RespGetReservationListDto.builder()
                     .reservations(reservations)
