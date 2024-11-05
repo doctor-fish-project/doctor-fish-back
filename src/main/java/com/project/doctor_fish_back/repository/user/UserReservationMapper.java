@@ -24,7 +24,7 @@ public interface UserReservationMapper {
     List<Reservation> todayReservationList(@Param("userId") Long userId);
 
     // 유저 페이지 예약 전체 조회
-    List<Reservation> todayReservationList(@Param("userId") Long userId,
+    List<Reservation> reservationList(@Param("userId") Long userId,
                                            @Param("startIndex") Long startIndex,
                                            @Param("limit") Long limit);
     Long reservationCount(Long userId);
