@@ -408,7 +408,7 @@
 <summary>관리자 로그인 코드 리뷰</summary>
 <div markdown="1">
 
-<br/>
+</br>
 
 **controller**
 
@@ -547,48 +547,48 @@ public interface AdminUserMapper {
 ```java
 
 <resultMap id="userResultMap" type="com.project.doctor_fish_back.entity.User">
-        <id property="id" column="user_id" />
-        <result property="email" column="email" />
-        <result property="name" column="name" />
-        <result property="password" column="password" />
-        <result property="phoneNumber" column="phone_number" />
-        <result property="img" column="img" />
-        <result property="emailValid" column="email_valid" />
-        <result property="registerDate" column="register_date" />
-        <result property="updateDate" column="update_date" />
-        <collection property="userRoles" javaType="java.util.Set" resultMap="userRolesResultMap" />
+    <id property="id" column="user_id" />
+    <result property="email" column="email" />
+    <result property="name" column="name" />
+    <result property="password" column="password" />
+    <result property="phoneNumber" column="phone_number" />
+    <result property="img" column="img" />
+    <result property="emailValid" column="email_valid" />
+    <result property="registerDate" column="register_date" />
+    <result property="updateDate" column="update_date" />
+    <collection property="userRoles" javaType="java.util.Set" resultMap="userRolesResultMap" />
 </resultMap>
 
 <select id="findByEmail" resultMap="userResultMap">
-        select
-            u.id as user_id,
-            u.email,
-            u.name,
-            u.password,
-            u.phone_number,
-            u.img,
-            u.email_valid,
-            u.register_date,
-            u.update_date,
-            ur.id as user_roles_id,
-            ur.user_id as ur_user_id,
-            ur.role_id as ur_role_id,
-            r.id as role_id,
-            r.name as role_name,
-            r.position as role_position
-        from
-            user_tb u
-            left outer join user_roles_tb ur on(u.id = ur.user_id)
-            left outer join role_tb r on(r.id = ur.role_id)
-        where
-            email = #{email}
+    select
+        u.id as user_id,
+        u.email,
+        u.name,
+        u.password,
+        u.phone_number,
+        u.img,
+        u.email_valid,
+        u.register_date,
+        u.update_date,
+        ur.id as user_roles_id,
+        ur.user_id as ur_user_id,
+        ur.role_id as ur_role_id,
+        r.id as role_id,
+        r.name as role_name,
+        r.position as role_position
+    from
+        user_tb u
+        left outer join user_roles_tb ur on(u.id = ur.user_id)
+        left outer join role_tb r on(r.id = ur.role_id)
+    where
+        email = #{email}
 </select>
 
 ```
 </br>
 
 - id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.
-- where문에서 mapper에서 받은 email(username)로 사용자를 찾는다.
+- where문에서 service에서 받은 email(username)로 사용자를 찾는다.
 
 ---
 
@@ -716,7 +716,7 @@ public class UserUserService {
 </br>
 
 - controller에서 보낸 email, password를 받아서 email로 데이터베이스에서 사용자를 찾고 password로 해당 사용자의 password와 비교를 한다.
-- 사용자가 email인증을 받았을 때만 로그인 할 수 있게 한다.
+- 사용자가 이메일 인증을 받았을 때만 로그인 할 수 있게 한다.
 
 ---
 
@@ -746,47 +746,47 @@ public interface UserUserMapper {
 ```java
 
 <resultMap id="userResultMap" type="com.project.doctor_fish_back.entity.User">
-        <id property="id" column="user_id" />
-        <result property="email" column="email" />
-        <result property="name" column="name" />
-        <result property="password" column="password" />
-        <result property="phoneNumber" column="phone_number" />
-        <result property="img" column="img" />
-        <result property="emailValid" column="email_valid" />
-        <result property="registerDate" column="register_date" />
-        <result property="updateDate" column="update_date" />
-        <collection property="userRoles" javaType="java.util.Set" resultMap="userRolesResultMap" />
+    <id property="id" column="user_id" />
+    <result property="email" column="email" />
+    <result property="name" column="name" />
+    <result property="password" column="password" />
+    <result property="phoneNumber" column="phone_number" />
+    <result property="img" column="img" />
+    <result property="emailValid" column="email_valid" />
+    <result property="registerDate" column="register_date" />
+    <result property="updateDate" column="update_date" />
+    <collection property="userRoles" javaType="java.util.Set" resultMap="userRolesResultMap" />
 </resultMap>
 
 <select id="findByEmail" resultMap="userResultMap">
-        select
-            u.id as user_id,
-            u.email,
-            u.name,
-            u.password,
-            u.phone_number,
-            u.img,
-            u.email_valid,
-            u.register_date,
-            u.update_date,
-            ur.id as user_roles_id,
-            ur.user_id as ur_user_id,
-            ur.role_id as ur_role_id,
-            r.id as role_id,
-            r.name as role_name
-        from
-            user_tb u
-            left outer join user_roles_tb ur on(u.id = ur.user_id)
-            left outer join role_tb r on(r.id = ur.role_id)
-        where
-            email = #{email}
+    select
+        u.id as user_id,
+        u.email,
+        u.name,
+        u.password,
+        u.phone_number,
+        u.img,
+        u.email_valid,
+        u.register_date,
+        u.update_date,
+        ur.id as user_roles_id,
+        ur.user_id as ur_user_id,
+        ur.role_id as ur_role_id,
+        r.id as role_id,
+        r.name as role_name
+    from
+        user_tb u
+        left outer join user_roles_tb ur on(u.id = ur.user_id)
+        left outer join role_tb r on(r.id = ur.role_id)
+    where
+        email = #{email}
 </select>
 
 ```
 </br>
 
 - id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.
-- where문에서 mapper에서 받은 email로 사용자를 찾는다.
+- where문에서 service에서 받은 email로 사용자를 찾는다.
 
 ---
 
@@ -798,11 +798,280 @@ public interface UserUserMapper {
 <summary>관리자 추가 코드 리뷰</summary>
 <div markdown="1">
 
+</br>
 
+**controller**
 
+```java
 
+@RestController
+@RequestMapping("/admin")
+public class AdminAuthenticationController {
 
-    
+    @Autowired
+    private AdminUserService userService;
+
+    // 원무과, 의사, 관리자 회원가입
+    @ValidAop
+    @PostMapping("/auth/signup")
+    public ResponseEntity<?> adminSignup(@Valid @RequestBody ReqAdminSignupDto dto, BindingResult bindingResult) throws SignupException {
+        return ResponseEntity.ok().body(userService.adminSignup(dto));
+    }
+
+```
+</br>
+
+- 관리자를 추가할 때 필요한 데이터들을 객체로 받는다.
+- 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
+
+---
+
+</br></br>
+
+**dto**
+
+```java
+
+@Data
+public class ReqAdminSignupDto {
+    private Long roleId;
+    @NotBlank(message = "아이디는 공백일 수 없습니다.")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "아이디는 영어여야합니다.")
+    private String username;
+    @NotBlank(message = "이름은 공백일 수 없습니다.")
+    private String name;
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*?])[A-Za-z\\d~!@#$%^&*?]{8,16}$", message = "비밀번호는 8자이상 16자이하의 영대소문, 숫자, 특    수문자(~!@#$%^&*?)를 포함하여합니다.")
+    private String password;
+    private String checkPassword;
+    @NotBlank(message = "전화번호는 공백일 수 없습니다.")
+    private String phoneNumber;
+    private Long departId;
+    private String comment;
+    private String record;
+
+    public User toEntity(BCryptPasswordEncoder passwordEncoder, String img) {
+        return User.builder()
+                .email(username)
+                .name(name)
+                .password(passwordEncoder.encode(password))
+                .phoneNumber(phoneNumber)
+                .img(img)
+                .build();
+    }
+}
+
+```
+</br>
+
+- 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
+- 비밀번호는 보안성을 위해 BCrypt로 바꿔준다.
+
+---
+
+</br></br>
+
+**service**
+
+```java
+
+@Service
+public class AdminUserService {
+
+    @Value("${user.profile.user.img.default}")
+    private String userDefaultProfileImg;
+
+    @Value("${user.profile.doctor.img.default}")
+    private String doctorDefaultProfileImg;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private AdminUserMapper userMapper;
+    @Autowired
+    private UserRolesMapper userRolesMapper;
+    @Autowired
+    private AdminDepartMapper departMapper;
+    @Autowired
+    private AdminDoctorMapper doctorMapper;
+
+    @Transactional(rollbackFor = SignupException.class)
+    public Boolean adminSignup(ReqAdminSignupDto dto) throws SignupException {
+        User user = null;
+        try {
+            if (dto.getRoleId() == 2) { // 원무과
+                insertInfoOrAdminAndUserRoles(dto, user);
+            } else if (dto.getRoleId() == 3) { // 의사
+                doctorSignup(dto, user);
+            } else if (dto.getRoleId() == 4) { // 관리자
+                insertInfoOrAdminAndUserRoles(dto, user);
+            } else {
+                throw new SignupException("잘못된 요청입니다.");
+            }
+        } catch (Exception e) {
+            throw new SignupException(e.getMessage());
+        }
+
+        return true;
+    }
+
+    private void insertInfoOrAdminAndUserRoles(ReqAdminSignupDto dto, User user) throws SignupException {
+        try {
+            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
+            userMapper.save(user);
+
+            userMapper.modifyEmailValidById(user.getId());
+
+            UserRoles userRoles = UserRoles.builder()
+                    .userId(user.getId())
+                    .roleId(dto.getRoleId())
+                    .build();
+
+            userRolesMapper.save(userRoles);
+
+            user.setUserRoles(Set.of(userRoles));
+        } catch (Exception e) {
+            throw new SignupException("로그인 도중 오류 발생");
+        }
+    }
+
+    private void doctorSignup(ReqAdminSignupDto dto, User user) throws SignupException {
+        try {
+            if(dto.getDepartId() == null || dto.getDepartId() == 0) {
+                throw new SignupException("부서이름을 입력하세요.");
+            }
+
+            user = dto.toEntity(passwordEncoder, doctorDefaultProfileImg);
+            userMapper.save(user);
+
+            userMapper.modifyEmailValidById(user.getId());
+
+            UserRoles userRoles = UserRoles.builder()
+                    .userId(user.getId())
+                    .roleId(dto.getRoleId())
+                    .build();
+
+            userRolesMapper.save(userRoles);
+
+            user.setUserRoles(Set.of(userRoles));
+
+            Depart depart = departMapper.findById(dto.getDepartId());
+
+//            if(depart == null) {
+//                departMapper.save(Depart.builder().name(dto.getDepartName()).build());
+//                depart = departMapper.findByName(dto.getDepartName());
+//            }
+
+            Doctor doctor = Doctor.builder()
+                    .userId(user.getId())
+                    .departId(depart.getId())
+                    .comment(dto.getComment())
+                    .record(dto.getRecord())
+                    .build();
+
+            doctorMapper.save(doctor);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SignupException("로그인 도중 오류 발생");
+        }
+    }
+}
+
+```
+</br>
+
+- 추가하려는 관리자의 role에 따라서 다르게 처리해준다.
+- 추가하는 관리자가 의사일 경우 데이터베이스의 doctor테이블에도 데이터를 추가한다.
+- 처음에 관리자를 추가할 때는 img를 application.yml의 기본 이미지로 추가한다.
+- 관리자는 이메일 인증을 할 필요가 없으므로 이메일 인증 처리를 해준다.
+- 관리자를 추가할 때 여러 테이블에 연쇄적으로 데이터를 추가해야 하기 때문에 @Transactional을 이용해서 트렌잭션 처리를 해준다.
+
+---
+
+</br></br>
+
+**mapper**
+
+```java
+@Mapper
+public interface AdminUserMapper {
+
+    int save(User user);
+    int modifyEmailValidById(Long id);
+
+}
+
+@Mapper
+public interface UserRolesMapper {
+
+    int save(UserRoles userRoles);
+
+}
+
+@Mapper
+public interface AdminDepartMapper {
+
+    Depart findById(Long departId);
+}
+
+@Mapper
+public interface AdminDoctorMapper {
+
+    int save(Doctor doctor);
+
+}
+
+```
+</br>
+
+- service에서 받은 user객체로 데이터베이스에 관리자를 추가한다.
+- service에서 받은 doctor객체로 데이터베이스에 의사를 추가한다.
+
+---
+
+</br></br>
+
+**sql**
+
+```java
+
+<insert id="save" useGeneratedKeys="true" keyProperty="id">
+    insert into user_tb
+    values(default, #{email}, #{name}, #{password}, #{phoneNumber}, #{img}, default, now(), now())
+</insert>
+
+<update id="modifyEmailValidById">
+    update user_tb
+    set
+        email_valid = if(email_valid = 0, 1, 0)
+    where
+        id = #{id}
+</update>
+
+<insert id="save">
+    insert into user_roles_tb
+    values(default, #{userId}, #{roleId})
+</insert>
+
+<select id="findById" resultType="com.project.doctor_fish_back.entity.Depart">
+    select
+        id,
+        name
+    from
+        depart_tb
+    where
+        id = #{departId}
+</select>
+
+<insert id="save">
+    insert into doctor_tb
+    values(default, #{userId}, #{departId}, #{comment}, #{record})
+</insert>
+
+```
+</br>
+
+- useGeneratedKeys="true" keyProperty="id" -> 데이터베이스에 데이터를 추가한 후 바로 id 값을 들고온다.
+
 ---
 
 </div>
