@@ -795,7 +795,7 @@ public interface UserUserMapper {
 
 
 <details>
-<summary>관리자 추가</summary>
+<summary>관리자 추가 코드 리뷰</summary>
 <div markdown="1">
 
 
