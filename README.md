@@ -469,6 +469,8 @@ public class ReqAdminSigninDto {
 public class AdminUserService {
 
     @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
     private JwtProvider jwtProvider;
     @Autowired
     private AdminUserMapper userMapper;
@@ -555,9 +557,9 @@ public interface AdminUserMapper {
         <result property="registerDate" column="register_date" />
         <result property="updateDate" column="update_date" />
         <collection property="userRoles" javaType="java.util.Set" resultMap="userRolesResultMap" />
-    </resultMap>
+</resultMap>
 
- <select id="findByEmail" resultMap="userResultMap">
+<select id="findByEmail" resultMap="userResultMap">
         select
             u.id as user_id,
             u.email,
@@ -580,7 +582,7 @@ public interface AdminUserMapper {
             left outer join role_tb r on(r.id = ur.role_id)
         where
             email = #{email}
-    </select>
+</select>
 
 ```
 </br>
@@ -588,9 +590,201 @@ public interface AdminUserMapper {
 - id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.
 - where문에서 mapper에서 받은 email(username)로 사용자를 찾는다.
 
+</div>
+</details>
+
+
+<details>
+<summary>사용자 로그인 코드 리뷰</summary>
+<div markdown="1">
+
+</br>
+
+**controller**
+
+```java
+
+@RestController
+public class UserAuthenticationController {
+
+    @Autowired
+    private UserUserService userService;
+
+    // 사용자 로그인
+    @ValidAop
+    @PostMapping("/auth/signin")
+    public ResponseEntity<?> signin(@Valid @RequestBody ReqSigninDto dto, BindingResult bindingResult) throws SigninException {
+        return ResponseEntity.ok().body(userService.getGeneratedAccessToken(dto));
+    }
+
+}
+
+```
+</br>
+
+- 프론트에서 보낸 email, password를 받는다.
+- 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
+
+---
+
 </br></br>
 
+**dto**
 
+```java
+
+@Data
+public class ReqSigninDto {
+    @NotBlank(message = "이메일을 입력해 주세요.")
+    @Email(message = "이메일 형식이어야 합니다.")
+    private String email;
+    @NotBlank(message = "비밀번호를 입력해 주세요.")
+    private String password;
+}
+
+```
+</br>
+
+- 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
+
+---
+
+</br></br>
+
+**service**
+
+```java
+
+@Service
+public class UserUserService {
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtProvider jwtProvider;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private UserUserMapper userMapper;
+   
+    public RespSigninDto getGeneratedAccessToken(ReqSigninDto dto) throws SigninException {
+            try {
+                User user = checkUsernameAndPassword(dto.getEmail(), dto.getPassword());
+    
+                if(user.getEmailValid() != 1) {
+                    emailService.sendAuthMail(dto.getEmail());
+                    throw new EmailValidException("이메일 인증 후 로그인 가능합니다.");
+                }
+    
+                return RespSigninDto.builder()
+                        .expireDate(jwtProvider.getExpireDate().toLocaleString())
+                        .accessToken(jwtProvider.generateAccessToken(user))
+                        .build();
+            } catch (SigninException e) {
+                throw new SigninException(e.getMessage());
+            } catch (EmailValidException e) {
+                throw new EmailValidException(e.getMessage());
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+        }
+
+    private User checkUsernameAndPassword(String email, String password) throws SigninException {
+        try {
+            User user = userMapper.findByEmail(email);
+
+            if(user == null) {
+                throw new SigninException("사용자 정보를 다시 확인하세요.");
+            }
+
+            if(!passwordEncoder.matches(password, user.getPassword())) {
+                throw new SigninException("사용자 정보를 다시 확인하세요.");
+            }
+
+            return user;
+        } catch (SigninException e) {
+            throw new SigninException(e.getMessage());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+    }
+}
+
+```
+</br>
+
+- controller에서 보낸 email, password를 받아서 email로 데이터베이스에서 사용자를 찾고 password로 해당 사용자의 password와 비교를 한다.
+- 사용자가 email인증을 받았을 때만 로그인 할 수 있게 한다.
+
+---
+
+</br></br>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserUserMapper {
+
+     User findByEmail(String email);
+}
+
+```
+</br>
+
+- service에서 보낸 email로 데이터베이스에서 해당 email을 가지고 있는 사용자를 찾는다.
+
+---
+
+</br></br>
+
+**sql**
+
+```java
+
+<resultMap id="userResultMap" type="com.project.doctor_fish_back.entity.User">
+        <id property="id" column="user_id" />
+        <result property="email" column="email" />
+        <result property="name" column="name" />
+        <result property="password" column="password" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="img" column="img" />
+        <result property="emailValid" column="email_valid" />
+        <result property="registerDate" column="register_date" />
+        <result property="updateDate" column="update_date" />
+        <collection property="userRoles" javaType="java.util.Set" resultMap="userRolesResultMap" />
+</resultMap>
+
+<select id="findByEmail" resultMap="userResultMap">
+        select
+            u.id as user_id,
+            u.email,
+            u.name,
+            u.password,
+            u.phone_number,
+            u.img,
+            u.email_valid,
+            u.register_date,
+            u.update_date,
+            ur.id as user_roles_id,
+            ur.user_id as ur_user_id,
+            ur.role_id as ur_role_id,
+            r.id as role_id,
+            r.name as role_name
+        from
+            user_tb u
+            left outer join user_roles_tb ur on(u.id = ur.user_id)
+            left outer join role_tb r on(r.id = ur.role_id)
+        where
+            email = #{email}
+</select>
+
+```
+</br>
+
+- id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.
+- where문에서 mapper에서 받은 email로 사용자를 찾는다.
 
 </div>
 </details>
