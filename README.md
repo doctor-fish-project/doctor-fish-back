@@ -436,6 +436,8 @@ public class AdminAuthenticationController {
 - 프론트에서 보낸 username, password를 받는다.  
 - 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
 
+---
+
 </br></br>
 
 **dto**
@@ -454,6 +456,8 @@ public class ReqAdminSigninDto {
 </br>
 
 - 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
+  
+---
 
 </br></br>
 
@@ -512,6 +516,8 @@ public class AdminUserService {
 - controller에서 보낸 username, password를 받아서 username으로 데이터베이스에서 사용자를 찾고 password로 해당 사용자의 password와 비교를 한다.  
 - 데이터베이스에 사용자가 있는 것을 확인하면 토큰을 발급해준다.
 
+---
+
 </br></br>
 
 **mapper**
@@ -529,6 +535,8 @@ public interface AdminUserMapper {
 </br>
 
 - service에서 보낸 username으로 데이터베이스에서 해당 username을 가지고 있는 사용자를 찾는다.
+
+---
 
 </br></br>
 
