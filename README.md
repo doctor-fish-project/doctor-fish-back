@@ -408,7 +408,7 @@
 <summary>관리자 로그인 코드 리뷰</summary>
 <div markdown="1">
 
-</br>
+<br/>
 
 **controller**
 
@@ -431,14 +431,14 @@ public class AdminAuthenticationController {
 }
 
 ```
-</br>
+<br/>
 
 - 프론트에서 보낸 username, password를 받는다.  
 - 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **dto**
 
@@ -453,13 +453,13 @@ public class ReqAdminSigninDto {
 }
 
 ```
-</br>
+<br/>
 
 - 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
   
 ---
 
-</br></br>
+<br/><br/>
 
 **service**
 
@@ -513,14 +513,14 @@ public class AdminUserService {
 }
 
 ```
-</br>
+<br/>
 
 - controller에서 보낸 username, password를 받아서 username으로 데이터베이스에서 사용자를 찾고 password로 해당 사용자의 password와 비교를 한다.  
 - 데이터베이스에 사용자가 있는 것을 확인하면 토큰을 발급해준다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **mapper**
 
@@ -534,13 +534,13 @@ public interface AdminUserMapper {
 }
 
 ```
-</br>
+<br/>
 
 - service에서 보낸 username으로 데이터베이스에서 해당 username을 가지고 있는 사용자를 찾는다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **sql**
 
@@ -585,7 +585,7 @@ public interface AdminUserMapper {
 </select>
 
 ```
-</br>
+<br/>
 
 - id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.
 - where문에서 service에서 받은 email(username)로 사용자를 찾는다.
@@ -600,7 +600,7 @@ public interface AdminUserMapper {
 <summary>사용자 로그인 코드 리뷰</summary>
 <div markdown="1">
 
-</br>
+<br/>
 
 **controller**
 
@@ -622,14 +622,14 @@ public class UserAuthenticationController {
 }
 
 ```
-</br>
+<br/>
 
 - 프론트에서 보낸 email, password를 받는다.
 - 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **dto**
 
@@ -645,13 +645,13 @@ public class ReqSigninDto {
 }
 
 ```
-</br>
+<br/>
 
 - 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **service**
 
@@ -713,14 +713,14 @@ public class UserUserService {
 }
 
 ```
-</br>
+<br/>
 
 - controller에서 보낸 email, password를 받아서 email로 데이터베이스에서 사용자를 찾고 password로 해당 사용자의 password와 비교를 한다.
 - 사용자가 이메일 인증을 받았을 때만 로그인 할 수 있게 한다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **mapper**
 
@@ -733,13 +733,13 @@ public interface UserUserMapper {
 }
 
 ```
-</br>
+<br/>
 
 - service에서 보낸 email로 데이터베이스에서 해당 email을 가지고 있는 사용자를 찾는다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **sql**
 
@@ -783,7 +783,7 @@ public interface UserUserMapper {
 </select>
 
 ```
-</br>
+<br/>
 
 - id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.
 - where문에서 service에서 받은 email로 사용자를 찾는다.
@@ -798,7 +798,7 @@ public interface UserUserMapper {
 <summary>관리자 추가 코드 리뷰</summary>
 <div markdown="1">
 
-</br>
+<br/>
 
 **controller**
 
@@ -819,14 +819,14 @@ public class AdminAuthenticationController {
     }
 
 ```
-</br>
+<br/>
 
 - 관리자를 추가할 때 필요한 데이터들을 객체로 받는다.
 - 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **dto**
 
@@ -861,14 +861,14 @@ public class ReqAdminSignupDto {
 }
 
 ```
-</br>
+<br/>
 
 - 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
 - 비밀번호는 보안성을 위해 BCrypt로 바꿔준다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **service**
 
@@ -977,7 +977,7 @@ public class AdminUserService {
 }
 
 ```
-</br>
+<br/>
 
 - 추가하려는 관리자의 role에 따라서 다르게 처리해준다.
 - 추가하는 관리자가 의사일 경우 데이터베이스의 doctor테이블에도 데이터를 추가한다.
@@ -987,7 +987,7 @@ public class AdminUserService {
 
 ---
 
-</br></br>
+<br/><br/>
 
 **mapper**
 
@@ -1021,14 +1021,14 @@ public interface AdminDoctorMapper {
 }
 
 ```
-</br>
+<br/>
 
 - service에서 받은 user객체로 데이터베이스에 관리자를 추가한다.
 - service에서 받은 doctor객체로 데이터베이스에 의사를 추가한다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **sql**
 
@@ -1068,7 +1068,7 @@ public interface AdminDoctorMapper {
 </insert>
 
 ```
-</br>
+<br/>
 
 - useGeneratedKeys="true" keyProperty="id" -> 데이터베이스에 데이터를 추가한 후 바로 id 값을 들고온다.
 
@@ -1082,7 +1082,7 @@ public interface AdminDoctorMapper {
 <summary>사용자 회원가입 코드 리뷰</summary>
 <div markdown="1">
 
-</br>
+<br/>
 
 **controller**
 ```java
@@ -1102,14 +1102,14 @@ public class UserAuthenticationController {
 }
 
 ```
-</br>
+<br/>
 
 - 사용자를 추가할 때 필요한 데이터들을 객체로 받는다.
 - 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **dto**
 
@@ -1140,14 +1140,14 @@ public class ReqSignupDto {
 }
 
 ```
-</br>
+<br/>
 
 - 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
 - 비밀번호는 보안성을 위해 BCrypt로 바꿔준다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **service**
 
@@ -1203,7 +1203,7 @@ public class UserUserService {
 }
 
 ```
-</br>
+<br/>
 
 - 회원가입할 때는 img를 application.yml의 기본 이미지로 추가한다.
 - 사용자는 이메일 인증을 해야 하므로 데이터를 다 추가한 후 이메일 인증을 할 수 있는 메일을 보낸다.
@@ -1211,7 +1211,7 @@ public class UserUserService {
 
 ---
 
-</br></br>
+<br/><br/>
 
 **mapper**
 
@@ -1240,13 +1240,13 @@ public interface UserRolesMapper {
 }
 
 ```
-</br>
+<br/>
 
 - service에서 받은 user객체로 데이터베이스에 관리자를 추가한다.
 
 ---
 
-</br></br>
+<br/><br/>
 
 **sql**
 
@@ -1279,7 +1279,7 @@ public interface UserRolesMapper {
 </insert>
 
 ```
-</br>
+<br/>
 
 - useGeneratedKeys="true" keyProperty="id" -> 데이터베이스에 데이터를 추가한 후 바로 id 값을 들고온다.
 
