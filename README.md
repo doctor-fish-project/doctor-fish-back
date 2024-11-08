@@ -323,7 +323,7 @@ public class AdminAuthenticationController {
 
 ```
 </br>
-- 프론트에서 보낸 username, password를 받는다.        
+- 프론트에서 보낸 username, password를 받는다.  
 - 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
 
 </br></br>
@@ -397,7 +397,7 @@ public class AdminUserService {
 
 ```
 </br>
-- controller에서 보낸 username, password를 받아서 username으로 데이터베이스에서 사용자를 찾고 password로 해당 사용자의 password와 비교를 한다.        
+- controller에서 보낸 username, password를 받아서 username으로 데이터베이스에서 사용자를 찾고 password로 해당 사용자의 password와 비교를 한다.  
 - 데이터베이스에 사용자가 있는 것을 확인하면 토큰을 발급해준다.
 
 </br></br>
@@ -463,7 +463,7 @@ public interface AdminUserMapper {
 
 ```
 </br>
-- id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.        
+- id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.  
 - where문에서 mapper에서 받은 email(username)로 사용자를 찾는다.
 
 </br></br>
