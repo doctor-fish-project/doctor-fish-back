@@ -788,6 +788,8 @@ public interface UserUserMapper {
 - id는 mapper에 있는 findByEmail이고 반환 값은 userResultMap이다.
 - where문에서 mapper에서 받은 email로 사용자를 찾는다.
 
+---
+
 </div>
 </details>
 
