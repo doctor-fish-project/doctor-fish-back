@@ -402,7 +402,7 @@
 
 <br/>
 
-### 로그인
+### 로그인, 회원가입입
 
 <details>
 <summary>관리자 로그인 코드 리뷰</summary>
@@ -794,6 +794,18 @@ public interface UserUserMapper {
 </details>
 
 
+<details>
+<summary>관리자 추가</summary>
+<div markdown="1">
 
+
+
+
+
+    
+---
+
+</div>
+</details>
 
 
