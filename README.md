@@ -840,7 +840,7 @@ public class ReqAdminSignupDto {
     private String username;
     @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*?])[A-Za-z\\d~!@#$%^&*?]{8,16}$", message = "비밀번호는 8자이상 16자이하의 영대소문, 숫자, 특    수문자(~!@#$%^&*?)를 포함하여합니다.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*?])[A-Za-z\\d~!@#$%^&*?]{8,16}$", message = "비밀번호는 8자이상 16자이하의 영대소문, 숫자, 특수문자(~!@#$%^&*?)를 포함하여합니다.")
     private String password;
     private String checkPassword;
     @NotBlank(message = "전화번호는 공백일 수 없습니다.")
@@ -1076,5 +1076,224 @@ public interface AdminDoctorMapper {
 
 </div>
 </details>
+
+
+<details>
+<summary>사용자 회원가입 코드 리뷰</summary>
+<div markdown="1">
+
+</br>
+
+**controller**
+```java
+
+@RestController
+public class UserAuthenticationController {
+
+    @Autowired
+    private UserUserService userService;
+
+    // 사용자 회원가입
+    @ValidAop
+    @PostMapping("/auth/signup")
+    public ResponseEntity<?> userSignup(@Valid @RequestBody ReqSignupDto dto, BindingResult bindingResult) throws SignupException {
+        return ResponseEntity.ok().body(userService.insertUserAndUserRoles(dto));
+    }
+}
+
+```
+</br>
+
+- 사용자를 추가할 때 필요한 데이터들을 객체로 받는다.
+- 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
+
+---
+
+</br></br>
+
+**dto**
+
+```java
+
+@Data
+public class ReqSignupDto {
+    @NotBlank(message = "이메일은 공백일 수 없습니다.")
+    @Email(message = "이메일 형식이어야 합니다.")
+    private String email;
+    @NotBlank(message = "이름은 공백일 수 없습니다.")
+    private String name;
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[~!@#$%^&*?])[A-Za-z\\d~!@#$%^&*?]{8,16}$", message = "8자이상 16자이하의 영대소문, 숫자, 특수문자         (~!@#$%^&*?)")
+    private String password;
+    private String checkPassword;
+    @NotBlank(message = "전화번호는 공백일 수 없습니다.")
+    private String phoneNumber;
+
+    public User toEntity(BCryptPasswordEncoder passwordEncoder, String defaultProfileImg) {
+        return User.builder()
+                .email(email)
+                .name(name)
+                .password(passwordEncoder.encode(password))
+                .phoneNumber(phoneNumber)
+                .img(defaultProfileImg)
+                .build();
+    }
+}
+
+```
+</br>
+
+- 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
+- 비밀번호는 보안성을 위해 BCrypt로 바꿔준다.
+
+---
+
+</br></br>
+
+**service**
+
+```java
+
+@Service
+public class UserUserService {
+
+    @Value("${user.profile.user.img.default}")
+    private String userDefaultProfileImg;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private UserUserMapper userMapper;
+    @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
+    private UserRolesMapper userRolesMapper;
+    @Autowired
+    private EmailService emailService;
+
+    @Transactional(rollbackFor = SignupException.class)
+    public Boolean insertUserAndUserRoles(ReqSignupDto dto) throws SignupException {
+        User user = null;
+        try {
+            user = dto.toEntity(passwordEncoder, userDefaultProfileImg);
+            userMapper.save(user);
+
+            Role role = roleMapper.findByPosition("ROLE_USER");
+
+            if (role == null) {
+                role = Role.builder().name("회원").position("ROLE_USER").build();
+                roleMapper.save(role);
+            }
+
+            UserRoles userRoles = UserRoles.builder()
+                    .userId(user.getId())
+                    .roleId(role.getId())
+                    .build();
+
+            userRolesMapper.save(userRoles);
+
+            user.setUserRoles(Set.of(userRoles));
+
+            emailService.sendAuthMail(dto.getEmail());
+        } catch (Exception e) {
+            throw new SignupException(e.getMessage());
+        }
+
+        return true;
+    }
+}
+
+```
+</br>
+
+- 회원가입할 때는 img를 application.yml의 기본 이미지로 추가한다.
+- 사용자는 이메일 인증을 해야 하므로 데이터를 다 추가한 후 이메일 인증을 할 수 있는 메일을 보낸다.
+- 사용자를 추가할 때 여러 테이블에 연쇄적으로 데이터를 추가해야 하기 때문에 @Transactional을 이용해서 트렌잭션 처리를 해준다.
+
+---
+
+</br></br>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserUserMapper {
+
+    int save(User user);
+
+}
+
+@Mapper
+public interface RoleMapper {
+
+    Role findByPosition(String position);
+    int save(Role role);
+
+}
+
+@Mapper
+public interface UserRolesMapper {
+
+    int save(UserRoles userRoles);
+
+}
+
+```
+</br>
+
+- service에서 받은 user객체로 데이터베이스에 관리자를 추가한다.
+
+---
+
+</br></br>
+
+**sql**
+
+```java
+
+<insert id="save" useGeneratedKeys="true" keyProperty="id">
+    insert into user_tb
+    values(default, #{email}, #{name}, #{password}, #{phoneNumber}, #{img}, default, now(), now())
+</insert>
+
+<select id="findByPosition" resultType="com.project.doctor_fish_back.entity.Role">
+    select
+        id,
+        name,
+        position
+    from
+        role_tb
+    where
+        position = #{position}
+</select>
+
+<insert id="save" useGeneratedKeys="true" keyProperty="id">
+    insert into role_tb
+    values(default, #{name}, #{position})
+</insert>
+
+<insert id="save">
+    insert into user_roles_tb
+    values(default, #{userId}, #{roleId})
+</insert>
+
+```
+</br>
+
+- useGeneratedKeys="true" keyProperty="id" -> 데이터베이스에 데이터를 추가한 후 바로 id 값을 들고온다.
+
+---
+
+</div>
+</details>
+
+
+
+
+
+
+
+
 
 
