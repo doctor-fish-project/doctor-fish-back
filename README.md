@@ -1,8 +1,12 @@
 # 🔖 목차
 
+> ## [✨ Doctor-Fish 프로젝트 소개](#-프로젝트-소개-notion)
+>
 > ## [👥 팀원 소개](#-팀원-소개-1)
 >
-> ## [✨ 프로젝트 소개](#-프로젝트-소개-notion)
+> ## [🛠 개발 도구](#-개발-도구-1)
+>
+> ## [📄 API 명세서 ERD 설계도](#-API-명세서-ERD-설계도-1)
 >
 > ## [🤝 협업 방식](#-협업-방식-1)
 >
@@ -135,6 +139,111 @@
 
 <br/>
 <br/>
+
+## **🛠 개발 도구**
+
+### FrontEnd
+
+<p>
+<img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"> 
+<img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"> 
+<img src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white"> 
+<img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white"> 
+<img src="https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white">
+</p>
+
+### BackEnd
+
+<p>
+<img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white"> 
+<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">
+<img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white">
+<img src="https://img.shields.io/badge/firebase-a08021?style=for-the-badge&logo=firebase&logoColor=ffcd34">
+</p>
+
+### SCM & Deployment
+
+<p>
+<img src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white">
+<img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white">
+<img src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white">
+</p>
+
+### Library
+
+- ### BackEnd
+    <p>
+    <img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens">
+    <img src="https://img.shields.io/badge/MyBatis-271e1f?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABuElEQVR4nO3US4hPcRQH8H9RI+Wx8FohkVfkUdQkC5FXxs6WhZSysSBCTWyRZpryWDHZi7LxSGRBKUtKMmGiRB6ZIvPRqbP4u917/zP/maXv6t77u+f7Ped8z/k1GiMANuI29mJuY7yBM/7F2bGQLcR2TMR8rMVsHMJd/MSftirBKgwrx03Mwv1839BuBdHnAfzCezzH1yR9gjv53IdH+IR3uIWudkXn4G0Sf8GQapxuV2QLvmENJqRXXTiGG0k+lAmsrCLpRTc2Y2rJ+YqKuGhVYFmrLPubSh1ODx7jepSOzoq4+E8mNg+TyxKMH1fnCNahP1pUiNuKF2n2ASzBDxwuE7moNQ5iJqZVVLQYr7G+7HA6XrYQuIxd+I2HOIUdafyUaA/WFSttFlmEjzUCx7G/5rynzuiOVI9snpYED2R77tUI7C4jjrKOYjAn6Fx+25bP13ACM3L2qxDxHc3Em3A1l6iID7iAPblo0ZYH6nGkmPl544dncQuXtWcfvo+RfBALWl1ol3L0RotXWF5JXhBamstW5kkRkcyV2J0RkReEJmFnehTGvsHnvLZjuU7GKI+a+D8aBfwFL0hrRFV1ciwAAAAASUVORK5CYII=&logoColor=white">
+    <img src="https://img.shields.io/badge/Lombok-ca0124?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEeElEQVR4nO2aW4hVVRjHP01HzZJGJcpuU6l00Uqzgl4sCrqgDz5IZZjZQxlEaKBJWVA9pEEG3QkqESrtAqWhY+WDQZBpF2ys1DLz0s3spqU2Nr/42GvR19eZaVpzBtaZs39wmLPP3vs/a+219ndbS6SkpKSkpKSk1gEOA14H/gBukXoDmMHfvCf1BHAU8L15AHOlngAeNJ3/Augv9QIwAjhoHsAkqSeAl03nV0tPAjgDuBt4E9gItAAXm/NnAW2h8/r3HOkJAKcElxY7Z1lmrnvE/L5cegLAJGAflTkE3GCu3WnOfQyMlFoGmBw6GWkFloTfTwcGmWsHVHhAvwDjpRYBTnMj/2lH7zQwtJ1Zshc4U2oNYIXr/OBOhL77jQHUjkc+AHpLrQCMcu/52Z2870Vz33bgN3N8tdQKwP2m4Uv/x30nAdvCfa8C9xidt6RWoAhfIxPduaOBdcAmf87kAZcBhwPHGNeps6FBcgcYZzr/M9DPnZ/mjNzzQFMHel+aa0+U3AEWmAYvrnB+mOtUdI865a8HRodZol5kivMkx0nOAL2Are1Nf3PdIOCpdiLD9mjNPisELu1o+le4/oIw8n924gF8KLkDrDQNfiMYLv3b9z/uawJuDpng2mBE1VD+aPRulBrw/W2hsTqi35nGj0rQ09kR+QkYKDkDLDINft98/wrok6C32GgslJyhmMK2imOt/KwEPfUCB8L9OqtGSM4AL5kOf+YM4ZEJevOMRrPkDDDeNLbNjf78BL2BwG6jMUFyhSKD+8g0dr35/quGsgmas41GS9ZZIIXrivwO7DHHdyToaVHkW6MxWXIFODWMcuRdl8oOSNCcaTQ+yXb0gb4hYLGuzkZz1yVo9gd2GY1rJFeA+1yMriMeWa05QRct/2a1L5Kx1T9kGvuOM3xNCZrDXAnsKskRYLhzUS0uo0uK14EXjMbbKTOo2wEGhypOZI8zgs2JU3+i0dCZNUZyA+gHrDEN3e8ehhrBoQm6jW4x5CHJDaCPFjZNI3XKL3P+f2xi8URrAZHPtQ4oOQE0AK/wT+4EnjPH0xK1b3NTP68VIAq/vNx1/olw7njgMWB6ovYVwX1G7pKcoEhIVrnOP1mNsrS+Ls7lNWcV8VGEuBtc51eFabqxK++prg26SpHqNUouUCxI2IRGmQ+8Zo7PTdQ+D/jB6HytK0GSAxQW+XYX4WmF56Zw/vyQ9i5KCVGBqcFbRL5JqRN256akNW7UdXQurIK2prePOu1tWZS4KPz7bDcyMbY/tgr6lwBbnLYWTE6oTg+6bujWuca1hve9oQrl8aUVVn2ezmJlh6Liandhxg0IY7ug2Vt3e4WFDb/Ko//rWskFim1qNqafm1i31/f7IuABYAf/Rh/EM8AQyQngWdPIe0NCYj9HmDC4MdT8dUPTlcCtwMMhZY11+0odX5KNlfcAc+ge1HMs1IclOQMMcSWsVNrCXj7d3Hh5tiWsSgAnh50ZO8MKrP3EjUkHwvHWELLq9tbHQxY3ISX/LykpKSkpKZHu5C8+ETRdu+5D6AAAAABJRU5ErkJggg==&logoColor=white">
+    </p>
+
+- ### FrontEnd
+    <p>
+    <img src="https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white">
+    <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white">
+    <img src="https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white">
+    </p>
+
+### 형상 관리
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
+
+<br/>
+
+### ⛓️ pom.xml(Back-end)
+
+| 라이브러리                          | 용도                                  |
+| ----------------------------------- | ------------------------------------- |
+| lombok                              | 어노테이션(@)으로 코드 자동 생성      |
+| spring-boot-starter-security        | spring security 적용                  |
+| spring-boot-starter-mail            | 이메일 인증                          |
+| spring-boot-starter-validation      | 입력 값 검증                          |
+| spring-boot-starter-web             | Spring Web 프로젝트에 필수 라이브러리 |
+| spring-boot-starter-test            | 프로젝트 작동을 테스트하는 역할       |
+| mybatis-spring-boot-starter         | 백엔드에서 MyBatis 문법 적용          |
+| spring-boot-devtools                | 빠른 재시작                           |
+| mysql-connector-java                | DB인 MySQL과 연결                     |
+| jjwt-api / jjwt-impl / jjwt-jackson | JWT(JSON Web Token) 활용              |
+| spring-boot-starter-oauth2-client   | Oauth2 인증                           |
+| spring-boot-starter-aop             | spring aop 적용                       |
+
+### ⛓️ node_modules(Front-end)
+
+| 모듈 이름                                                                   | 용도                                       |
+| --------------------------------------------------------------------------- | ------------------------------------------ |
+| emotion/react, emotion/styled                                               | 리액트 내 css 적용                         |
+| testing-library/jest-dom, testing-library/react, testing-library/user-event | 리액트 dom 테스트                          |
+| axios                                                                       | 서버로 요청을 보내 통신                    |
+| firebase                                                                    | 저장된 이미지를 업로드                     |
+| react-dom, react-router-dom                                                 | 주소 요청 발생 시 각 페이지로 이동         |
+| react-calendar                                                              | 달력을 커스텀하여 사용                     |
+| react-icons                                                                 | 리액트 아이콘을 불러와 사용                |
+| react-query                                                                 | 서버 데이터 동기화(fetching, caching) 지원 |
+| react-quill                                                                 | 글 작성 요소로 커스텀하여 사용             |
+| react-js-pagination                                                         | 여러개의 컨텐츠를 여러개의 페이지로 이동    |
+| react-select                                                                | select 요소를 쉽게 사용                    |
+| react-modal                                                                 | 페이지를 modal창으로 사용                   |
+| react, react-scripts                                                        | 리액트 라이브러리 적용                     |
+| chart.js                                                                    | 가져온 데이터를 차트로 시각화하는 역할     |
+| recoil                                                                      | 전역 상태 관리                             |
+| styled-reset                                                                | 초기 CSS 스타일 재설정                     |
+| sweetalert2                                                                 | 알림창 구현                                |
+| uuid                                                                        | 고유 아이디 값을 생성하는 함수 제공        |
+
+<br/>
+<br/>
+
+## 📄 API 명세서 ERD 설계도
+### 📄 API 명세서
+### 사용자 관련 API
+![사용자API명세서](https://github.com/user-attachments/assets/9a890b17-efa2-4c6d-b355-582d60a920da)
+
+### 관리자 관련 API
+![관리자API명세서](https://github.com/user-attachments/assets/95dfb748-d030-4609-ade0-bddc4bdecbed)
+
+### 📐 ERD 설계도
+![ERD](https://github.com/user-attachments/assets/0786033a-a37f-43fd-8a73-47b041db8ffa)
+
 
 ## 🤝 협업 방식
 
