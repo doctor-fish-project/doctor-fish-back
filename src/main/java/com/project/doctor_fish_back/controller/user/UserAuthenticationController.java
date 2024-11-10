@@ -2,6 +2,7 @@ package com.project.doctor_fish_back.controller.user;
 
 import com.project.doctor_fish_back.aspect.annotation.ValidAop;
 import com.project.doctor_fish_back.dto.user.request.auth.ReqAccessDto;
+import com.project.doctor_fish_back.dto.user.request.auth.ReqCheckEmailAndNameDto;
 import com.project.doctor_fish_back.dto.user.request.auth.ReqSigninDto;
 import com.project.doctor_fish_back.dto.user.request.auth.ReqSignupDto;
 import com.project.doctor_fish_back.exception.SigninException;
@@ -41,6 +42,18 @@ public class UserAuthenticationController {
     @PostMapping("/auth/signin")
     public ResponseEntity<?> signin(@Valid @RequestBody ReqSigninDto dto, BindingResult bindingResult) throws SigninException {
         return ResponseEntity.ok().body(userService.getGeneratedAccessToken(dto));
+    }
+
+    // 사용자 이메일, 이름 확인
+    @PostMapping("/auth/check")
+    public ResponseEntity<?> checkEmailAndName(@RequestBody ReqCheckEmailAndNameDto dto) {
+        return ResponseEntity.ok().body(userService.checkEmailAndName(dto));
+    }
+
+    // 사용자 비밀번호 재설정 상태 확인
+    @GetMapping("/auth/password/status")
+    public ResponseEntity<?> checkResetPasswordStatus(ReqCheckEmailAndNameDto dto) {
+        return ResponseEntity.ok().body(userService.checkPasswordStatus(dto));
     }
 
 }

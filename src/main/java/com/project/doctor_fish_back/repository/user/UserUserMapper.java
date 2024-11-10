@@ -19,6 +19,7 @@ public interface UserUserMapper {
 
     User findById(Long id);
     User findByEmail(String email);
+    User findByName(String name);
     User findByPhoneNumber(String phoneNumber);
 
 }

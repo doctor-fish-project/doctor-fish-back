@@ -1,5 +1,7 @@
 package com.project.doctor_fish_back.service.user;
 
+import com.project.doctor_fish_back.dto.user.request.auth.ReqCheckEmailAndNameDto;
+import com.project.doctor_fish_back.dto.user.response.auth.RespCheckEmailAndNameDto;
 import com.project.doctor_fish_back.dto.user.response.auth.RespSigninDto;
 import com.project.doctor_fish_back.dto.user.response.user.RespUserInfoDto;
 import com.project.doctor_fish_back.dto.user.request.auth.ReqSigninDto;
@@ -14,6 +16,7 @@ import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
 import com.project.doctor_fish_back.repository.RoleMapper;
 import com.project.doctor_fish_back.repository.UserRolesMapper;
+import com.project.doctor_fish_back.repository.user.UserPasswordMapper;
 import com.project.doctor_fish_back.repository.user.UserUserMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
@@ -48,6 +51,8 @@ public class UserUserService {
     @Autowired
     private EmailService emailService;
     private ContentNegotiatingViewResolver viewResolver;
+    @Autowired
+    private UserPasswordMapper passwordMapper;
 
     @Transactional(rollbackFor = SignupException.class)
     public Boolean insertUserAndUserRoles(ReqSignupDto dto) throws SignupException {
@@ -176,10 +181,9 @@ public class UserUserService {
 
     public Boolean modifyUserPassword(ReqModifyUserPasswordDto dto) {
         try {
-            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            userMapper.modifyPassword(dto.toEntity( principalUser.getId(), passwordEncoder));
+            userMapper.modifyPassword(dto.toEntity(passwordEncoder));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ExecutionException("실행 도중 오류 발생");
         }
         return true;
@@ -196,6 +200,46 @@ public class UserUserService {
             throw new RuntimeException(e.getMessage());
         }
 
+        return true;
+    }
+
+    public RespCheckEmailAndNameDto checkEmailAndName(ReqCheckEmailAndNameDto dto) {
+        Password password = null;
+        try {
+            User findUserByEmail = userMapper.findByEmail(dto.getEmail());
+            User findUserByName = userMapper.findByName(dto.getName());
+
+            if(findUserByEmail != null & findUserByName != null) {
+                passwordMapper.save(dto.toEntity());
+                emailService.sendResetPasswordMail(dto.getEmail());
+                password = passwordMapper.findByEmail(dto.getEmail());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return password.toDto();
+    }
+
+    public RespCheckEmailAndNameDto checkPasswordStatus(ReqCheckEmailAndNameDto dto) {
+        Password password = null;
+        try {
+            User findUserByEmail = userMapper.findByEmail(dto.getEmail());
+            User findUserByName = userMapper.findByName(dto.getName());
+
+            if(findUserByEmail != null & findUserByName != null) {
+                password = passwordMapper.findByEmail(dto.getEmail());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assert password != null;
+        return password.toDto();
+    }
+
+    public boolean deletePassword(String email) {
+        passwordMapper.deleteByEmail(email);
         return true;
     }
 

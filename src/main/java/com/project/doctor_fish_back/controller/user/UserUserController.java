@@ -44,9 +44,15 @@ public class UserUserController {
 
     // 사용자 비밀번호 변경
     @ValidAop
-    @PutMapping("/user/password")
+    @PutMapping("/auth/user/password")
     public ResponseEntity<?> modifyUserPassword(@Valid @RequestBody ReqModifyUserPasswordDto dto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(userService.modifyUserPassword(dto));
+    }
+
+    @DeleteMapping("/auth/user/password/{email}")
+    public ResponseEntity<?> deletePassword(@PathVariable String email) {
+        System.out.println(email);
+        return ResponseEntity.ok().body(userService.deletePassword(email));
     }
 
     // 회원 탈퇴

@@ -70,7 +70,7 @@
             password = #{password},
             update_date = now()
         where
-            id = #{id}
+            email = #{email}
     </update>
 
     <update id="modifyEmailValidById">
@@ -134,7 +134,7 @@
             left outer join user_roles_tb ur on(u.id = ur.user_id)
             left outer join role_tb r on(r.id = ur.role_id)
         where
-            email = #{email}
+            u.email = #{email}
     </select>
 
     <select id="findByPhoneNumber" resultMap="userResultMap">
@@ -158,7 +158,31 @@
             left outer join user_roles_tb ur on(u.id = ur.user_id)
             left outer join role_tb r on(r.id = ur.role_id)
         where
-            phone_number = #{phoneNumber}
+            u.phone_number = #{phoneNumber}
+    </select>
+
+    <select id="findByName" resultType="com.project.doctor_fish_back.entity.User">
+        select
+            u.id as user_id,
+            u.email,
+            u.name,
+            u.password,
+            u.phone_number,
+            u.img,
+            u.email_valid,
+            u.register_date,
+            u.update_date,
+            ur.id as user_roles_id,
+            ur.user_id as ur_user_id,
+            ur.role_id as ur_role_id,
+            r.id as role_id,
+            r.name as role_name
+        from
+            user_tb u
+            left outer join user_roles_tb ur on(u.id = ur.user_id)
+            left outer join role_tb r on(r.id = ur.role_id)
+        where
+            u.name = #{name}
     </select>
 
 </mapper>

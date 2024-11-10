@@ -5,13 +5,9 @@ import com.project.doctor_fish_back.dto.admin.request.reservation.ReqPageAndLimi
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyAdminUsernameDto;
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserDto;
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserPasswordDto;
-import com.project.doctor_fish_back.dto.search.ReqSearchDto;
-import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.admin.AdminUserService;
-import com.project.doctor_fish_back.service.user.UserUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 

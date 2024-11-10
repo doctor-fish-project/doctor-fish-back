@@ -1,13 +1,10 @@
 package com.project.doctor_fish_back.aspect;
 
 import com.project.doctor_fish_back.dto.admin.request.auth.ReqAdminSignupDto;
-import com.project.doctor_fish_back.dto.admin.request.doctor.ReqModifyDoctorDto;
 import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyAdminUsernameDto;
-import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserDto;
-import com.project.doctor_fish_back.dto.admin.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.dto.user.request.auth.ReqSignupDto;
 import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserEmailDto;
-import com.project.doctor_fish_back.entity.User;
+import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserPasswordDto;
 import com.project.doctor_fish_back.exception.ValidException;
 import com.project.doctor_fish_back.repository.admin.AdminUserMapper;
 import com.project.doctor_fish_back.service.admin.AdminUserService;
