@@ -12,12 +12,14 @@ import com.project.doctor_fish_back.exception.EmailValidException;
 import com.project.doctor_fish_back.exception.ExecutionException;
 import com.project.doctor_fish_back.exception.SigninException;
 import com.project.doctor_fish_back.exception.SignupException;
+import com.project.doctor_fish_back.repository.ChangePasswordMapper;
 import com.project.doctor_fish_back.repository.RoleMapper;
 import com.project.doctor_fish_back.repository.UserRolesMapper;
 import com.project.doctor_fish_back.repository.user.UserUserMapper;
 import com.project.doctor_fish_back.security.jwt.JwtProvider;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.EmailService;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +49,8 @@ public class UserUserService {
     private UserRolesMapper userRolesMapper;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ChangePasswordMapper changePasswordMapper;
     private ContentNegotiatingViewResolver viewResolver;
 
     @Transactional(rollbackFor = SignupException.class)
@@ -176,9 +180,7 @@ public class UserUserService {
 
     public Boolean modifyUserPassword(ReqModifyUserPasswordDto dto) {
         try {
-            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            userMapper.modifyPassword(dto.toEntity( principalUser.getId(), passwordEncoder));
+            userMapper.modifyPassword(dto.toEntity(passwordEncoder));
         } catch (Exception e) {
             throw new ExecutionException("실행 도중 오류 발생");
         }
@@ -197,6 +199,30 @@ public class UserUserService {
         }
 
         return true;
+    }
+
+    public Long getUserByEmail(String email) throws NotFoundException {
+        User user = userMapper.findByEmail(email);
+
+        System.out.println(email);
+        System.out.println(user);
+
+        if (user == null) {
+            throw new NotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        ChangePassword changePassword = changePasswordMapper.findByEmail(user.getEmail());
+        if(changePassword == null) {
+            changePasswordMapper.save(ChangePassword.builder()
+                            .email(user.getEmail())
+                            .build());
+            emailService.sendChangePasswordMail(user.getEmail());
+            return user.getId();
+        }
+
+        changePasswordMapper.modifyStatusByEmail(user.getEmail());
+        emailService.sendChangePasswordMail(user.getEmail());
+        return user.getId();
     }
 
 }
