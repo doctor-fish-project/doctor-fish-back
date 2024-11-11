@@ -1658,7 +1658,162 @@ public interface UserReservationMapper {
 
 **controller**
 
+```java
+
+@RestController
+public class UserReservationController {
+
+    @Autowired
+    private UserReservationService reservationService;
+
+    // 사용자 내 예약 전체 조회
+    @GetMapping("/reservation/list")
+    public ResponseEntity<?> getAllReservationsToUser(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reservationService.getReservations(dto));
+    }
+}
+
+```
+<br/>
+
+- 프론트에서 보여줄 페이지와 개수를 받는다.
+
+---
+
+<br/><br/>
+
+**dto**
+
+```java
+
+@Data
+public class ReqPageAndLimitDto {
+    private Long page;
+    private Long limit;
+}
+
+```
+<br/>
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReservationService {
+
+    @Autowired
+    private UserReservationMapper reservationMapper;
+
+    public RespGetReservationListDto getReservations(ReqPageAndLimitDto dto) {
+            try {
+                Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+                PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     
+                List<Reservation> reservations = reservationMapper.reservationList(principalUser.getId(), startIndex, dto.getLimit());
+                Long totalCount = reservationMapper.reservationCount(principalUser.getId());
+                return RespGetReservationListDto.builder()
+                        .reservations(reservations)
+                        .totalCount(totalCount)
+                        .build();
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+        }
+}
+
+```
+<br/>
+
+- dto의 데이터들을 mapper로 넘겨준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReservationMapper {
+
+    // 유저 페이지 예약 전체 조회
+    List<Reservation> reservationList(@Param("userId") Long userId,
+                                           @Param("startIndex") Long startIndex,
+                                           @Param("limit") Long limit);
+    Long reservationCount(Long userId);    
+
+}
+
+```
+<br/>
+
+- 예약 리스트와 개수를 가져온다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<select id="reservationList" resultMap="reservationResultMap">
+    select
+        rt.id as rt_id,
+        rt.user_id as rt_user_id,
+        rt.doctor_id,
+        rt.status,
+        rt.reservation_date,
+        rt.register_date,
+        rt.review_status,
+        dot.id as dot_id,
+        dot.user_id as dot_user_id,
+        dot.depart_id,
+        dot.comment,
+        dot.record,
+        ut.id as ut_id,
+        ut.email,
+        ut.name as ut_name,
+        ut.password,
+        ut.phone_number,
+        ut.img as ut_img,
+        ut.email_valid,
+        det.id as det_id,
+        det.name as det_name
+    from
+        reservation_tb rt
+        left outer join doctor_tb dot on(rt.doctor_id = dot.id)
+        left outer join user_tb ut on(dot.user_id = ut.id)
+        left outer join depart_tb det on(dot.depart_id = det.id)
+    where
+        rt.user_id = #{userId}
+    order by
+        Date(rt.reservation_date) desc
+    limit #{startIndex}, #{limit}
+</select>
+
+<select id="reservationCount" resultType="java.lang.Long">
+    select
+        count(*)
+    from
+        reservation_tb
+    where
+        user_id = #{userId}
+</select>
+
+```
+<br/>
+
+- 데이터베이스에서 해당 유저의 예약 리스트와 개수를 가져온다.
+
+---
+
 </div>
 </details>
 
