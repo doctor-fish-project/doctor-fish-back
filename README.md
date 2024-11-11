@@ -1321,7 +1321,7 @@ public class AdminReservationController {
 ```
 <br/>
 
-- 프론트에서 수락해줄 reservationId를 받는다.
+- 프론트에서 수락해 줄 예약의 reservationId를 받는다.
 
 ---
 
@@ -1417,7 +1417,99 @@ public interface AdminReservationMapper {
 
 **controller**
 
-    
+```java
+
+@RestController
+@RequestMapping("/admin")
+public class AdminReservationController {
+
+    @Autowired
+    private AdminReservationService reservationService;
+
+    // 예약 취소
+    @PutMapping("/reservation/cancel/{reservationId}")
+    public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) {
+        return ResponseEntity.ok().body(reservationService.cancelReservation(reservationId));
+    }
+}
+
+```
+<br/>
+
+- 프론트에서 취소해 줄 예약의 reservationId를 받는다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class AdminReservationService {
+
+    @Autowired
+    private AdminReservationMapper reservationMapper;
+
+    public Boolean cancelReservation(Long reservationId) {
+            try {
+                reservationMapper.cancelById(reservationId);
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+            return true;
+        }
+}
+
+```
+<br/>
+
+- controller에서 보낸 reservationId로 예약 status를 바꿔준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface AdminReservationMapper {
+
+    int cancelById(Long id);
+
+}
+
+```
+<br/>
+
+- service에서 보낸 reservationId로 예약 status를 바꿔준다.
+
+--- 
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<update id="cancelById">
+    update reservation_tb
+    set
+        status = 3
+    where
+        id = #{id}
+</update>
+
+```
+<br/>
+
+- status를 예약 취소 상태인 3으로 바꾼다.
+
+---
+
 </div>
 </details>
 
@@ -1459,6 +1551,11 @@ public interface AdminReservationMapper {
 
 **controller**
 
+```java
+
+
+
+```
     
 </div>
 </details>
