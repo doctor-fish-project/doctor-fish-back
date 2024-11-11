@@ -2693,6 +2693,179 @@ public interface UserReviewMapper {
 
 **controller**
 
+```java
+
+@RestController
+public class UserReviewController {
+
+    @Autowired
+    private UserReviewService reviewService;
+
+    // 리뷰 삭제
+    @DeleteMapping("/review/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
+        return ResponseEntity.ok().body(reviewService.deleteReview(reviewId));
+    }
+}
+
+```
+<br/>
+
+- 프론트에서 삭제할 리뷰의 reviewId를 받아온다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReviewService {
+
+    @Autowired
+    private UserReviewMapper reviewMapper;
+    @Autowired
+    private UserReservationMapper reservationMapper;
+    @Autowired
+    private UserReviewLikeMapper reviewLikeMapper;
+    @Autowired
+    private UserCommentMapper userCommentMapper;
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Boolean deleteReview(Long reviewId) {
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Review review = reviewMapper.findById(principalUser.getId(), reviewId);
+            reservationMapper.modifyReviewStatusById(review.getReservationId());
+            reviewLikeMapper.deleteReviewsByReviewId(reviewId);
+            userCommentMapper.deleteCommentsByReviewId(reviewId);
+            reviewMapper.deleteById(reviewId);
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+        return true;
+    }
+}
+
+```
+<br/>
+
+- 리뷰를 삭제할 때 해당 리뷰의 댓글, 좋아요를 같이 삭제해주고 예약의 리뷰 상태를 바꿔준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReviewMapper {
+
+    Review findById(@Param("userId") Long userId,
+                        @Param("reviewId") Long reviewId);
+    int deleteById(Long id);
+
+}
+
+@Mapper
+public interface UserReservationMapper {
+
+    int modifyReviewStatusById(Long id);
+
+}
+
+@Mapper
+public interface UserReviewLikeMapper {
+
+    int deleteReviewsByReviewId(Long reviewId);
+
+}
+
+@Mapper
+public interface UserCommentMapper {
+
+    int deleteCommentsByReviewId(Long reviewId);
+
+}
+
+```
+<br/>
+
+- service에서 받은 reviewId로 리뷰, 댓글, 좋아요를 삭제한다.
+- service에서 받은 reservationId로 예약의 리뷰 상태를 바꾼다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<select id="findById" resultType="com.project.doctor_fish_back.entity.Review">
+    select
+        rt.id,
+        rt.user_id as userId,
+        rt.reservation_id as reservationId,
+        rt.img,
+        rt.content,
+        rt.register_date as registerDate,
+        rt.update_date as updateDate,
+        ut.name as userName,
+        ut.img as userImg,
+        (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
+        (select count(*) from review_like_tb where user_id = #{userId} and review_id = rt.id) as isLike
+    from
+        review_tb rt
+        left outer join user_tb ut on(rt.user_id = ut.id)
+    where
+        rt.id = #{reviewId}
+</select>
+
+<delete id="deleteById">
+    delete
+    from
+        review_tb
+    where
+        id = #{id}
+</delete>
+
+<update id="modifyReviewStatusById">
+    update reservation_tb
+    set
+        review_status = if(review_status = 1, 0, 1)
+    where
+        id = #{id}
+</update>
+
+<delete id="deleteReviewsByReviewId">
+    delete
+    from
+        review_like_tb
+    where
+        review_id = #{reviewId}
+</delete>
+
+<delete id="deleteCommentsByReviewId">
+    delete
+    from
+        comment_tb
+    where
+        review_id = #{reviewId}
+</delete>
+
+```
+<br/>
+
+- 데이터베이스에서 리뷰, 삭제할 리뷰의 댓글, 좋아요를 삭제한다.
+- 리뷰를 삭제했기 때문에 예약의 리뷰 상태를 다시 리뷰가 없다는 상태인 0으로 바꾼다.
+
+---
+
 </div>
 </details>
 
