@@ -1527,7 +1527,126 @@ public interface AdminReservationMapper {
 
 **controller**
 
+```java
+
+@RestController
+public class UserReservationController {
+
+    @Autowired
+    private UserReservationService reservationService;
+
+    // 예약하기
+    @PostMapping("/reservation")
+    public ResponseEntity<?> registerReservation(@RequestBody ReqRegisterReservationDto dto) {
+        System.out.println(dto);
+        return ResponseEntity.ok().body(reservationService.registerReservation(dto));
+    }
+}
+
+```
+<br/>
+
+- 예약할 때 필요한 데이터들을 객체로 받는다.
+
+---
+
+<br/><br/>
+
+**dto**
+
+```java
+
+@Data
+public class ReqRegisterReservationDto {
+    private LocalDateTime reserveDate;
+    private Long doctorId;
+
+    public Reservation toEntity(Long userId) {
+        return Reservation.builder()
+                .userId(userId)
+                .doctorId(doctorId)
+                .reservationDate(reserveDate)
+                .build();
+    }
+}
+
+```
+<br/>
+
+- userId는 service에서 받아와서 entity로 바꿔준다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReservationService {
+
+    @Autowired
+    private UserReservationMapper reservationMapper;
+
+    public Boolean registerReservation(ReqRegisterReservationDto dto) {
+            try {
+                PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     
+                Reservation reservation = dto.toEntity(principalUser.getId());
+                reservationMapper.register(reservation);
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+            return true;
+        }
+}
+
+```
+<br/>
+
+- principalUser에서 userId를 찾아서 toEntity로 넘겨준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReservationMapper {
+
+    int register(Reservation reservation);
+
+}
+
+```
+<br/>
+
+- service에서 받은 reservation객체로 데이터베이스에 예약을 추가한다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<insert id="register">
+    insert into reservation_tb
+    values(default, #{userId}, #{doctorId}, default, #{reservationDate}, now(), default)
+</insert>
+
+```
+<br/>
+
+- service에서 받은 reservation객체로 데이터베이스에 예약을 추가한다.
+
+---
+
 </div>
 </details>
 
