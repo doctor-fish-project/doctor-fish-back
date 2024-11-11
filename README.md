@@ -1295,14 +1295,117 @@ public interface UserRolesMapper {
 ### 관리자 예약 기능 코드 리뷰
 
 <details>
-<summary>예약 확인 코드 리뷰</summary>
+<summary>예약 수락 코드 리뷰</summary>
 <div markdown="1">
 
 <br/>
 
 **controller**
 
+```java
+
+@RestController
+@RequestMapping("/admin")
+public class AdminReservationController {
+
+    @Autowired
+    private AdminReservationService reservationService;
+
+    // 예약 수락
+    @PutMapping("/reservation/accept/{reservationId}")
+    public ResponseEntity<?> acceptReservation(@PathVariable Long reservationId) {
+        return ResponseEntity.ok().body(reservationService.acceptReservation(reservationId));
+    }
+}
+
+```
+<br/>
+
+- 프론트에서 수락해줄 reservationId를 받는다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class AdminReservationService {
+
+    @Autowired
+    private AdminReservationMapper reservationMapper;
+
+    @Autowired
+    private AdminAlarmInsertMapper alarmInsertMapper;
+
+    public Boolean acceptReservation(Long reservationId) {
+            try {
+                reservationMapper.acceptById(reservationId);
+                Reservation reservation = reservationMapper.findById(reservationId);
     
+                alarmInsertMapper.save(AlarmInsert.builder()
+                                .typeId(1L)
+                                .alarmId(reservationId)
+                                .messageId(1L)
+                                .build());
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+            return true;
+        }
+}
+
+```
+<br/>
+
+- controller에서 보낸 reservationId로 예약 status를 바꿔준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface AdminReservationMapper {
+
+    int acceptById(Long id);
+
+}
+
+```
+<br/>
+
+- service에서 보낸 reservationId로 예약 status를 바꿔준다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<update id="acceptById">
+    update reservation_tb
+    set
+        status = 2
+    where
+        id = #{id}
+</update>
+
+```
+<br/>
+
+- status를 예약 수락 상태인 2로 바꾼다.
+
+---
+
 </div>
 </details>
 
