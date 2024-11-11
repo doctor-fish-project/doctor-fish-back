@@ -2877,6 +2877,126 @@ public interface UserCommentMapper {
 
 **controller**
 
+```java
+
+@RestController
+public class UserReviewController {
+
+    @Autowired
+    private UserReviewService reviewService;
+
+    // 리뷰 좋아요
+    @PostMapping("/review/like/{reviewId}")
+    public ResponseEntity<?> like(@PathVariable Long reviewId) throws ReviewLikeException {
+        return ResponseEntity.ok().body(reviewService.like(reviewId));
+    }
+}
+
+```
+<br/>
+
+- 프론트에서 좋아요를 할 리뷰의 reviewId를 받아온다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReviewService {
+
+    @Autowired
+    private UserReviewLikeMapper reviewLikeMapper;
+
+    public Boolean like(Long reviewId) throws ReviewLikeException {
+        try {
+            PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long userId = principalUser.getId();
+
+            ReviewLike reviewLike = reviewLikeMapper.findByReviewIdAndUserId(reviewId, userId);
+
+            if(reviewLike != null) {
+                throw new ReviewLikeException("이미 좋아요한 리뷰입니다.");
+            }
+
+            ReviewLike rl = ReviewLike.builder()
+                    .reviewId(reviewId)
+                    .userId(userId)
+                    .build();
+
+            reviewLikeMapper.save(rl);
+        } catch (ReviewLikeException e) {
+            throw new ReviewLikeException(e.getMessage());
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+        return true;
+    }
+}
+
+```
+<br/>
+
+- 한 번 좋아요한 리뷰는 다시 좋아요를 못하게 한다.(좋아요는 1번만 가능)
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReviewLikeMapper {
+
+    ReviewLike findByReviewIdAndUserId(@Param("reviewId") Long reviewId,
+                                       @Param("userId")  Long userId);
+
+    int save(ReviewLike reviewLike);
+
+}
+
+```
+<br/>
+
+- 이미 좋아요를 했었는지 찾은 후 없으면 데이터베이스에 추가한다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<select id="findByReviewIdAndUserId" resultType="com.project.doctor_fish_back.entity.ReviewLike">
+    select
+        id,
+        review_id as reviewId,
+        user_id as userId
+    from
+        review_like_tb
+    where
+        review_id = #{reviewId}
+        and user_id = #{userId}
+</select>
+
+<insert id="save">
+    insert into review_like_tb
+    values(default, #{reviewId}, #{userId})
+</insert>
+
+```
+<br/>
+
+- 데이터베이스에 좋아요를 추가한다.
+
+---
+
 </div>
 </details>
 
