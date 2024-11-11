@@ -1349,7 +1349,7 @@ public interface UserRolesMapper {
 </details>
 
 <details>
-<summary>예약수 코드 리뷰</summary>
+<summary>예약수정 코드 리뷰</summary>
 <div markdown="1">
 
 <br/>
