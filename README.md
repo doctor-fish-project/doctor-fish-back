@@ -1651,7 +1651,7 @@ public interface UserReservationMapper {
 </details>
 
 <details>
-<summary>예약조회 코드 리뷰</summary>
+<summary>예약 조회 코드 리뷰</summary>
 <div markdown="1">
 
 <br/>
@@ -1818,7 +1818,7 @@ public interface UserReservationMapper {
 </details>
 
 <details>
-<summary>예약수정 코드 리뷰</summary>
+<summary>예약 수정 코드 리뷰</summary>
 <div markdown="1">
 
 <br/>
@@ -1949,9 +1949,86 @@ public interface UserReservationMapper {
 
 ### 관리자 리뷰 기능 코드 리뷰
 
+<details>
+<summary>리뷰 조회 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+</div>
+</details>
+
+<details>
+<summary>리뷰 삭제 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+</div>
+</details>
+
 <br/>
 
 ### 사용자 리뷰 기능 코드 리뷰
+
+<details>
+<summary>리뷰 작성 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+</div>
+</details>
+
+<details>
+<summary>내 리뷰 조회 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+</div>
+</details>
+
+<details>
+<summary>리뷰 수정 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+</div>
+</details>
+
+<details>
+<summary>리뷰 삭제 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+</div>
+</details>
+
+<details>
+<summary>리뷰 좋아요 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+</div>
+</details>
 
 
 
