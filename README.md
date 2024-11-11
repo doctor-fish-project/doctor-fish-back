@@ -1946,6 +1946,9 @@ public interface UserReservationMapper {
 </details>
 
 
+### 관리자 리뷰 기능 코드 리뷰
+
+### 사용자 리뷰 기능 코드 리뷰
 
 
 
