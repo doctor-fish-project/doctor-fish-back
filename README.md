@@ -2254,6 +2254,147 @@ public interface AdminReviewMapper {
 
 **controller**
 
+```java
+
+@RestController
+public class UserReviewController {
+
+    @Autowired
+    private UserReviewService reviewService;
+
+    // 리뷰 작성
+    @ValidAop
+    @PostMapping("/review")
+    public ResponseEntity<?> writeReview(@Valid @RequestBody ReqWriteReviewDto dto, BindingResult bindingResult) {
+        return ResponseEntity.ok().body(reviewService.writeReview(dto));
+    }
+}
+
+```
+<br/>
+
+- 프론트에서 작성할 리뷰 내용 데이터를 객체로 받는다.
+- 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
+
+---
+
+<br/><br/>
+
+**dto**
+
+```java
+
+@Data
+public class ReqWriteReviewDto {
+    private Long reservationId;
+    private String imgList;
+    @NotBlank(message = "내용을 입력하세요.")
+    private String content;
+
+    public Review toEntity(Long userId) {
+        return Review.builder()
+                .userId(userId)
+                .reservationId(reservationId)
+                .img(imgList)
+                .content(content)
+                .build();
+    }
+}
+
+```
+<br/>
+
+- 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReviewService {
+
+    @Autowired
+    private UserReviewMapper reviewMapper;
+    @Autowired
+    private UserReservationMapper reservationMapper;
+
+    public Boolean writeReview(ReqWriteReviewDto dto) {
+            try {
+                PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    
+                reviewMapper.save(dto.toEntity(principalUser.getId()));
+                reservationMapper.modifyReviewStatusById(dto.getReservationId());
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+            return true;
+        }
+}
+
+```
+<br/>
+
+- 리뷰를 작성하면 예약의 리뷰 상태를 바꿔준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReviewMapper {
+
+    int save(Review review);
+
+}
+
+@Mapper
+public interface UserReservationMapper {
+
+    int modifyReviewStatusById(Long id);
+
+}
+
+```
+<br/>
+
+- 각각 service에서 id를 받아서 추가, 수정한다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<insert id="save">
+    insert into review_tb
+    values(default, #{reservationId}, #{userId}, #{img}, #{content}, now(), now())
+</insert>
+
+<update id="modifyReviewStatusById">
+    update reservation_tb
+    set
+        review_status = if(review_status = 1, 0, 1)
+    where
+        id = #{id}
+</update>
+
+```
+<br/>
+
+- 데이터베이스에서 리뷰를 추가하고 예약의 리뷰 상태를 해당 예약에 리뷰가 있다는 상태인 1로 바꿔준다.(처음엔 0)
+
+---
+
 </div>
 </details>
 
@@ -2264,6 +2405,12 @@ public interface AdminReviewMapper {
 <br/>
 
 **controller**
+
+```java
+
+
+
+```
 
 </div>
 </details>
