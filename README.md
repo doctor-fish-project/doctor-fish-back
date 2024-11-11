@@ -1753,7 +1753,7 @@ public interface UserReservationMapper {
 ```
 <br/>
 
-- 예약 리스트와 개수를 가져온다.
+- 데이터베이스에서 예약 리스트와 개수를 가져온다.
 
 ---
 
