@@ -1294,12 +1294,71 @@ public interface UserRolesMapper {
 
 ### 관리자 예약 기능 코드 리뷰
 
+<details>
+<summary>예약 확인 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+    
+</div>
+</details>
+
+<details>
+<summary>예약 취소 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+    
+</div>
+</details>
+
+
 
 <br/>
 
 ### 사용자 예약 기능 코드 리뷰
 
+<details>
+<summary>예약하기 코드 리뷰</summary>
+<div markdown="1">
 
+<br/>
+
+**controller**
+
+    
+</div>
+</details>
+
+<details>
+<summary>예약조회 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+    
+</div>
+</details>
+
+<details>
+<summary>예약수 코드 리뷰</summary>
+<div markdown="1">
+
+<br/>
+
+**controller**
+
+    
+</div>
+</details>
 
 
 
