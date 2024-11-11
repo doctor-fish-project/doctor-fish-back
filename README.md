@@ -2408,9 +2408,144 @@ public interface UserReservationMapper {
 
 ```java
 
+@RestController
+public class UserReviewController {
 
+    @Autowired
+    private UserReviewService reviewService;
+
+    // 사용자 내 리뷰 전체 조회
+    @GetMapping("/review/me")
+    public ResponseEntity<?> getReviewsToUser(ReqPageAndLimitDto dto) {
+        return ResponseEntity.ok().body(reviewService.getReviewsByUserId(dto));
+    }
+}
 
 ```
+<br/>
+
+- 프론트에서 보여줄 페이지와 개수를 받는다.
+
+---
+
+<br/><br/>
+
+**dto**
+
+```java
+
+@Data
+public class ReqPageAndLimitDto {
+    private Long page;
+    private Long limit;
+}
+
+```
+<br/>
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReviewService {
+
+    @Autowired
+    private UserReviewMapper reviewMapper;
+    
+    public RespGetReviewListDto getReviewsByUserId(ReqPageAndLimitDto dto) {
+            try {
+                PrincipalUser principalUser = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+                List<Review> reviews = reviewMapper.reviewListByUserId(principalUser.getId(), startIndex, dto.getLimit());
+                Long reviewCount = reviewMapper.reviewCountByUserId(principalUser.getId());
+    
+                return RespGetReviewListDto.builder()
+                        .reviews(reviews)
+                        .reviewCount(reviewCount)
+                        .build();
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+    }
+}
+
+```
+<br/>
+
+- principalUser에서 userId를 mapper에 넘겨준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReviewMapper {
+
+    // 유저 페이지 사용자의 리뷰 조회
+    List<Review> reviewListByUserId(@Param("userId") Long userId,
+                                    @Param("startIndex") Long startIndex,
+                                    @Param("limit") Long limit);
+    Long reviewCountByUserId(Long userId);
+
+}
+
+```
+<br/>
+
+- 데이터베이스에서 리뷰 리스트와 개수를 가져온다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<select id="reviewListByUserId" resultType="com.project.doctor_fish_back.entity.Review">
+    select
+        rt.id,
+        rt.user_id as userId,
+        rt.img,
+        rt.content,
+        rt.register_date as registerDate,
+        rt.update_date as updateDate,
+        ut.name as userName,
+        ut.img as userImg,
+        (select count(*) from review_like_tb where review_id = rt.id) as likeCount,
+        (select count(*) from review_like_tb where user_id = #{userId} and review_id = rt.id) as isLike
+    from
+        review_tb rt
+        left outer join user_tb ut on(rt.user_id = ut.id)
+    where
+        user_id = #{userId}
+    limit #{startIndex}, #{limit}
+</select>
+
+<select id="reviewCountByUserId" resultType="java.lang.Long">
+    select
+        count(*)
+    from
+        review_tb
+    where
+        user_id = #{userId}
+</select>
+
+```
+<br/>
+
+- 데이터베이스에서 해당 유저의 리뷰 리스트와 개수를 가져온다.
+
+---
 
 </div>
 </details>
