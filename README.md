@@ -1957,6 +1957,150 @@ public interface UserReservationMapper {
 
 **controller**
 
+```java
+
+@RestController
+@RequestMapping("/admin")
+public class AdminReviewController {
+
+    @Autowired
+    private AdminReviewService reviewService;
+
+    // 관리자 페이지 전체 리뷰 조회
+    @GetMapping("/review")
+    public ResponseEntity<?> getReviewAllByLimit(ReqPageAndLimitDto dto, String searchText) {
+        return ResponseEntity.ok().body(reviewService.getReviewAllByLimit(dto, searchText));
+    }
+}
+
+```
+<br/>
+
+- searchText는 검색을 안 할때는 빈 문자열값.
+
+---
+
+<br/><br/>
+
+**dto**
+
+```java
+
+@Data
+public class ReqPageAndLimitDto {
+    private Long page;
+    private Long limit;
+}
+
+```
+<br/>
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class AdminReviewService {
+
+    @Autowired
+    private AdminReviewMapper reviewMapper;
+
+    public RespGetReviewListDto getReviewAllByLimit(ReqPageAndLimitDto dto, String searchText) {
+            try {
+                Long startIndex = (dto.getPage() - 1) * dto.getLimit();
+                List<Review> reviews = reviewMapper.reviewList(startIndex, dto.getLimit(), searchText);
+                Long reviewCount = reviewMapper.reviewCount(searchText);
+    
+                return RespGetReviewListDto.builder()
+                        .reviews(reviews)
+                        .reviewCount(reviewCount)
+                        .build();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+        }
+}
+
+```
+<br/>
+
+- dto의 데이터들을 mapper로 넘겨준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface AdminReviewMapper {
+
+    // 관리자 페이지 리뷰 전체 조회
+    List<Review> reviewList(@Param("startIndex") Long startIndex,
+                            @Param("limit") Long limit,
+                            @Param("searchText") String searchText);
+    Long reviewCount(String searchText);
+
+}
+
+```
+<br/>
+
+- 데이터베이스에서 리뷰 리스트와 개수를 가져온다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<select id="reviewList" resultType="com.project.doctor_fish_back.entity.Review">
+    select
+        rt.id,
+        rt.user_id as userId,
+        rt.img,
+        rt.content,
+        rt.register_date as registerDate,
+        rt.update_date as updateDate,
+        ut.name as userName,
+        ut.img as userImg,
+        (select count(*) from comment_tb where review_id = rt.id) as commentCount
+    from
+        review_tb rt
+        left outer join user_tb ut on(rt.user_id = ut.id)
+    where
+        ut.name like concat("%", #{searchText}, "%")
+    order by
+        rt.register_date desc
+    limit #{startIndex}, #{limit}
+</select>
+
+<select id="reviewCount" resultType="java.lang.Long">
+    select
+        count(*)
+    from
+        review_tb rt
+        left outer join user_tb ut on(rt.user_id = ut.id)
+    where
+        ut.name like concat("%", #{searchText}, "%")
+</select>
+
+```
+<br/>
+
+- 데이터베이스에서 리뷰를 작성한 사용자의 이름이 searchText에 포함되어있는 리뷰 리스트와 개수를 가져온다.
+
+---
+
 </div>
 </details>
 
@@ -1967,6 +2111,11 @@ public interface UserReservationMapper {
 <br/>
 
 **controller**
+```java
+
+
+
+```
 
 </div>
 </details>
