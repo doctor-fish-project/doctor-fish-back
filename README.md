@@ -1938,7 +1938,7 @@ public interface UserReservationMapper {
 ```
 <br/>
 
-- 데이터베이스에서 예약날짜를 수정헤준다.
+- 데이터베이스에서 예약날짜를 수정해준다.
 
 ---
 
@@ -2557,6 +2557,130 @@ public interface UserReviewMapper {
 <br/>
 
 **controller**
+
+```java
+
+@RestController
+public class UserReviewController {
+
+    @Autowired
+    private UserReviewService reviewService;
+
+    // 리뷰 수정
+    @ValidAop
+    @PutMapping("/review/{reviewId}")
+    public ResponseEntity<?> modifyReview(@PathVariable Long reviewId, @Valid @RequestBody ReqModifyReviewDto dto, BindingResult bindingResult) {
+        return ResponseEntity.ok().body(reviewService.modifyReview(reviewId, dto));
+    }
+}
+
+```
+<br/>
+
+- 프론트에서 수정할 리뷰의 내용을 객체로 받는다.
+- 요청에서 받은 데이터로 유효성 검사 실시 후 성공하면 service로 넘긴다.
+
+---
+
+<br/><br/>
+
+**dto**
+
+```java
+
+@Data
+public class ReqModifyReviewDto {
+    private String imgList;
+    @NotBlank(message = "내용을 입력하세요.")
+    private String content;
+
+    public Review toEntity(Long reviewId) {
+        return Review.builder()
+                .id(reviewId)
+                .img(imgList)
+                .content(content)
+                .build();
+    }
+}
+
+```
+<br/>
+
+- 유효성 검사에 실패하면 해당 메세지를 에러 메세지로 반환해준다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReviewService {
+
+    @Autowired
+    private UserReviewMapper reviewMapper;
+
+    public Boolean modifyReview(Long reviewId, ReqModifyReviewDto dto) {
+        try {
+            reviewMapper.modify(dto.toEntity(reviewId));
+        } catch (Exception e) {
+            throw new ExecutionException("실행 도중 오류 발생");
+        }
+        return true;
+    }
+}
+
+```
+<br/>
+
+- controller에서 받은 데이터들을 mapper로 보내서 리뷰을 수정한다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReviewMapper {
+
+    int modify(Review review);
+
+}
+
+```
+<br/>
+
+- service에서 받은 review객체로 데이터베이스에서 리뷰을 수정한다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<update id="modify">
+    update review_tb
+    set
+        img = #{img},
+        content = #{content},
+        update_date = now()
+    where
+        id = #{id}
+</update>
+
+```
+<br/>
+
+- 데이터베이스에서 리뷰를 수정해준다.
+
+---
 
 </div>
 </details>
