@@ -22,10 +22,16 @@ public class EmailController {
         return ResponseEntity.ok().body(emailService.sendAuthMail(dto.get("email").toString()));
     }
 
-    // 이메일 인증 확인
+    // 회원가입 이메일 인증 확인
     @GetMapping("/auth/mail")
     public void emailValid(HttpServletResponse response, @RequestParam String token) throws IOException {
         emailService.emailValidResult(response, token);
+    }
+
+    // 비밀번호 변경 이메일 인증 확인
+    @GetMapping("/auth/password/mail")
+    public void passwordEmailValid(HttpServletResponse response, @RequestParam String token) throws IOException {
+        emailService.passwordEmailValidResult(response, token);
     }
 
 }

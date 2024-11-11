@@ -7,6 +7,7 @@ import com.project.doctor_fish_back.dto.user.request.user.ReqModifyUserPasswordD
 import com.project.doctor_fish_back.exception.SignupException;
 import com.project.doctor_fish_back.security.principal.PrincipalUser;
 import com.project.doctor_fish_back.service.user.UserUserService;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,8 +45,9 @@ public class UserUserController {
 
     // 사용자 비밀번호 변경
     @ValidAop
-    @PutMapping("/user/password")
+    @PutMapping("/auth/password")
     public ResponseEntity<?> modifyUserPassword(@Valid @RequestBody ReqModifyUserPasswordDto dto, BindingResult bindingResult) {
+        System.out.println(dto);
         return ResponseEntity.ok().body(userService.modifyUserPassword(dto));
     }
 
@@ -55,4 +57,9 @@ public class UserUserController {
         return ResponseEntity.ok().body(userService.deleteUser());
     }
 
+    // 비밀번호 변경할 때 이메일로 사용자 찾기
+    @PostMapping("/auth/check")
+    public ResponseEntity<?> getUserByEmail(@RequestBody ReqModifyUserEmailDto dto) throws NotFoundException {
+        return ResponseEntity.ok().body(userService.getUserByEmail(dto.getEmail()));
+    }
 }
