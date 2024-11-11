@@ -2113,9 +2113,131 @@ public interface AdminReviewMapper {
 **controller**
 ```java
 
+@RestController
+@RequestMapping("/admin")
+public class AdminReviewController {
 
+    @Autowired
+    private AdminReviewService reviewService;
+
+    // 리뷰 삭제
+    @DeleteMapping("/review/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
+        return ResponseEntity.ok().body(reviewService.deleteReview(reviewId));
+    }
+}
 
 ```
+<br/>
+
+- 프론트에서 삭제할 리뷰의 reviewId를 받아온다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class AdminReviewService {
+
+    @Autowired
+    private UserCommentMapper userCommentMapper;
+    @Autowired
+    private UserReviewLikeMapper userReviewLikeMapper;
+    @Autowired
+    private AdminReviewMapper reviewMapper;
+
+    public Boolean deleteReview(Long reviewId) {
+            try {
+                userCommentMapper.deleteCommentsByReviewId(reviewId);
+                userReviewLikeMapper.deleteReviewsByReviewId(reviewId);
+                reviewMapper.deleteById(reviewId);
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+            return true;
+        }
+
+```
+<br/>
+
+- 리뷰를 삭제할 때 해당 리뷰의 댓글, 좋아요를 같이 삭제해준다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserCommentMapper {
+
+    int deleteCommentsByReviewId(Long reviewId);
+
+}
+
+@Mapper
+public interface UserReviewLikeMapper {
+
+    int deleteReviewsByReviewId(Long reviewId);
+
+}
+
+@Mapper
+public interface AdminReviewMapper {
+
+    int deleteById(Long id);
+
+}
+
+```
+<br/>
+
+- service에서 받은 reviewId로 리뷰, 댓글, 좋아요를 삭제한다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<delete id="deleteCommentsByReviewId">
+    delete
+    from
+        comment_tb
+    where
+        review_id = #{reviewId}
+</delete>
+
+<delete id="deleteReviewsByReviewId">
+    delete
+    from
+        review_like_tb
+    where
+        review_id = #{reviewId}
+</delete>
+
+<delete id="deleteById">
+    delete
+    from
+        review_tb
+    where
+        id = #{id}
+</delete>
+
+```
+<br/>
+
+- 데이터베이스에서 리뷰, 삭제할 리뷰의 댓글, 좋아요를 삭제한다.
+
+---
 
 </div>
 </details>
