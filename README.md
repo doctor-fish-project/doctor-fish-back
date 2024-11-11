@@ -1827,10 +1827,121 @@ public interface UserReservationMapper {
 
 ```java
 
+@RestController
+public class UserReservationController {
 
+    // 예약 정보 수정
+    @PutMapping("/reservation/{reservationId}")
+    public ResponseEntity<?> modifyReservation(@PathVariable Long reservationId, @RequestBody ReqModifyReservationDto dto) {
+        System.out.println(dto);
+        return ResponseEntity.ok().body(reservationService.modifyReservation(reservationId, dto));
+    }
+}
 
 ```
-    
+<br/>
+
+- 프론트에서 수정할 예약의 reservationId와 수정할 때 필요한 데이터들을 객체로 받는다.
+
+---
+
+<br/><br/>
+
+**dto**
+
+```java
+
+@Data
+public class ReqModifyReservationDto {
+    private Long doctorId;
+    private LocalDateTime reserveDate;
+
+    public Reservation toEntity(Long id) {
+        return Reservation.builder()
+                .id(id)
+                .doctorId(doctorId)
+                .reservationDate(reserveDate)
+                .build();
+        }
+}
+
+```
+<br/>
+
+- service에서 reservationId를 받아와서 entity로 바꾼다.
+
+---
+
+<br/><br/>
+
+**service**
+
+```java
+
+@Service
+public class UserReservationService {
+
+    @Autowired
+    private UserReservationMapper reservationMapper;
+
+    public Boolean modifyReservation(Long reservationId, ReqModifyReservationDto dto) {
+            try {
+                reservationMapper.modify(dto.toEntity(reservationId));
+            } catch (Exception e) {
+                throw new ExecutionException("실행 도중 오류 발생");
+            }
+            return true;
+        }
+}
+
+```
+<br/>
+
+- controller에서 받은 데이터들을 mapper로 보내서 예약을 수정한다.
+
+---
+
+<br/><br/>
+
+**mapper**
+
+```java
+
+@Mapper
+public interface UserReservationMapper {
+
+    int modify(Reservation reservation);
+
+}
+
+```
+<br/>
+
+- service에서 받은 reservation객체로 데이터베이스에서 예약을 수정한다.
+
+---
+
+<br/><br/>
+
+**sql**
+
+```java
+
+<update id="modify">
+   update reservation_tb
+    set
+        reservation_date = #{reservationDate}
+    where
+        id = #{id} and doctor_id = #{doctorId}
+</update>
+
+```
+<br/>
+
+- 데이터베이스에서 예약날짜를 수정헤준다.
+
+---
+
 </div>
 </details>
 
