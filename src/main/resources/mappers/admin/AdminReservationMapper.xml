@@ -441,15 +441,21 @@
     <select id="weekReservationCount" resultMap="weekReservationCountMap">
         with temp_week_tb as (
             select 1 as id, date_sub(curdate(), interval weekday(curdate()) day) as day union all
-            select 2, date_sub(curdate(), interval weekday(curdate()) - 1 day) union all
-            select 3, curdate() as day union all
-            select 4, date_add(curdate(), interval 1 DAY) union all
-            select 5, date_add(curdate(), interval 2 DAY)
+            select 2, date_add(date_sub(curdate(), interval weekday(curdate()) day), interval 1 DAY) union all
+            select 3, date_add(date_sub(curdate(), interval weekday(curdate()) day), interval 2 DAY) union all
+            select 4, date_add(date_sub(curdate(), interval weekday(curdate()) day), interval 3 DAY) union all
+            select 5, date_add(date_sub(curdate(), interval weekday(curdate()) day), interval 4 DAY)
         )
         select
             twt.id as id,
             twt.day as name,
-            count(rt.id) as count
+            case
+                when twt.id = 1 then rpad(count(rt.id), 5, 0)
+                when twt.id = 2 then lpad(rpad(count(rt.id), 4, 0), 5, 0)
+                when twt.id = 3 then lpad(rpad(count(rt.id), 3, 0), 5, 0)
+                when twt.id = 4 then lpad(rpad(count(rt.id), 2, 0), 5, 0)
+                when twt.id = 5 then lpad(count(rt.id), 5, 0)
+            end as count
         from
             temp_week_tb twt
             left outer join reservation_tb rt on date(rt.reservation_date) = twt.day
@@ -494,7 +500,7 @@
                             group by
                                 substr(reservation_date, 6, 2)) rt on(rt.id = mt.id)
         order by
-            month
+            id
     </select>
 
 </mapper>

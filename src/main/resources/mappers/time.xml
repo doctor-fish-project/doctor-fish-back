@@ -48,6 +48,7 @@
                                                             and lt.status = 2
                                                             and lt.leave_date like concat(#{reservationDate}, "%"));
     </select>
+
     <select id="availableTimeList" resultType="com.project.doctor_fish_back.entity.Time">
         select
             id,
